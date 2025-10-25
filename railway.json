@@ -21,7 +21,7 @@
   },
   "nixpacks": {
     "setup": {
-      "packages": ["chromium"]
+      "packages": ["chromium", "nodejs-20_x"]
     },
     "phases": {
       "install": {
