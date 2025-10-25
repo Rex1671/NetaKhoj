@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 7
+    },
+    "auditLog": "C:\\Users\\bbrak\\Desktop\\fixKaroWeb 3,0\\logs\\.641b379be27dd7117342c1285e75083e836d150f-audit.json",
+    "files": [
+        {
+            "date": 1761420699517,
+            "name": "C:\\Users\\bbrak\\Desktop\\fixKaroWeb 3,0\\logs\\websocket-2025-10-26.log",
+            "hash": "f71a720d8ac4d2ccdaf6ae292a5dc34b33da70559815170fd1b0351d49711029"
+        }
+    ],
+    "hashType": "sha256"
+}

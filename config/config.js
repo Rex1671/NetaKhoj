@@ -5,8 +5,10 @@ const config = {
   env: process.env.NODE_ENV || 'development',
   server: {
     port: parseInt(process.env.PORT) || 3000,
-    host: process.env.HOST || 'localhost',
-    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+    host: process.env.HOST || '0.0.0.0' || localhost,
+    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+    behindProxy: process.env.BEHIND_PROXY === 'true',
+    trustedProxies: process.env.TRUSTED_PROXIES?.split(',') || []
   },
   cache: {
     ttl: {

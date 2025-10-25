@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 7
+    },
+    "auditLog": "C:\\Users\\bbrak\\Desktop\\fixKaroWeb 3,0\\logs\\.0b21db40721f085d078f3e09a7bedbae90ac70d4-audit.json",
+    "files": [
+        {
+            "date": 1761420699521,
+            "name": "C:\\Users\\bbrak\\Desktop\\fixKaroWeb 3,0\\logs\\performance-2025-10-26.log",
+            "hash": "e69adb4b9de218cf590e9f5ca4feb057f89f7dfdb3c6506e996ca5a66fd7949a"
+        }
+    ],
+    "hashType": "sha256"
+}

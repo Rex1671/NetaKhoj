@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: fixkaro-web
+    runtime: node
+    region: singapore # or singapore, frankfurt, ohio
+    plan: free # or starter, standard, pro
+    
+    buildCommand: npm install
+    startCommand: npm start
+    
+    healthCheckPath: /health
+    
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RENDER
+        value: true
+      - key: BEHIND_PROXY
+        value: true
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/google-chrome-stable
+      
+    # Auto-deploy on git push
+    autoDeploy: true
