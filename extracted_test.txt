@@ -1,39 +1,39 @@
 {
   "candidate": {
-    "name": "AVIMANYU SETHI",
+    "name": "PRATAP CHANDRA SARANGI",
     "party": "BJP",
-    "constituency": "BHADRAK (SC)  (ODISHA)",
-    "relation": "Late Arjun Charan Sethi",
-    "age": 53,
-    "voterEnrollment": "43 Bhandaripokhari (Orissa) constituency, at Serial no 505  in Part no   73",
-    "education": "Post Graduate MA From Utkal University, Vanivihar, Bhubneswar in 1992",
+    "constituency": "BALASORE  (ODISHA)",
+    "relation": "LATE GOBINDA CHANDRA SARANGI",
+    "age": 69,
+    "voterEnrollment": "Nilagiri (Orissa) constituency, at Serial no 886  in Part no   93",
+    "education": "Graduate Bachelor of Arts from Fakirmohan College Under Utlkal University 1975",
     "professions": {
-      "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
-      "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak"
+      "self": "Social Service, Member of Parliament",
+      "spouse": "NA"
     }
   },
   "otherElections": [
     {
       "declarationIn": "Lok Sabha 2019",
-      "declaredAssets": "Rs4,72,23,493~4 Crore+",
-      "declaredCases": 0
+      "declaredAssets": "Rs13,46,236~13 Lacs+",
+      "declaredCases": 7
     }
   ],
   "crimeOMeter": {
-    "cases": 0
+    "cases": 9
   },
   "incomeTax": [
     {
       "relation": "self",
       "pan": "Y",
       "year": "2022 - 2023",
-      "income": "2022 - 2023  **  <b>Rs 18,29,440</b>  18 Lacs+ ** 2021 - 2022  **  <b>Rs 15,55,910</b>  15 Lacs+ ** 2020 - 2021  **  <b>Rs 15,03,730</b>  15 Lacs+ ** 2019 - 2020  **  <b>Rs 12,70,090</b>  12 Lacs+ ** 2018 - 2019  **  <b>Rs 12,10,970</b>  12 Lacs+"
+      "income": "2022 - 2023  **  <b>Rs 13,47,441</b>  13 Lacs+ ** 2021 - 2022  **  <b>Rs 10,35,601</b>  10 Lacs+ ** 2020 - 2021  **  <b>Rs 9,64,848</b>  9 Lacs+ ** 2019 - 2020  **  <b>Rs 9,33,478</b>  9 Lacs+ ** 2018 - 2019  **  <b>Rs 0</b>"
     },
     {
       "relation": "spouse",
-      "pan": "Y",
-      "year": "2022 - 2023",
-      "income": "2022 - 2023  **  <b>Rs 8,25,280</b>  8 Lacs+ ** 2021 - 2022  **  <b>Rs 10,25,850</b>  10 Lacs+ ** 2020 - 2021  **  <b>Rs 9,06,640</b>  9 Lacs+ ** 2019 - 2020  **  <b>Rs 4,44,950</b>  4 Lacs+ ** 2018 - 2019  **  <b>Rs 4,12,628</b>  4 Lacs+"
+      "pan": "N",
+      "year": "None",
+      "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
     },
     {
       "relation": "huf",
@@ -43,7 +43,7 @@
     },
     {
       "relation": "dependent1",
-      "pan": "Y",
+      "pan": "N",
       "year": "None",
       "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
     },
@@ -61,45 +61,225 @@
     }
   ],
   "criminalCases": {
-    "briefIPC": [],
-    "pendingCases": [],
-    "convictedCases": [
-      "No Cases"
-    ]
+    "briefIPC": [
+      {
+        "count": 4,
+        "section": "Punishment for criminal intimidation (IPC Section-506)"
+      },
+      {
+        "count": 2,
+        "section": "Punishment for extortion (IPC Section-384)"
+      },
+      {
+        "count": 1,
+        "section": "Promoting enmity between different groups on grounds of religion, race, place of birth, residence, language, etc., and doing acts prejudicial to maintenance of harmony (IPC Section-153A)"
+      },
+      {
+        "count": 1,
+        "section": "False statement on oath or affirmation to public servant or person authorized to administer an oath or affirmation (IPC Section-181)"
+      },
+      {
+        "count": 1,
+        "section": "Criminal breach of trust by public servant, or by banker, merchant or agent (IPC Section-409)"
+      },
+      {
+        "count": 4,
+        "section": "Obscene acts and songs (IPC Section-294)"
+      },
+      {
+        "count": 4,
+        "section": "Punishment for voluntarily causing hurt (IPC Section-323)"
+      },
+      {
+        "count": 4,
+        "section": "Acts done by several persons in furtherance of common intention (IPC Section-34)"
+      },
+      {
+        "count": 3,
+        "section": "Mischief causing damage to the amount of fifty rupees (IPC Section-427)"
+      },
+      {
+        "count": 2,
+        "section": "Disobedience to order duly promulgated by public servant (IPC Section-188)"
+      },
+      {
+        "count": 1,
+        "section": "Punishment for forgery (IPC Section-465)"
+      },
+      {
+        "count": 1,
+        "section": "Furnishing false information (IPC Section-177)"
+      },
+      {
+        "count": 1,
+        "section": "Punishment for Being member of an unlawful assembly (IPC Section-143)"
+      },
+      {
+        "count": 1,
+        "section": "Punishment for Rioting (IPC Section-147)"
+      },
+      {
+        "count": 1,
+        "section": "Illegal purchase or bid for property offered for sale by authority of public servan (IPC Section-185)"
+      },
+      {
+        "count": 1,
+        "section": "Every member of unlawful assembly guilty of offence committed in prosecution of common object (IPC Section-149)"
+      },
+      {
+        "count": 1,
+        "section": "Mischief (IPC Section-425)"
+      },
+      {
+        "count": 1,
+        "section": "Using as genuine a forged document or electronic record (IPC Section-471)"
+      }
+    ],
+    "pendingCases": [
+      {
+        "serialNo": "1",
+        "firNo": "Nil",
+        "caseNo": "GR Case No. 72/2004",
+        "court": "JMFC(R) Balasore",
+        "ipcSections": "147, 294, 323, 506, 425, 149",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "2",
+        "firNo": "Nil",
+        "caseNo": "CT Case No. 103/2009",
+        "court": "JMFC(R), Balasore",
+        "ipcSections": "185, 427",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "3",
+        "firNo": "Nil",
+        "caseNo": "CT Case No. 105/2009",
+        "court": "JMFC(R), Balasore",
+        "ipcSections": "188, 427",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "4",
+        "firNo": "Nil",
+        "caseNo": "GR Case No. 150/2013",
+        "court": "ADJ, Bhubaneswar",
+        "ipcSections": "143, 294, 323, 506, 34",
+        "otherDetails": "Section 3(i)(x) of SC ST POA Act.",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "5",
+        "firNo": "Nil",
+        "caseNo": "GR Case No. 66/2015",
+        "court": "ADJ, Bhubaneswar",
+        "ipcSections": "153A, 34",
+        "otherDetails": "Section 32 PA",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "6",
+        "firNo": "Nil",
+        "caseNo": "GR Case No. 156/97",
+        "court": "JMFC, Jajpur Road",
+        "ipcSections": "294, 323, 384, 506, 34",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "7",
+        "firNo": "Nil",
+        "caseNo": "CT Case No. 189/2003",
+        "court": "JMFC, Nilagiri",
+        "ipcSections": "294, 323, 384, 506, 34",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "8",
+        "firNo": "Nil",
+        "caseNo": "CT Case No. 779/2009",
+        "court": "JMFC, Nilagiri",
+        "ipcSections": "188, 427",
+        "otherDetails": "Nil",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      },
+      {
+        "serialNo": "9",
+        "firNo": "Nil",
+        "caseNo": "CT Case No. 95/2020",
+        "court": "Nil",
+        "ipcSections": "177, 181, 465, 471, 409",
+        "otherDetails": "Section 125A of RPA",
+        "chargesFramed": "No",
+        "dateChargesFramed": "Nil",
+        "appealFiled": "No",
+        "appealDetails": "Nil"
+      }
+    ],
+    "convictedCases": []
   },
   "movableAssets": [
     {
       "srNo": "i",
       "description": "Cash",
-      "self": "Rs 2,13,533",
-      "spouse": "1,43,850 1 Lacs+",
+      "self": "Rs 25,515",
+      "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 3,57,383"
+      "total": "Rs 25,515"
     },
     {
       "srNo": "ii",
       "description": "Deposits in Banks, Financial Institutions and Non-Banking Financial Companies",
-      "self": "FD Indusland Bank No 39801010000xxxxx: Rs 753\nAxis Bank No 91101006085xxxxx: Rs 33,819\nIDBI Bank No 4021040000xxxxx: Rs 3,098\nIDBI No 40210200000xxxxx: Rs 1,19,193\nSBI No 1140344xxxxx: Rs 1,05,917\nFD In Indusind Bank No 18231901: Rs 4,08,797\nHDFC No 1956193000xxxxx: Rs 6,088",
-      "spouse": "IDBI No 40210400009xxxxx 1,93,565 1 Lacs+",
-      "huf": "Nil",
-      "dependent1": "No 5010007521xxxxx 13,531 13 Thou+",
-      "dependent2": "No 5010007521xxxxx 25,429 25 Thou+",
-      "dependent3": "Nil",
-      "total": "Rs 9,10,190"
-    },
-    {
-      "srNo": "iii",
-      "description": "Bonds, Debentures and Shares in companies",
-      "self": "SBI Mutual Funds No 1447xxxxx: Rs 54,32,028\nABSL Mutual Fund No 101601xxxxx: Rs 5,16,000\nFranklin Templeton Mutual No 1933xxxxx: Rs 65,796\nInvestment in shree Jagannath Gas agency: Rs 77,10,473\nDSP Mutual Fund No 2766396: Rs 19,910",
-      "spouse": "Investment in shree Jagannath Gas agency 54,33,348 54 Lacs+",
+      "self": "UCO Bank Nilagiri No 04320100xxxxx 44: Rs 46,381\nUCO Bank, Bhubaneswar A / c 44 066401009476: Rs 86,246\nHPO, Balasore No 03881000xxxxx: Rs 402\nSBI, New Delhi: Rs 955\nUBI, Balasore No 50060201004xxxxx: Rs 1,000",
+      "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 1,91,77,555"
+      "total": "Rs 1,34,984"
+    },
+    {
+      "srNo": "iii",
+      "description": "Bonds, Debentures and Shares in companies",
+      "self": "SBI, New Delhi 69 A/c384903080: Rs 7,93,818\nSBI mutual Fund: Rs 27,00,000",
+      "spouse": "Nil",
+      "huf": "Nil",
+      "dependent1": "Nil",
+      "dependent2": "Nil",
+      "dependent3": "Nil",
+      "total": "Rs 34,93,818"
     },
     {
       "srNo": "iv",
@@ -114,13 +294,13 @@
     },
     {
       "srNo": "(b)LIC or other insurance Policies",
-      "description": "Health Insurance MET LifeNo 0053xxxxx 6,94,319 6 Lacs+ Max Life No 87307xxxxx 6,00,000 6 Lacs+ LIC No 58736xxxxx 2,14,022 2 Lacs+ LIC No 8449xxxxx 16,06,878 16 Lacs+ LIC No 42xxxxx 4,27,500 4 Lacs+ LIC No 85818xxxxx 5,28,833 5 Lacs+ LIC No 58540xxxxx 6,62,421 6 Lacs+ LIC No 58540xxxxx 3,98,040 3 Lacs+",
-      "self": "Max Life No 873079xxxxx: Rs 6,00,000\nLIC No 85818xxxxx: Rs 5,54,149",
+      "description": "SBI LIfe 9,00,000 9 Lacs+",
+      "self": "Nil",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
-      "dependent3": "Rs 62,86,162 62 Lacs+",
+      "dependent3": "Rs 9,00,000 9 Lacs+",
       "total": "Nil"
     },
     {
@@ -137,59 +317,59 @@
     {
       "srNo": "vi",
       "description": "Motor Vehicles (details of make, etc.)",
-      "self": "Maruti S-Cross OD33AD1933: Rs 13,00,000\nToyota Fortunner OD33AC1933: Rs 37,00,000",
+      "self": "Bicycle Atlas Model 1995: Rs 270",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 50,00,000"
+      "total": "Rs 270"
     },
     {
       "srNo": "vii",
       "description": "Jewellery (give details weight value)",
-      "self": "Gold 313gm: Rs 20,34,500",
-      "spouse": "Gold 385gm 25,02,500 25 Lacs+",
+      "self": "Nil",
+      "spouse": "Nil",
       "huf": "Nil",
-      "dependent1": "Gold 10gm 65,000 65 Thou+",
-      "dependent2": "Gold 15mg 97,500 97 Thou+",
+      "dependent1": "Nil",
+      "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 46,99,500"
+      "total": "Rs 70"
     },
     {
       "srNo": "viii",
       "description": "Other assets, such as values of claims / interests",
-      "self": "Household article: Rs 4,92,850",
-      "spouse": "3,45,650 3 Lacs+",
+      "self": "Nil",
+      "spouse": "Nil",
       "huf": "Nil",
-      "dependent1": "7,500 7 Thou+",
-      "dependent2": "7,500 7 Thou+",
+      "dependent1": "Nil",
+      "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 8,53,500"
+      "total": "Rs 70"
     }
   ],
   "immovableAssets": [
     {
       "srNo": "i",
       "description": "Agricultural Land",
-      "self": "Mouza Mathasahi\nKh. No  776/2678 | Value: Rs 1,28,00,000",
+      "self": "1.Mouza: Kahalia\n\nKhata 120\n\n2. Mouza: Kahalia\n\nKhata 119\n\n3. Mouza: Kahalia\n\nKhata 118\n\n4. Mouza: Raigaon\n\nKhata 463/56\n\n5.Mouza: Kahalia\n\nKhata 624\n\n6.Mouza: Dobasila\n\nKhata 805\n\n7\n\nMouza:\n\nGopinathpur\n\nKhata 242\n\n8. Mouza:\n\nDhobasila\n\nKhata 804\n\n1.Ac.0.170\n\n2.Ac.4.630\n\n3. Ac 2.73\n\n4.Ac 2.49\n\n5. Ac0.68\n\n6. Ac 0.26\n\n7 Ac 0.50\n\n8. Ac 0.18, Rs. 2000000.00 Share 1/5 | Value: Rs 4,00,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 1,28,00,000"
+      "total": "Rs 4,00,000"
     },
     {
       "srNo": "ii",
       "description": "Non Agricultural Land",
-      "self": "Mouza Odanga\nKh. No. 286 | Value: Rs 12,10,000",
+      "self": "Nil",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 12,10,000"
+      "total": "Rs 70"
     },
     {
       "srNo": "iii",
@@ -205,13 +385,13 @@
     {
       "srNo": "iv",
       "description": "Residential Buildings",
-      "self": "Ranasinghpur\nBhubneswar\nKh. No. 254\nPlot No. 11/737 | Value: Rs 1,95,00,000",
+      "self": "Thatched house with mud wall in Muoza Kahalia | Value: Rs 30,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 1,95,00,000"
+      "total": "Rs 30,000"
     },
     {
       "srNo": "v",
@@ -229,34 +409,34 @@
     {
       "srNo": "i",
       "description": "Loans from Banks / FIs",
-      "self": "HDFC Bank Maruti S-Cross: Rs 6,13,324\nHDFC Bank Car: Rs 2,71,691\nIB Fortuner Loan: Rs 13,73,422\nHDFC PL: Rs 2,27,006\nAxis Bank HB Loan: Rs 30,76,923\nHDFC Credit Card: Rs 1,58,081\nSBI Credit Card: Rs 1,59,222\nLoan from LIC: Rs 13,01,567\nLoan from LIC: Rs 6,27,936",
+      "self": "Nil",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 78,09,172"
+      "total": "Rs 70"
     }
   ],
   "profession": {
-    "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
-    "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak"
+    "self": "Social Service, Member of Parliament",
+    "spouse": "NA"
   },
   "sourcesOfIncome": {
-    "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
-    "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak",
-    "dependent": "Nil"
+    "self": "Agriculture, Salary",
+    "spouse": "NA",
+    "dependent": "NA"
   },
   "contracts": {
-    "candidate": "NA",
-    "spouse": "NA",
-    "dependents": "NA",
+    "candidate": "NIL",
+    "spouse": "NIL",
+    "dependents": "NIL",
     "huf": "NA",
     "partnerships": "NA",
     "privateCompanies": "NA"
   },
   "summary": {
-    "totalAssets": "Rs 7,07,94,290 ~7 Crore+",
-    "totalLiabilities": "Rs 1,06,59,172 ~1 Crore+"
+    "totalAssets": "Rs 49,59,072 ~49 Lacs+",
+    "totalLiabilities": "Nil"
   }
 }

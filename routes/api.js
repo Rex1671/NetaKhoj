@@ -159,7 +159,7 @@ router.get('/health', (req, res) => {
   const browserStats = browserPool.getStats();
   const cacheStats = cacheService.getStats();
 
-  res.json({
+  res.status(200).json({
     status: 'healthy',
     uptime: process.uptime(),
     memory: {

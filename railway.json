@@ -30,7 +30,9 @@
     },
     "variables": {
       "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
-      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/chromium-browser"
+      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/chromium-browser",
+      "BEHIND_PROXY": "true",
+      "NODE_ENV": "production"
     }
   }
 }

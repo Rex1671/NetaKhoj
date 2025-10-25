@@ -2,6 +2,9 @@
   "name": "fixkaroweb",
   "version": "2.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -23,7 +26,7 @@
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.12",
     "p-retry": "^7.1.0",
-    "puppeteer": "^21.5.2",
+    "puppeteer": "^24.26.1",
     "useragent": "^2.3.0",
     "uuid": "^9.0.1",
     "winston": "^3.18.3",
