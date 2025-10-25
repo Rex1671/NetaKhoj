@@ -1,0 +1,4164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Member Profile | MP/MLA Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="member_detail.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1a1a2e;
+      overflow-x: hidden;
+    }
+
+    /* ========================================
+       ANIMATED BACKGROUND PARTICLES
+    ======================================== */
+    .background-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float-particle linear infinite;
+    }
+
+    @keyframes float-particle {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========================================
+       SCROLL REVEAL ANIMATIONS
+    ======================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ========================================
+       ENHANCED LOADING SCREEN
+    ======================================== */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .loader-content {
+      text-align: center;
+      max-width: 500px;
+      padding: 0 20px;
+    }
+
+    .spinner-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 30px;
+    }
+
+    .spinner {
+      border: 8px solid rgba(99, 102, 241, 0.1);
+      border-top: 8px solid #a78bfa;
+      border-right: 8px solid #ec4899;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 40px rgba(167, 139, 250, 0.5);
+    }
+
+    .spinner-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.5em;
+      animation: pulse 1.5s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.8));
+    }
+
+    .loading-text {
+      font-size: 1.6em;
+      font-weight: 800;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #a78bfa, #ec4899, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .loading-subtitle {
+      font-size: 1.1em;
+      opacity: 0.8;
+      margin-bottom: 30px;
+      color: #c4b5fd;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(167, 139, 250, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899, #f59e0b);
+      border-radius: 20px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.8);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .loading-steps {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 25px;
+      font-size: 0.85em;
+    }
+
+    .loading-step {
+      opacity: 0.3;
+      transition: all 0.4s ease;
+      font-size: 2em;
+      filter: grayscale(100%);
+    }
+
+    .loading-step.active {
+      opacity: 1;
+      transform: scale(1.3);
+      filter: grayscale(0%) drop-shadow(0 0 15px rgba(167, 139, 250, 0.9));
+    }
+
+    .loading-step.completed {
+      opacity: 0.6;
+      filter: grayscale(50%);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================
+       PREMIUM HEADER CARD - ENHANCED 3D
+    ======================================== */
+    .header-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 
+        0 20px 60px rgba(0,0,0,0.15),
+        0 0 0 1px rgba(255,255,255,0.5) inset,
+        0 0 100px rgba(167, 139, 250, 0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      position: relative;
+      overflow: hidden;
+      animation: slideDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(167, 139, 250, 0.1), transparent);
+      animation: rotate 10s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-section {
+      display: flex;
+      gap: 40px;
+      align-items: start;
+      flex-wrap: wrap;
+    }
+
+    .profile-image-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      animation: fadeInScale 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 25px;
+      object-fit: cover;
+      border: 5px solid transparent;
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(135deg, #667eea, #764ba2, #f093fb) border-box;
+      box-shadow: 
+        0 15px 40px rgba(102, 126, 234, 0.3),
+        0 0 0 10px rgba(255,255,255,0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05) rotate(2deg);
+      box-shadow: 
+        0 20px 60px rgba(102, 126, 234, 0.5),
+        0 0 0 15px rgba(255,255,255,0.2);
+    }
+
+    .verification-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.5em;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+      border: 3px solid white;
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); box-shadow: 0 6px 25px rgba(16, 185, 129, 0.7); }
+    }
+
+    .profile-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .member-name {
+      font-size: 3em;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      line-height: 1.2;
+      text-shadow: 0 2px 20px rgba(102, 126, 234, 0.3);
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .member-role-section {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .role-badge, .constituency-badge, .party-badge {
+      padding: 12px 24px;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 1.1em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .role-badge::before,
+    .constituency-badge::before,
+    .party-badge::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .role-badge:hover::before,
+    .constituency-badge:hover::before,
+    .party-badge:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .role-badge {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      animation-delay: 0.3s;
+    }
+
+    .constituency-badge {
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      animation-delay: 0.4s;
+    }
+
+    .party-badge {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: white;
+      animation-delay: 0.5s;
+    }
+
+    .role-badge:hover, .constituency-badge:hover, .party-badge:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .info-item {
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      padding: 18px;
+      border-radius: 15px;
+      border-left: 4px solid;
+      border-image: linear-gradient(180deg, #667eea, #764ba2) 1;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    .info-item:nth-child(1) { animation-delay: 0.6s; }
+    .info-item:nth-child(2) { animation-delay: 0.7s; }
+    .info-item:nth-child(3) { animation-delay: 0.8s; }
+    .info-item:nth-child(4) { animation-delay: 0.9s; }
+    .info-item:nth-child(5) { animation-delay: 1s; }
+    .info-item:nth-child(6) { animation-delay: 1.1s; }
+
+    .info-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+      background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    }
+
+    .info-label {
+      font-size: 0.85em;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .info-value {
+      font-size: 1.15em;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    /* ========================================
+       FIXED QUICK STATS - 3 COLUMNS MAX
+    ======================================== */
+    .quick-stats-banner {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      color: white;
+      padding: 50px 40px;
+      border-radius: 30px;
+      margin: 40px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      max-width: 100%;
+      gap: 30px;
+      box-shadow: 
+        0 20px 60px rgba(30, 27, 75, 0.6),
+        0 0 100px rgba(167, 139, 250, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
+    }
+
+    @media (min-width: 1024px) {
+      .quick-stats-banner {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Animated mesh gradient background */
+    .quick-stats-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+      animation: meshMove 15s ease-in-out infinite;
+    }
+
+    @keyframes meshMove {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Floating orbs in background */
+    .quick-stats-banner::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.2), transparent 70%);
+      border-radius: 50%;
+      top: -100px;
+      right: -100px;
+      animation: float-orb 20s ease-in-out infinite;
+      filter: blur(40px);
+    }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-100px, 100px) scale(1.2); }
+    }
+
+    .quick-stat-item {
+      text-align: center;
+      padding: 35px 25px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    /* Gradient border animation */
+    .quick-stat-item::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #a78bfa, #ec4899, #8b5cf6, #06b6d4);
+      border-radius: 25px;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.5s ease;
+      animation: borderRotate 3s linear infinite;
+      background-size: 300% 300%;
+    }
+
+    @keyframes borderRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Inner glow effect */
+    .quick-stat-item::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+      pointer-events: none;
+    }
+
+    .quick-stat-item:hover::before {
+      opacity: 1;
+    }
+
+    .quick-stat-item:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .quick-stat-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-15px) rotateX(5deg) rotateY(5deg) scale(1.05);
+      box-shadow: 
+        0 25px 60px rgba(0,0,0,0.4),
+        0 0 80px rgba(167, 139, 250, 0.6),
+        inset 0 0 60px rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Icon container with floating animation */
+    .quick-stat-icon {
+      font-size: 3.5em;
+      margin-bottom: 15px;
+      display: inline-block;
+      filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.8));
+      animation: float-icon 3s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    @keyframes float-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .quick-stat-item:hover .quick-stat-icon {
+      transform: scale(1.2) rotate(10deg);
+      filter: drop-shadow(0 0 30px rgba(167, 139, 250, 1));
+    }
+
+    .quick-stat-value {
+      font-size: 2.8em;
+      font-weight: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff, #e0e7ff, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 10px rgba(255,255,255,0.3));
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .quick-stat-item:hover .quick-stat-value {
+      transform: scale(1.1);
+      filter: drop-shadow(0 4px 20px rgba(255,255,255,0.6));
+    }
+
+    /* Counter animation */
+    @keyframes countUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .quick-stat-value.counting {
+      animation: countUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .quick-stat-label {
+      font-size: 1em;
+      color: #e0e7ff;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    .quick-stat-item:hover .quick-stat-label {
+      opacity: 1;
+      letter-spacing: 3px;
+      color: #ffffff;
+    }
+
+    /* Stagger animation for stat items */
+    .quick-stat-item:nth-child(1) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards; }
+    .quick-stat-item:nth-child(2) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards; }
+    .quick-stat-item:nth-child(3) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards; }
+    .quick-stat-item:nth-child(4) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards; }
+    .quick-stat-item:nth-child(5) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards; }
+    .quick-stat-item:nth-child(6) { animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards; }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Sparkle effect on hover */
+    .quick-stat-item .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .quick-stat-item:hover .sparkle {
+      animation: sparkle-anim 1s ease-out;
+    }
+
+    @keyframes sparkle-anim {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0);
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1);
+      }
+    }
+
+    /* ========================================
+       DATA ROWS - ENHANCED
+    ======================================== */
+    .data-row {
+      margin: 12px 0;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+      border-radius: 15px;
+      border-left: 4px solid #a78bfa;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .data-row::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .data-row:hover::before {
+      left: 100%;
+    }
+
+    .data-row:hover {
+      background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+      border-left-color: #8b5cf6;
+      transform: translateX(8px);
+      box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .data-label {
+      font-weight: 700;
+      color: #5b21b6;
+      font-size: 0.95em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .data-value {
+      color: #1e1b4b;
+      font-weight: 700;
+      font-size: 1.1em;
+    }
+
+    .amount-large {
+      font-size: 1.6em;
+      background: linear-gradient(135deg, #10b981, #059669);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+    }
+
+    /* ========================================
+       CARD ITEMS - 3D ENHANCED
+    ======================================== */
+    .card-item {
+      background: white;
+      padding: 28px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .card-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, currentColor, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card-item:hover {
+      transform: translateY(-8px) scale(1.02) rotateX(2deg);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: currentColor;
+    }
+
+    .card-item:hover::before {
+      opacity: 1;
+    }
+
+    .card-item.bank {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #3b82f6, #1d4ed8) 1;
+      color: #3b82f6;
+    }
+
+    .card-item.bank:hover {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    }
+
+    .card-item.vehicle {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #f59e0b, #d97706) 1;
+      color: #f59e0b;
+    }
+
+    .card-item.vehicle:hover {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    }
+
+    .card-item.property {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #10b981, #059669) 1;
+      color: #10b981;
+    }
+
+    .card-item.property:hover {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+
+    .card-item.loan {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #ef4444, #dc2626) 1;
+      color: #ef4444;
+    }
+
+    .card-item.loan:hover {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    }
+
+    .card-item.income {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #8b5cf6, #7c3aed) 1;
+      color: #8b5cf6;
+    }
+
+    .card-item.income:hover {
+      background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+    }
+
+    .card-item.jewellery {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #eab308, #ca8a04) 1;
+      color: #eab308;
+    }
+
+    .card-item.jewellery:hover {
+      background: linear-gradient(135deg, #fefce8, #fef9c3);
+    }
+
+    .card-item.insurance {
+      border-left: 5px solid;
+      border-image: linear-gradient(180deg, #06b6d4, #0891b2) 1;
+      color: #06b6d4;
+    }
+
+    .card-item.insurance:hover {
+      background: linear-gradient(135deg, #ecfeff, #cffafe);
+    }
+
+    /* ========================================
+       BADGES - ENHANCED
+    ======================================== */
+    .badge {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .badge:hover::before {
+      width: 200px;
+      height: 200px;
+    }
+
+    .badge:hover {
+      transform: scale(1.1) rotate(-2deg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .badge-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .badge-warning {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+    }
+
+    .badge-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+    }
+
+    .badge-info {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .badge-purple {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    /* ========================================
+       SECTION HEADERS - ANIMATED
+    ======================================== */
+    .section-header-main {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      color: white;
+      padding: 30px 35px;
+      border-radius: 20px;
+      margin: 50px 0 30px 0;
+      box-shadow: 
+        0 10px 30px rgba(30, 27, 75, 0.4),
+        0 0 60px rgba(167, 139, 250, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-header-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: slide 3s infinite;
+    }
+
+    @keyframes slide {
+      0%, 100% { left: -100%; }
+      50% { left: 100%; }
+    }
+
+    .section-header-main h2 {
+      margin: 0;
+      font-size: 2em;
+      font-weight: 900;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header-main h2 .icon {
+      font-size: 1.4em;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+      animation: bounce-icon 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* ========================================
+       SUMMARY CARDS - GLASSMORPHISM
+    ======================================== */
+    .summary-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(255,255,255,0.5) inset;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .summary-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 15px 45px rgba(0,0,0,0.15),
+        0 0 0 1px rgba(255,255,255,0.7) inset;
+    }
+
+    .summary-card-title {
+      font-size: 1.3em;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .summary-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
+    }
+
+    .summary-item {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+      border-radius: 15px;
+      border: 2px solid #e9d5ff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .summary-item:hover {
+      transform: translateY(-5px) scale(1.05);
+      border-color: #a78bfa;
+      box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
+      background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+    }
+
+    .summary-item-value {
+      font-size: 2em;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .summary-item-label {
+      font-size: 0.9em;
+      color: #5b21b6;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========================================
+       ACTION BUTTONS - ENHANCED 3D
+    ======================================== */
+    .action-buttons {
+      position: fixed;
+      bottom: 35px;
+      right: 35px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .action-btn {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.8em;
+      cursor: pointer;
+      box-shadow: 
+        0 8px 25px rgba(0,0,0,0.25),
+        0 0 0 3px rgba(255,255,255,0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    }
+
+    .action-btn:nth-child(1) { animation-delay: 0.1s; }
+    .action-btn:nth-child(2) { animation-delay: 0.2s; }
+    .action-btn:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .action-btn:hover::before {
+      width: 100%;
+      height: 100%;
+    }
+
+    .action-btn:active {
+      transform: scale(0.9);
+    }
+
+    .action-btn:hover {
+      transform: scale(1.2) rotate(10deg);
+      box-shadow: 
+        0 15px 40px rgba(0,0,0,0.35),
+        0 0 0 5px rgba(255,255,255,0.3);
+    }
+
+    .action-btn.print {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .action-btn.share {
+      background: linear-gradient(135deg, #06b6d4, #0891b2);
+    }
+
+    .action-btn.top {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    /* ========================================
+       TABLES - MODERN STYLING
+    ======================================== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    table th {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: white;
+      padding: 18px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 0.95em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    table td {
+      padding: 15px 18px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    table tr {
+      transition: all 0.3s ease;
+    }
+
+    table tr:hover {
+      background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+      transform: scale(1.01);
+    }
+
+    table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ========================================
+       GRID LAYOUTS
+    ======================================== */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 25px;
+    }
+
+    .section-divider {
+      margin: 50px 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+    }
+
+    /* ========================================
+       DETAILS SECTION
+    ======================================== */
+    .details-section {
+      margin: 30px 0;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .chart-title {
+      font-size: 1.5em;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chart-title-icon {
+      font-size: 1.3em;
+      filter: grayscale(0);
+      animation: wiggle 2s ease-in-out infinite;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-5deg); }
+      75% { transform: rotate(5deg); }
+    }
+
+    .toggle-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toggle-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .toggle-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .toggle-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    .toggle-btn:active {
+      transform: translateY(-1px);
+    }
+
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .collapsible-content.active {
+      max-height: 5000px;
+    }
+
+    /* ========================================
+       PERFORMANCE STATS
+    ======================================== */
+    .performance-section {
+      margin: 40px 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid transparent;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      border-color: #a78bfa;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .stat-title {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: #1e1b4b;
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-value {
+      font-size: 2.5em;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .comparison-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .comparison-bar {
+      display: grid;
+      grid-template-columns: 100px 1fr 80px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-label {
+      font-size: 0.85em;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .bar-container {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer-bar 2s infinite;
+    }
+
+    @keyframes shimmer-bar {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .bar-value {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #334155;
+      text-align: right;
+    }
+
+    /* ========================================
+       ASSET SUMMARY
+    ======================================== */
+    .asset-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+
+    .asset-card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      border: 2px solid #e2e8f0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .asset-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .asset-card:hover::before {
+      opacity: 1;
+    }
+
+    .asset-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #a78bfa;
+    }
+
+    .asset-card-title {
+      font-size: 1em;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .asset-card-value {
+      font-size: 2.2em;
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      word-break: break-word;
+    }
+
+    /* ========================================
+       NO DATA PLACEHOLDER
+    ======================================== */
+    .no-data-placeholder {
+      text-align: center;
+      padding: 60px 30px;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border-radius: 20px;
+      border: 2px dashed #cbd5e1;
+    }
+
+    .no-data-placeholder .icon {
+      font-size: 5em;
+      margin-bottom: 20px;
+      opacity: 0.6;
+      animation: float-icon 3s ease-in-out infinite;
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+    ======================================== */
+    @media (max-width: 768px) {
+      .member-name {
+        font-size: 2em;
+      }
+
+      .profile-section {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-image-wrapper {
+        margin: 0 auto;
+      }
+
+      .quick-stats-banner {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 25px;
+      }
+
+      .quick-stat-value {
+        font-size: 2em;
+      }
+
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .action-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.5em;
+      }
+
+      .comparison-bar {
+        grid-template-columns: 80px 1fr 70px;
+      }
+    }
+
+    /* ========================================
+       PRINT STYLES
+    ======================================== */
+     @media print {
+      @page {
+        size: A4;
+        margin: 15mm 10mm 15mm 10mm;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: white !important;
+        font-size: 11pt !important;
+        line-height: 1.5 !important;
+        color: #000 !important;
+      }
+
+      /* PDF Watermark */
+      body::before {
+        content: "OFFICIAL DOCUMENT";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 120pt;
+        font-weight: 100;
+        color: rgba(0, 0, 0, 0.05);
+        z-index: -1;
+        white-space: nowrap;
+        font-family: 'Inter', sans-serif;
+      }
+
+      /* Header with timestamp */
+      .pdf-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #667eea;
+      }
+
+      .pdf-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 10mm;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+      }
+
+      /* Hide non-print elements */
+      .action-buttons,
+      .toggle-btn,
+      #backToTop,
+      .background-particles,
+      #loading-screen,
+      .verification-badge {
+        display: none !important;
+      }
+
+      /* Show all collapsed content */
+      .collapsible-content {
+        display: block !important;
+        max-height: none !important;
+        opacity: 1 !important;
+      }
+
+      /* Dashboard container adjustments */
+      .dashboard-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* Enhanced header card for PDF */
+      .header-card {
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%) !important;
+        border: 2px solid #667eea !important;
+        border-radius: 15px !important;
+        padding: 20px !important;
+        margin-bottom: 20px !important;
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+        position: relative !important;
+      }
+
+      .header-card::before {
+        display: none !important;
+      }
+
+      /* Profile section optimization */
+      .profile-section {
+        display: flex !important;
+        gap: 20px !important;
+        align-items: flex-start !important;
+      }
+
+      .profile-image-wrapper {
+        flex-shrink: 0 !important;
+      }
+
+      .profile-image {
+        width: 120px !important;
+        height: 120px !important;
+        border-radius: 15px !important;
+        border: 3px solid #667eea !important;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.2) !important;
+      }
+
+      .member-name {
+        font-size: 24pt !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        margin-bottom: 10px !important;
+      }
+
+      /* Role badges for print */
+      .role-badge, .constituency-badge, .party-badge {
+        display: inline-block !important;
+        padding: 6px 12px !important;
+        border-radius: 8px !important;
+        font-size: 10pt !important;
+        font-weight: 600 !important;
+        margin-right: 8px !important;
+        margin-bottom: 8px !important;
+        border: 1px solid !important;
+      }
+
+      .role-badge {
+        background: #e0e7ff !important;
+        border-color: #6366f1 !important;
+        color: #4338ca !important;
+      }
+
+      .constituency-badge {
+        background: #fce7f3 !important;
+        border-color: #ec4899 !important;
+        color: #be185d !important;
+      }
+
+      .party-badge {
+        background: #fed7aa !important;
+        border-color: #f97316 !important;
+        color: #c2410c !important;
+      }
+
+      /* Info grid for print */
+      .info-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-top: 15px !important;
+      }
+
+      .info-item {
+        background: #f8fafc !important;
+        padding: 10px !important;
+        border-radius: 8px !important;
+        border-left: 3px solid #667eea !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Quick stats banner for print */
+      .quick-stats-banner {
+        background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
+        border: 2px solid #8b5cf6 !important;
+        padding: 20px !important;
+        border-radius: 12px !important;
+        margin: 20px 0 !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 15px !important;
+        page-break-inside: avoid !important;
+      }
+
+      .quick-stat-item {
+        background: white !important;
+        border: 1px solid #e9d5ff !important;
+        border-radius: 8px !important;
+        padding: 15px !important;
+        text-align: center !important;
+      }
+
+      .quick-stat-icon {
+        font-size: 24pt !important;
+        margin-bottom: 5px !important;
+      }
+
+      .quick-stat-value {
+        font-size: 18pt !important;
+        font-weight: 800 !important;
+        color: #7c3aed !important;
+        margin: 5px 0 !important;
+      }
+
+      .quick-stat-label {
+        font-size: 9pt !important;
+        color: #6b7280 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+      }
+
+      /* Section headers for print */
+      .section-header-main {
+        background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%) !important;
+        border: 2px solid #6366f1 !important;
+        color: #312e81 !important;
+        padding: 15px 20px !important;
+        border-radius: 10px !important;
+        margin: 20px 0 15px 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .section-header-main h2 {
+        font-size: 16pt !important;
+        color: #312e81 !important;
+        margin: 0 !important;
+      }
+
+      /* Performance stats for print */
+      .stat-card {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 15px !important;
+      }
+
+      .stat-value {
+        font-size: 20pt !important;
+        color: #6366f1 !important;
+        margin: 10px 0 !important;
+      }
+
+      /* Tables for print */
+      table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 15px 0 !important;
+        font-size: 9pt !important;
+        page-break-inside: auto !important;
+      }
+
+      table thead {
+        display: table-header-group !important;
+      }
+
+      table th {
+        background: #4c1d95 !important;
+        color: white !important;
+        padding: 8px !important;
+        font-weight: 600 !important;
+        font-size: 9pt !important;
+        border: 1px solid #4c1d95 !important;
+      }
+
+      table td {
+        padding: 6px 8px !important;
+        border: 1px solid #e2e8f0 !important;
+        font-size: 9pt !important;
+      }
+
+      table tr {
+        page-break-inside: avoid !important;
+      }
+
+      table tr:nth-child(even) {
+        background: #f8fafc !important;
+      }
+
+      /* Summary cards for print */
+      .summary-card {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        margin-bottom: 15px !important;
+        page-break-inside: avoid !important;
+      }
+
+      .summary-card-title {
+        font-size: 12pt !important;
+        font-weight: 700 !important;
+        color: #4c1d95 !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 5px !important;
+        border-bottom: 2px solid #e9d5ff !important;
+      }
+
+      /* Card items for print */
+      .card-item {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 12px !important;
+        border-radius: 6px !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 10px !important;
+      }
+
+      .card-item.bank {
+        border-left: 4px solid #3b82f6 !important;
+        background: #eff6ff !important;
+      }
+
+      .card-item.vehicle {
+        border-left: 4px solid #f59e0b !important;
+        background: #fffbeb !important;
+      }
+
+      .card-item.property {
+        border-left: 4px solid #10b981 !important;
+        background: #f0fdf4 !important;
+      }
+
+      .card-item.loan {
+        border-left: 4px solid #ef4444 !important;
+        background: #fef2f2 !important;
+      }
+
+      /* Data rows for print */
+      .data-row {
+        padding: 8px !important;
+        margin: 5px 0 !important;
+        background: #f9fafb !important;
+        border-radius: 4px !important;
+        border-left: 3px solid #8b5cf6 !important;
+      }
+
+      .data-label {
+        font-size: 8pt !important;
+        color: #4b5563 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+      }
+
+      .data-value {
+        font-size: 10pt !important;
+        color: #111827 !important;
+        font-weight: 500 !important;
+      }
+
+      /* Badges for print */
+      .badge {
+        display: inline-block !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        font-size: 8pt !important;
+        font-weight: 600 !important;
+      }
+
+      .badge-success {
+        background: #d1fae5 !important;
+        color: #065f46 !important;
+        border: 1px solid #10b981 !important;
+      }
+
+      .badge-warning {
+        background: #fed7aa !important;
+        color: #92400e !important;
+        border: 1px solid #f59e0b !important;
+      }
+
+      .badge-danger {
+        background: #fee2e2 !important;
+        color: #991b1b !important;
+        border: 1px solid #ef4444 !important;
+      }
+
+      .badge-info {
+        background: #dbeafe !important;
+        color: #1e3a8a !important;
+        border: 1px solid #3b82f6 !important;
+      }
+
+      .badge-purple {
+        background: #e9d5ff !important;
+        color: #581c87 !important;
+        border: 1px solid #8b5cf6 !important;
+      }
+
+      /* Amount display for print */
+      .amount-large {
+        font-size: 14pt !important;
+        font-weight: 800 !important;
+        color: #059669 !important;
+      }
+
+      /* Asset summary for print */
+      .asset-summary {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+        margin: 15px 0 !important;
+      }
+
+      .asset-card {
+        background: white !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 12px !important;
+        border-radius: 6px !important;
+        text-align: center !important;
+      }
+
+      .asset-card-title {
+        font-size: 9pt !important;
+        color: #4b5563 !important;
+        font-weight: 600 !important;
+        margin-bottom: 5px !important;
+      }
+
+      .asset-card-value {
+        font-size: 12pt !important;
+        font-weight: 700 !important;
+        color: #6366f1 !important;
+      }
+
+      /* Page breaks */
+      .section-divider {
+        page-break-after: avoid !important;
+      }
+
+      .details-section {
+        page-break-inside: avoid !important;
+      }
+
+      /* Grids for print */
+      .grid-2 {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+
+      .grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+      }
+
+      /* Ensure images print */
+      img {
+        max-width: 100% !important;
+        display: block !important;
+      }
+
+      /* Animation removal */
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      /* PDF-specific footer info */
+      .pdf-timestamp {
+        display: block !important;
+        text-align: right;
+        font-size: 8pt;
+        color: #6b7280;
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #e5e7eb;
+      }
+    }
+
+    /* PDF-specific elements (hidden on screen) */
+    .pdf-header,
+    .pdf-footer,
+    .pdf-timestamp {
+      display: none;
+    }
+
+    @media print {
+      .pdf-header,
+      .pdf-footer,
+      .pdf-timestamp {
+        display: block !important;
+      }}
+
+    /* ========================================
+       ERROR CARD
+    ======================================== */
+    .error-card {
+      text-align: center;
+      padding: 80px 40px;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      max-width: 600px;
+      margin: 100px auto;
+      animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .error-card a {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 35px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-decoration: none;
+      border-radius: 15px;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .error-card a:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    /* ========================================
+       FINANCIAL INSIGHTS
+    ======================================== */
+    .insight-card {
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      padding: 25px;
+      border-radius: 18px;
+      border-left: 5px solid;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin: 15px 0;
+      transition: all 0.3s ease;
+    }
+
+    .insight-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .insight-card.positive {
+      border-left-color: #10b981;
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+
+    .insight-card.negative {
+      border-left-color: #ef4444;
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    }
+
+    .insight-card.neutral {
+      border-left-color: #3b82f6;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    }
+
+    .insight-title {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .insight-value {
+      font-size: 1.8em;
+      font-weight: 900;
+      margin: 10px 0;
+    }
+
+    .insight-description {
+      font-size: 0.95em;
+      color: #64748b;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated Background Particles -->
+  <div class="background-particles" id="particles"></div>
+
+  <div class="dashboard-container">
+    <div id="content"></div>
+  </div>
+  
+  <!-- Enhanced Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <div class="spinner-icon" id="loader-icon">🏛️</div>
+      </div>
+      
+      <div class="loading-text" id="loading-text">Initializing Dashboard...</div>
+      <div class="loading-subtitle" id="loading-subtitle">Please wait while we prepare the data</div>
+      
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+      </div>
+      
+      <div class="loading-steps">
+        <div class="loading-step" id="step-1">📄</div>
+        <div class="loading-step" id="step-2">🏦</div>
+        <div class="loading-step" id="step-3">🚗</div>
+        <div class="loading-step" id="step-4">🏠</div>
+        <div class="loading-step" id="step-5">✅</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="action-btn print" onclick="PDFGenerator.generate()" title="Generate PDF">
+  🖨️
+</button>
+    <button class="action-btn share" onclick="shareProfile()" title="Share Profile">
+      📤
+    </button>
+    <button class="action-btn top" id="backToTop" onclick="scrollToTop()" title="Back to Top" style="display: none;">
+      ⬆️
+    </button>
+  </div>
+
+<script src="pdf-generator.js"></script>
+  <script type="module">
+  
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      if (!particlesContainer) return;
+      
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 60 + 20;
+        const startX = Math.random() * window.innerWidth;
+        const duration = Math.random() * 20 + 15;
+        const delay = Math.random() * 5;
+        
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = startX + 'px';
+        particle.style.animationDuration = duration + 's';
+        particle.style.animationDelay = delay + 's';
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Scroll reveal animation
+    function revealOnScroll() {
+      const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+      
+      reveals.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+          element.classList.add('active');
+        }
+      });
+    }
+
+    // Add sparkles to quick stat items
+    function addSparkles() {
+      const statItems = document.querySelectorAll('.quick-stat-item');
+      
+      statItems.forEach(item => {
+        item.addEventListener('mouseenter', function(e) {
+          for (let i = 0; i < 6; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            
+            const tx = (Math.random() - 0.5) * 100;
+            const ty = (Math.random() - 0.5) * 100;
+            
+            sparkle.style.setProperty('--tx', tx + 'px');
+            sparkle.style.setProperty('--ty', ty + 'px');
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = (Math.random() * 0.5) + 's';
+            
+            this.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 1000);
+          }
+        });
+      });
+    }
+
+    // Animate counters
+    function animateCounters() {
+      const counters = document.querySelectorAll('.quick-stat-value');
+      
+      counters.forEach(counter => {
+        const text = counter.textContent;
+        const match = text.match(/[\d.]+/);
+        
+        if (match) {
+          const endValue = parseFloat(match[0]);
+          const duration = 2000;
+          const startTime = Date.now();
+          
+          function updateCounter() {
+            const currentTime = Date.now();
+            const progress = Math.min((currentTime - startTime) / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+            const currentValue = (endValue * easeProgress).toFixed(text.includes('.') ? 2 : 0);
+            
+            counter.textContent = text.replace(/[\d.]+/, currentValue);
+            
+            if (progress < 1) {
+              requestAnimationFrame(updateCounter);
+            }
+          }
+          
+          counter.textContent = text.replace(/[\d.]+/, '0');
+          counter.classList.add('counting');
+          
+          setTimeout(() => {
+            updateCounter();
+          }, 500);
+        }
+      });
+    }
+
+    // 3D tilt effect for cards
+    function add3DTilt() {
+      const cards = document.querySelectorAll('.quick-stat-item, .card-item');
+      
+      cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          
+          const rotateX = (y - centerY) / 10;
+          const rotateY = (centerX - x) / 10;
+          
+          this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = '';
+        });
+      });
+    }
+
+    const loadingMessages = [
+      { text: "Connecting to Database...", subtitle: "Establishing secure connection", icon: "🔌", step: 1, progress: 10 },
+      { text: "Fetching Member Profile...", subtitle: "Retrieving parliamentary data", icon: "📊", step: 1, progress: 20 },
+      { text: "Extracting Personal Information...", subtitle: "Processing member details", icon: "👤", step: 1, progress: 30 },
+      { text: "Analyzing Financial Data...", subtitle: "Scanning affidavit records", icon: "💰", step: 2, progress: 40 },
+      { text: "Finding Bank Accounts...", subtitle: "Extracting deposit information", icon: "🏦", step: 2, progress: 50 },
+      { text: "Parsing Asset Details...", subtitle: "Processing movable assets", icon: "💎", step: 3, progress: 60 },
+      { text: "Identifying Vehicles...", subtitle: "Extracting vehicle information", icon: "🚗", step: 3, progress: 70 },
+      { text: "Processing Properties...", subtitle: "Analyzing immovable assets", icon: "🏠", step: 4, progress: 80 },
+      { text: "Calculating Liabilities...", subtitle: "Processing loan details", icon: "💳", step: 4, progress: 90 },
+      { text: "Finalizing Dashboard...", subtitle: "Preparing visualization", icon: "✨", step: 5, progress: 95 },
+      { text: "Almost Ready...", subtitle: "Final touches", icon: "🎨", step: 5, progress: 100 }
+    ];
+
+    let currentMessageIndex = 0;
+    let messageInterval;
+
+    function updateLoadingMessage() {
+      if (currentMessageIndex >= loadingMessages.length) {
+        clearInterval(messageInterval);
+        return;
+      }
+
+      const message = loadingMessages[currentMessageIndex];
+      const loadingText = document.getElementById('loading-text');
+      const loadingSubtitle = document.getElementById('loading-subtitle');
+      const loaderIcon = document.getElementById('loader-icon');
+      const progressBar = document.getElementById('progress-bar');
+
+      loadingText.style.animation = 'none';
+      loadingSubtitle.style.animation = 'none';
+      
+      setTimeout(() => {
+        loadingText.textContent = message.text;
+        loadingSubtitle.textContent = message.subtitle;
+        loaderIcon.textContent = message.icon;
+        progressBar.style.width = message.progress + '%';
+        
+        loadingText.style.animation = 'fadeIn 0.5s ease-in-out';
+        loadingSubtitle.style.animation = 'fadeIn 0.5s ease-in-out';
+
+        for (let i = 1; i <= 5; i++) {
+          const step = document.getElementById(`step-${i}`);
+          if (i < message.step) {
+            step.className = 'loading-step completed';
+          } else if (i === message.step) {
+            step.className = 'loading-step active';
+          } else {
+            step.className = 'loading-step';
+          }
+        }
+      }, 10);
+
+      currentMessageIndex++;
+    }
+
+    function startLoadingAnimation() {
+      updateLoadingMessage();
+      messageInterval = setInterval(updateLoadingMessage, 800);
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function shareProfile() {
+      if (navigator.share) {
+        navigator.share({
+          title: `${currentMemberName} - ${currentMemberType} Profile`,
+          text: `Check out the profile of ${currentMemberName}`,
+          url: window.location.href
+        }).catch(err => console.log('Share failed:', err));
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          alert('✅ Profile link copied to clipboard!');
+        });
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      const backToTop = document.getElementById('backToTop');
+      if (window.scrollY > 300) {
+        backToTop.style.display = 'flex';
+      } else {
+        backToTop.style.display = 'none';
+      }
+      
+      revealOnScroll();
+    });
+
+    window.scrollToTop = scrollToTop;
+    window.shareProfile = shareProfile;
+
+    let currentMemberData = null;
+    let currentCandidateData = null;
+    let currentMemberName = null;
+    let currentMemberType = null;
+
+    function getQueryParams() {
+      const params = {};
+      window.location.search.substring(1).split('&').forEach(pair => {
+        const [key, value] = pair.split('=');
+        if (key) params[key] = decodeURIComponent(value || '');
+      });
+      return params;
+    }
+
+    const escapeHtml = (text) => {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+    
+    const safeText = (value) => {
+      if (!value) return 'N/A';
+      return escapeHtml(String(value));
+    };
+
+    function formatCurrency(value) {
+      if (!value || value === 'Nil' || value === 'N/A') return 'N/A';
+      
+      const match = String(value).match(/Rs\s*([\d,]+)/);
+      if (match) {
+        const num = parseInt(match[1].replace(/,/g, ''));
+        if (num >= 10000000) return `₹${(num / 10000000).toFixed(2)} Cr`;
+        if (num >= 100000) return `₹${(num / 100000).toFixed(2)} L`;
+        if (num >= 1000) return `₹${(num / 1000).toFixed(2)} K`;
+        return `₹${num.toLocaleString('en-IN')}`;
+      }
+      return value;
+    }
+
+    function toggleSection(id) {
+      const content = document.getElementById(id);
+      const btn = event.target;
+      if (content) {
+        content.classList.toggle('active');
+        btn.textContent = content.classList.contains('active') ? 'Hide Details' : 'Show Details';
+      }
+    }
+
+    window.toggleSection = toggleSection;
+function cleanEducation(educationText) {
+  if (!educationText) return 'N/A';
+  
+  // First, remove all the Google Charts and JavaScript code
+  let cleaned = educationText
+    // Remove everything from google.charts to the end of the function
+    .replace(/google\.charts[\s\S]*?}\s*\)/gm, '')
+    // Remove script tags and their content
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    // Remove function definitions
+    .replace(/function\s+\w+\s*\([^)]*\)\s*{[\s\S]*?}/g, '')
+    // Remove Crime-O-Meter section
+    .replace(/Crime-O-Meter[\s\S]*?Criminal Cases:\s*\d+/gi, '')
+    // Remove Assets & Liabilities section
+    .replace(/Assets\s*&\s*Liabilities[\s\S]*?Liabilities:\s*Rs\s*[\d,]+\s*~[\s\S]*?Lacs\+/gi, '')
+    // Remove chart related content
+    .replace(/var\s+(data|options|chart)[\s\S]*?;/g, '')
+    .replace(/chart\.draw\([^)]*\);?/g, '')
+    // Remove any remaining JavaScript snippets
+    .replace(/\(['"].*?['"]\)/g, '')
+    .replace(/document\.getElementById\([^)]*\)/g, '')
+    // Remove numeric patterns that look like amounts
+    .replace(/\d{1,3}(,\d{3})*\s*~\d+\s*Lacs?\+/g, '')
+    // Clean up "Others" prefix at the beginning
+    .replace(/^\s*Others\s+/i, '')
+    // Remove duplicate content (the text appears twice in your sample)
+    .replace(/(\n|^)Others\s+/gi, '\n')
+    // Clean up back(drawChart) and similar artifacts
+    .replace(/back\(drawChart\);?/gi, '')
+    // Remove any remaining gauge/chart references
+    .replace(/google\.visualization\.\w+/g, '')
+    .replace(/\bGauge\b/g, '')
+    .replace(/chart_div/g, '')
+    // Remove Nu | mber patterns
+    .replace(/Num\s*\|\s*ber/gi, 'Number')
+    // Clean up pipe separators that shouldn't be there
+    .replace(/([a-zA-Z])\s*\|\s*([a-zA-Z])/g, '$1$2')
+    // Remove multiple spaces and trim
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  // Now extract the actual education content
+  // Look for education-related keywords
+  const educationPatterns = [
+    /Diploma[\s\S]*?Year-?\d{4}/gi,
+    /Doctorate[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /Ph\.?D[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /Post\s*Graduate[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /Graduate[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /M\.?A[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /M\.?Sc[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /M\.?Com[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /M\.?B\.?A[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /B\.?E[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /B\.?Tech[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /B\.?A[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /B\.?Sc[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /B\.?Com[\s\S]*?(?=\s*$|Others|Crime)/gi,
+    /\d{1,2}th\s+Pass[\s\S]*?Year-?\d{4}/gi,
+    /\d{1,2}th\s+[Ss]tandard[\s\S]*?Year-?\d{4}/gi
+  ];
+  
+  const educationMatches = [];
+  
+  for (const pattern of educationPatterns) {
+    const matches = cleaned.match(pattern);
+    if (matches) {
+      matches.forEach(match => {
+        // Clean up the match
+        const cleanMatch = match
+          .replace(/\s+/g, ' ')
+          .replace(/Others\s*/gi, '')
+          .trim();
+        
+        // Only add if it's meaningful and not a duplicate
+        if (cleanMatch.length > 10 && !educationMatches.some(em => em.includes(cleanMatch) || cleanMatch.includes(em))) {
+          educationMatches.push(cleanMatch);
+        }
+      });
+    }
+  }
+  
+  // If we found education patterns, use them
+  if (educationMatches.length > 0) {
+    // Join multiple qualifications with " & "
+    return educationMatches.join(' & ');
+  }
+  
+  // Fallback: Try to extract anything that looks like education from the cleaned text
+  // Remove any remaining noise and look for education keywords
+  const fallbackPatterns = [
+    'diploma', 'degree', 'engineering', 'medical', 'arts', 'science', 'commerce',
+    'university', 'college', 'institute', 'school', 'pass', 'graduate', 'master',
+    'bachelor', 'phd', 'doctorate', 'certificate'
+  ];
+  
+  // Check if the cleaned text contains education-related content
+  const hasEducationKeywords = fallbackPatterns.some(keyword => 
+    cleaned.toLowerCase().includes(keyword)
+  );
+  
+  if (hasEducationKeywords && cleaned.length > 10 && cleaned.length < 500) {
+    // Remove any remaining artifacts and return
+    return cleaned
+      .replace(/^\W+/, '') // Remove leading non-word characters
+      .replace(/\W+$/, '') // Remove trailing non-word characters
+      .replace(/\s{2,}/g, ' ') // Replace multiple spaces with single space
+      .trim();
+  }
+  
+  return 'N/A';
+}
+function parseBankAccounts(text) {
+      if (!text || text === 'Nil') return [];
+
+      const accounts = [];
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 10);
+
+      for (const line of lines) {
+        const isFD = /^FD\s+[Ii]n/i.test(line);
+        
+        const bankMatch = line.match(/\b(State Bank of India|SBI|ICICI Bank|ICICI|HDFC Bank|HDFC|Axis Bank|Axis|Canara Bank|Canara|Punjab National Bank|PNB|Bank of Baroda|BOB|Union Bank|Oriental Bank of Commerce|OBC|IDBI Bank|Indian Bank|Yes Bank|Kotak Mahindra Bank|Federal Bank|IndusInd Bank)\b/i);
+        const bank = bankMatch ? bankMatch[1].trim() : '';
+        
+        const branchMatch = line.match(/Br\.?\s+([^,]+?)(?:,|\s+No)/i);
+        const branch = branchMatch ? branchMatch[1].trim() : 'N/A';
+        
+        const accMatch = line.match(/No\s+([\dxX]+)/);
+        const accountNo = accMatch ? accMatch[1] : '';
+        
+        const amountMatch = line.match(/Rs\s+([\d,]+)/);
+        const amount = amountMatch ? `Rs ${amountMatch[1]}` : 'N/A';
+        
+        if (!bank || !accountNo) continue;
+        
+        accounts.push({ bank, branch, accountNo, amount, type: isFD ? 'Fixed Deposit' : 'Savings/Current' });
+      }
+
+      console.log(`🏦 Parsed ${accounts.length} bank accounts`);
+      return accounts;
+    }
+
+    function parseVehicles(text) {
+      if (!text || text === 'Nil') return [];
+
+      const vehicles = [];
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 15);
+
+      const brands = ['Audi', 'BMW', 'Mercedes', 'Toyota', 'Honda', 'Hyundai', 'Mahindra', 'Maruti', 'Innova', 'Fortuner', 'City'];
+
+      for (const line of lines) {
+        let make = 'Vehicle';
+        for (const brand of brands) {
+          if (new RegExp(`\\b${brand}\\b`, 'i').test(line)) {
+            make = brand;
+            break;
+          }
+        }
+        
+        const modelMatch = line.match(/Model[:\s]+([^,]+?)(?:,|Reg|\s+Rs)/i);
+        const model = modelMatch ? modelMatch[1].trim() : '';
+        
+        const regMatch = line.match(/[Rr]eg(?:istration)?\s*No[:\s-]*([A-Z0-9-]+)/i);
+        const registration = regMatch ? regMatch[1].trim() : '';
+        
+        const yearMatch = line.match(/(?:Date\s*Of\s*Purchased|DOP|Purchased)[:\s]*(\d{2,4}[-\/]\d{2}[-\/]\d{2,4}|\d{4})/i) || line.match(/\b(20\d{2}|19\d{2})\b/);
+        const year = yearMatch ? yearMatch[1] : '';
+        
+        const amountMatch = line.match(/Rs\s+([\d,]+)/);
+        const amount = amountMatch ? `Rs ${amountMatch[1]}` : 'N/A';
+        
+        vehicles.push({ make, model, registration, year, amount });
+      }
+
+      console.log(`🚗 Parsed ${vehicles.length} vehicles`);
+      return vehicles;
+    }
+
+    function parseProperty(text) {
+      if (!text || text === 'Nil') return [];
+      
+      const properties = [];
+      const blocks = text.split(/\n\n+/).filter(b => b.trim().length > 0);
+      
+      for (const block of blocks) {
+        const parts = block.split('|');
+        
+        if (parts.length >= 2) {
+          const address = parts[0].replace(/\n/g, ' ').trim();
+          
+          const valuePart = parts.find(p => /Value:/i.test(p));
+          let value = 'N/A';
+          
+          if (valuePart) {
+            const valueMatch = valuePart.match(/Rs\s+([\d,]+)/);
+            value = valueMatch ? `Rs ${valueMatch[1]}` : 'N/A';
+          }
+          
+          const areaMatch = block.match(/Area:\s*([^|]+)/i);
+          const builtMatch = block.match(/Built:\s*([^|]+)/i);
+          const inheritedMatch = block.match(/Inherited:\s*(\w+)/i);
+          const dateMatch = block.match(/Purchased:\s*([\d-]+)/i);
+          
+          if (address && address.length > 5) {
+            properties.push({
+              address,
+              value,
+              area: areaMatch ? areaMatch[1].trim() : '',
+              built: builtMatch ? builtMatch[1].trim() : '',
+              inherited: inheritedMatch ? inheritedMatch[1] : '',
+              purchaseDate: dateMatch ? dateMatch[1] : ''
+            });
+          }
+        }
+      }
+      
+      console.log(`🏠 Parsed ${properties.length} properties`);
+      return properties;
+    }
+
+    function parseLoans(text) {
+      if (!text || text === 'Nil') return [];
+      
+      const loans = [];
+      const lines = text.split('\n').filter(l => l.trim().length > 10);
+      
+      for (const line of lines) {
+        const parts = line.split(':');
+        if (parts.length < 2) continue;
+        
+        const lender = parts[0].trim();
+        
+        let type = 'Loan';
+        if (/House Loan/i.test(line)) type = 'House Loan';
+        else if (/Unsecured Loan/i.test(line)) type = 'Unsecured Loan';
+        else if (/Personal Loan/i.test(line)) type = 'Personal Loan';
+        
+        const accMatch = line.match(/Ac\s+No[:\s-]*([\w-]+)/i);
+        const accountNo = accMatch ? accMatch[1] : '';
+        
+        const amountMatch = line.match(/Rs\s+([\d,]+)/);
+        const amount = amountMatch ? `Rs ${amountMatch[1]}` : 'N/A';
+        
+        loans.push({ lender, type, accountNo, amount });
+      }
+      
+      console.log(`💳 Parsed ${loans.length} loans`);
+      return loans;
+    }
+
+    function parseSimpleList(text) {
+      if (!text || text === 'Nil') return [];
+      
+      const items = [];
+      const lines = text.split('\n').filter(l => l.trim().length > 5);
+      
+      for (const line of lines) {
+        const parts = line.split(':');
+        const description = parts[0] ? parts[0].trim() : line.trim();
+        
+        const amountMatch = line.match(/Rs\s+([\d,]+)/);
+        const amount = amountMatch ? `Rs ${amountMatch[1]}` : 'N/A';
+        
+        items.push({ description, amount });
+      }
+      
+      return items;
+    }
+
+    function createStatCard(title, mpValue, natAvg, stateAvg, icon, gradient) {
+      const parseValue = (val) => {
+        if (!val || val === 'N/A') return 0;
+        return parseFloat(String(val).replace(/[^\d.-]/g, '')) || 0;
+      };
+
+      const mpNum = parseValue(mpValue);
+      const natNum = parseValue(natAvg);
+      const stateNum = parseValue(stateAvg);
+
+      const maxVal = Math.max(mpNum, natNum, stateNum) || 1;
+      const mpPct = (mpNum / maxVal * 100);
+      const natPct = (natNum / maxVal * 100);
+      const statePct = (stateNum / maxVal * 100);
+
+      return `
+        <div class="stat-card reveal">
+          <div class="stat-header">
+            <div class="stat-title">${escapeHtml(title)}</div>
+            <div class="stat-icon" style="background: ${gradient};">${icon}</div>
+          </div>
+          <div class="stat-value">${escapeHtml(mpValue) || 'N/A'}</div>
+          <div class="comparison-bars">
+            <div class="comparison-bar">
+              <span class="bar-label">Selected</span>
+              <div class="bar-container">
+                <div class="bar-fill" style="width: ${mpPct}%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+              </div>
+              <span class="bar-value">${escapeHtml(mpValue) || 'N/A'}</span>
+            </div>
+            ${natAvg && natAvg !== 'N/A' ? `
+            <div class="comparison-bar">
+              <span class="bar-label">National Avg</span>
+              <div class="bar-container">
+                <div class="bar-fill" style="width: ${natPct}%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+              </div>
+              <span class="bar-value">${escapeHtml(natAvg)}</span>
+            </div>
+            ` : ''}
+            ${stateAvg && stateAvg !== 'N/A' ? `
+            <div class="comparison-bar">
+              <span class="bar-label">State Avg</span>
+              <div class="bar-container">
+                <div class="bar-fill" style="width: ${statePct}%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
+              </div>
+              <span class="bar-value">${escapeHtml(stateAvg)}</span>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadMemberData() {
+      if (window.SERVER_DATA) {
+        console.log('✅ Using server-injected data');
+        const { memberName, memberType, prsData, candidateData } = window.SERVER_DATA;
+        
+        currentMemberName = memberName;
+        currentMemberType = memberType;
+        currentCandidateData = candidateData;
+
+        if (memberType === 'MP') {
+          renderMPDashboardFromServerData(prsData, candidateData);
+        } else {
+          renderMLADashboardFromServerData(prsData, candidateData);
+        }
+        
+        return;
+      }
+
+      console.log('⚠️ No server data, fetching via API...');
+      const params = getQueryParams();
+      const memberName = params.name;
+      const memberType = params.type;
+      
+      if (!memberName || !memberType) {
+        throw new Error('Missing name or type parameter');
+      }
+      
+      currentMemberName = memberName;
+      currentMemberType = memberType;
+
+      try {
+        const response = await fetch(`/api/prs?name=${encodeURIComponent(memberName)}&type=${encodeURIComponent(memberType)}`);
+        const prsData = await response.json();
+
+        if (!prsData.found) throw new Error('Member not found');
+
+        let candidateData = null;
+        if (prsData.constituency && prsData.constituency !== 'Unknown') {
+          try {
+            const candidateResponse = await fetch(
+              `/api/candidate?name=${encodeURIComponent(memberName)}&constituency=${encodeURIComponent(prsData.constituency)}&party=${encodeURIComponent(prsData.party)}`
+            );
+            if (candidateResponse.ok) {
+              const rawData = await candidateResponse.json();
+              candidateData = rawData.data || rawData;
+              currentCandidateData = candidateData;
+            }
+          } catch (err) {
+            console.error('Error fetching candidate data:', err);
+          }
+        }
+
+        if (memberType === 'MP') {
+          renderMPDashboardFromServerData(prsData, candidateData);
+        } else {
+          renderMLADashboardFromServerData(prsData, candidateData);
+        }
+
+      } catch (err) {
+        console.error('Error:', err);
+        document.getElementById('content').innerHTML = `
+          <div class="error-card">
+            <div style="font-size: 5em; margin-bottom: 20px;">⚠️</div>
+            <div style="font-size: 1.8em; font-weight: 800; color: #e74c3c; margin-bottom: 15px;">Unable to Load Profile</div>
+            <div style="color: #64748b; font-size: 1.1em;">${escapeHtml(err.message)}</div>
+            <a href="/">← Back to Map</a>
+          </div>
+        `;
+      }
+    }
+
+    function renderMPDashboardFromServerData(prsData, candidateData) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(prsData.html, 'text/html');
+      
+      const data = {
+        name: currentMemberName,
+        imageUrl: prsData.imageUrl,
+        state: prsData.state,
+        constituency: prsData.constituency,
+        party: prsData.party,
+        type: 'MP',
+        age: 'N/A',
+        gender: 'N/A',
+        education: 'N/A',
+        termStart: 'N/A',
+        termEnd: 'N/A',
+        noOfTerm: 'N/A',
+        attendance: 'N/A',
+        natAttendance: 'N/A',
+        stateAttendance: 'N/A',
+        debates: 'N/A',
+        natDebates: 'N/A',
+        stateDebates: 'N/A',
+        questions: 'N/A',
+        natQuestions: 'N/A',
+        stateQuestions: 'N/A',
+        pmb: 'N/A',
+        natPMB: 'N/A',
+        attendanceTable: '',
+        debatesTable: '',
+        questionsTable: ''
+      };
+
+      if (prsData.performance) {
+        Object.keys(prsData.performance).forEach(key => {
+          if (prsData.performance[key]) data[key] = prsData.performance[key];
+        });
+      }
+
+      if (prsData.personal) {
+        if (prsData.personal.age) data.age = prsData.personal.age;
+        if (prsData.personal.gender) data.gender = prsData.personal.gender;
+        if (prsData.personal.education) data.education = prsData.personal.education;
+        if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
+        if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
+        if (prsData.personal.noOfTerm) data.noOfTerm = prsData.personal.noOfTerm;
+      }
+
+      if (prsData.html) {
+        data.attendanceTable = doc.querySelector('#block-views-mps-attendance-block table')?.outerHTML || '';
+        data.debatesTable = doc.querySelector('#block-views-mps-debate-related-views-block table')?.outerHTML || '';
+        data.questionsTable = doc.querySelector('#block-views-mp-related-views-block-2222 table')?.outerHTML || '';
+      }
+
+      if (candidateData && candidateData.candidate) {
+        if (data.age === 'N/A' && candidateData.candidate.age) data.age = candidateData.candidate.age;
+        if (data.education === 'N/A' && candidateData.candidate.education) {
+          data.education = cleanEducation(candidateData.candidate.education);
+        }
+      }
+
+      renderDashboard(data, candidateData);
+    }
+
+    function renderMLADashboardFromServerData(prsData, candidateData) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(prsData.html, 'text/html');
+      
+      const data = {
+        name: currentMemberName,
+        imageUrl: prsData.imageUrl,
+        state: prsData.state,
+        constituency: prsData.constituency,
+        party: prsData.party,
+        type: 'MLA',
+        age: 'N/A',
+        gender: 'N/A',
+        education: 'N/A',
+        termStart: 'N/A',
+        termEnd: 'N/A',
+        attendance: 'N/A',
+        natAttendance: 'N/A',
+        stateAttendance: 'N/A',
+        debates: 'N/A',
+        natDebates: 'N/A',
+        stateDebates: 'N/A',
+        questions: 'N/A',
+        natQuestions: 'N/A',
+        stateQuestions: 'N/A',
+        pmb: 'N/A',
+        natPMB: 'N/A',
+        attendanceTable: '',
+        debatesTable: '',
+        questionsTable: ''
+      };
+
+      if (prsData.personal) {
+        if (prsData.personal.age) data.age = prsData.personal.age;
+        if (prsData.personal.gender) data.gender = prsData.personal.gender;
+        if (prsData.personal.education) data.education = prsData.personal.education;
+        if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
+        if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
+      }
+
+      if (candidateData && candidateData.candidate) {
+        if (data.age === 'N/A' && candidateData.candidate.age) data.age = candidateData.candidate.age;
+        if (data.education === 'N/A' && candidateData.candidate.education) {
+          data.education = cleanEducation(candidateData.candidate.education);
+        }
+      }
+
+      renderDashboard(data, candidateData);
+    }
+
+     function renderDashboard(data, candidateData = null) {
+  console.log('🎨 Rendering COMPLETE dashboard with ALL data');
+  console.log('data', data);
+  console.log("candidate data", candidateData);
+
+  if (candidateData && candidateData.candidate) {
+    if (candidateData.candidate.education) {
+      candidateData.candidate.education = cleanEducation(candidateData.candidate.education);
+    }
+  }
+
+  let totalAssets = 0;
+  let totalLiabilities = 0;
+  let totalBankAccounts = 0;
+  let totalVehicles = 0;
+  let totalProperties = 0;
+  let totalCash = 0;
+  let totalJewellery = 0;
+  let totalLoans = 0;
+  let criminalCases = 0;
+
+  if (candidateData) {
+    criminalCases = candidateData.crimeOMeter?.cases || candidateData.criminalCases?.pendingCases?.filter(c => c.serialNo && c.serialNo !== '---------No Cases--------' && c.serialNo !== 'Serial No.').length || 0;
+
+    if (candidateData.movableAssets && Array.isArray(candidateData.movableAssets)) {
+      candidateData.movableAssets.forEach(asset => {
+        if (asset.total && asset.total !== 'Nil' && !asset.total.includes('70')) {
+          const match = asset.total.match(/Rs\s*([\d,]+)/);
+          if (match) {
+            const num = parseInt(match[1].replace(/,/g, ''));
+            if (!isNaN(num) && num > 100) totalAssets += num;
+          }
+        }
+        
+        if (asset.description && asset.description.toLowerCase().includes('cash') && asset.self && asset.self !== 'Nil') {
+          const match = asset.self.match(/Rs\s*([\d,]+)/);
+          if (match) {
+            totalCash = parseInt(match[1].replace(/,/g, ''));
+          }
+        }
+        
+        if (asset.description && asset.description.toLowerCase().includes('deposits in banks') && asset.self && asset.self !== 'Nil') {
+          totalBankAccounts = parseBankAccounts(asset.self).length;
+        }
+        
+        if (asset.description && asset.description.toLowerCase().includes('motor vehicles') && asset.self && asset.self !== 'Nil') {
+          totalVehicles = parseVehicles(asset.self).length;
+        }
+
+        if (asset.description && asset.description.toLowerCase().includes('jewellery') && asset.total && asset.total !== 'Nil') {
+          const match = asset.total.match(/Rs\s*([\d,]+)/);
+          if (match) {
+            totalJewellery = parseInt(match[1].replace(/,/g, ''));
+          }
+        }
+      });
+    }
+
+    if (candidateData.immovableAssets && Array.isArray(candidateData.immovableAssets)) {
+      candidateData.immovableAssets.forEach(asset => {
+        if (asset.total && asset.total !== 'Nil' && !asset.total.includes('70')) {
+          const match = asset.total.match(/Rs\s*([\d,]+)/);
+          if (match) {
+            const num = parseInt(match[1].replace(/,/g, ''));
+            if (!isNaN(num) && num > 100) {
+              totalAssets += num;
+              totalProperties++;
+            }
+          }
+        }
+      });
+    }
+
+    if (candidateData.liabilities && Array.isArray(candidateData.liabilities)) {
+      candidateData.liabilities.forEach(liability => {
+        if (liability.total && liability.total !== 'Nil') {
+          const match = liability.total.match(/Rs\s*([\d,]+)/);
+          if (match) {
+            const num = parseInt(match[1].replace(/,/g, ''));
+            if (!isNaN(num)) {
+              totalLiabilities += num;
+              totalLoans++;
+            }
+          }
+        }
+      });
+    }
+  }
+
+  const hasAttendance = data.attendance && data.attendance !== 'N/A';
+  const hasDebates = data.debates && data.debates !== 'N/A' && data.debates !== '0';
+  const hasQuestions = data.questions && data.questions !== 'N/A' && data.questions !== '0';
+  const hasPMB = data.pmb && data.pmb !== 'N/A';
+  
+  const hasPerformance = hasAttendance || hasDebates || hasQuestions || hasPMB;
+
+  const statsIcons = {
+    assets: '💰',
+    netWorth: '📊',
+    banks: '🏦',
+    vehicles: '🚗',
+    properties: '🏠',
+    cases: '⚖️'
+  };
+
+  let quickStatsHTML = '';
+  if (candidateData) {
+    quickStatsHTML = `
+      <div class="quick-stats-banner">
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.assets}</div>
+          <div class="quick-stat-value">${formatCurrency('Rs ' + totalAssets)}</div>
+          <div class="quick-stat-label">Total Assets</div>
+        </div>
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.netWorth}</div>
+          <div class="quick-stat-value">${formatCurrency('Rs ' + (totalAssets - totalLiabilities))}</div>
+          <div class="quick-stat-label">Net Worth</div>
+        </div>
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.banks}</div>
+          <div class="quick-stat-value">${totalBankAccounts}</div>
+          <div class="quick-stat-label">Bank Accounts</div>
+        </div>
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.vehicles}</div>
+          <div class="quick-stat-value">${totalVehicles}</div>
+          <div class="quick-stat-label">Vehicles</div>
+        </div>
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.properties}</div>
+          <div class="quick-stat-value">${totalProperties}</div>
+          <div class="quick-stat-label">Properties</div>
+        </div>
+        <div class="quick-stat-item">
+          <div class="quick-stat-icon">${statsIcons.cases}</div>
+          <div class="quick-stat-value" style="${criminalCases > 0 ? 'background: linear-gradient(135deg, #fca5a5, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : ''}">${criminalCases}</div>
+          <div class="quick-stat-label">Criminal Cases</div>
+        </div>
+      </div>
+    `;
+  }
+
+  let statsHTML = '';
+  if (hasPerformance) {
+    const stats = [];
+
+    if (hasAttendance) {
+      stats.push(createStatCard('Attendance', data.attendance, data.natAttendance || 'N/A', data.stateAttendance || 'N/A', '📊', 'linear-gradient(135deg, #667eea, #764ba2)'));
+    }
+    
+    if (hasDebates) {
+      stats.push(createStatCard('Debates', data.debates, data.natDebates || 'N/A', data.stateDebates || 'N/A', '💬', 'linear-gradient(135deg, #8b5cf6, #7c3aed)'));
+    }
+    
+    if (hasQuestions) {
+      stats.push(createStatCard('Questions', data.questions, data.natQuestions || 'N/A', data.stateQuestions || 'N/A', '❓', 'linear-gradient(135deg, #06b6d4, #0891b2)'));
+    }
+    
+    if (hasPMB) {
+      stats.push(createStatCard('Private Member Bills', data.pmb, data.natPMB || 'N/A', 'N/A', '📄', 'linear-gradient(135deg, #10b981, #059669)'));
+    }
+
+    if (stats.length > 0) {
+  statsHTML = `
+    <div class="section-header-main reveal">
+      <h2><span class="icon">📊</span>Parliamentary Activity</h2>
+    </div>
+    <div class="performance-section reveal">
+      <div class="stats-grid">${stats.join('')}</div>
+    </div>
+  `;
+}
+  } else {
+    statsHTML = `
+      <div class="details-section reveal">
+        <div class="no-data-placeholder">
+          <div class="icon">📊</div>
+          <div style="font-size: 1.3em; color: #475569; font-weight: 600; margin-bottom: 10px;">
+            ${data.type === 'MLA' ? 'Performance Metrics Not Available' : 'Performance Data Not Available'}
+          </div>
+          <div style="font-size: 1em; max-width: 500px; margin: 0 auto; color: #64748b;">
+            ${data.type === 'MLA' ? 'Detailed performance metrics are typically available for MPs. MLA profiles show basic information and affidavit data.' : 'Performance data is not available for this member at the moment.'}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  let detailsHTML = '';
+
+  if (data.attendanceTable) {
+    detailsHTML += `
+      <div class="details-section reveal">
+        <div class="section-header">
+          <div class="chart-title"><span class="chart-title-icon">📋</span>Attendance Details</div>
+          <button class="toggle-btn" onclick="toggleSection('attendance-content')">Show Details</button>
+        </div>
+        <div id="attendance-content" class="collapsible-content">
+          ${data.attendanceTable}
+        </div>
+      </div>
+    `;
+  }
+  
+  if (data.debatesTable) {
+    detailsHTML += `
+      <div class="details-section reveal">
+        <div class="section-header">
+          <div class="chart-title"><span class="chart-title-icon">💬</span>Debates Participation</div>
+          <button class="toggle-btn" onclick="toggleSection('debates-content')">Show Details</button>
+        </div>
+        <div id="debates-content" class="collapsible-content">
+          ${data.debatesTable}
+        </div>
+      </div>
+    `;
+  }
+  
+  if (data.questionsTable) {
+    detailsHTML += `
+      <div class="details-section reveal">
+        <div class="section-header">
+          <div class="chart-title"><span class="chart-title-icon">❓</span>Questions Asked</div>
+          <button class="toggle-btn" onclick="toggleSection('questions-content')">Show Details</button>
+        </div>
+        <div id="questions-content" class="collapsible-content">
+          ${data.questionsTable}
+        </div>
+      </div>
+    `;
+  }
+
+  // ========================================
+  // AFFIDAVIT DATA - COMPLETE RENDERING
+  // ========================================
+  if (candidateData && candidateData.candidate) {
+    console.log('✅ Rendering ALL candidate data sections');
+
+    detailsHTML += `
+      <div class="section-header-main reveal">
+        <h2><span class="icon">📄</span>Affidavit Information</h2>
+      </div>
+    `;
+
+    // Personal Details
+    if (candidateData.candidate) {
+      detailsHTML += `
+        <div class="details-section reveal">
+          <div class="summary-card">
+            <div class="summary-card-title">👤 Personal Details</div>
+            <div class="grid-2">
+              ${candidateData.candidate.age ? `
+                <div class="data-row">
+                  <div class="data-label">🎂 Age</div>
+                  <div class="data-value">${safeText(candidateData.candidate.age)} years</div>
+                </div>
+              ` : ''}
+              ${candidateData.candidate.relation ? `
+                <div class="data-row">
+                  <div class="data-label">👨‍👩‍👦 Relation</div>
+                  <div class="data-value">${safeText(candidateData.candidate.relation)}</div>
+                </div>
+              ` : ''}
+              ${candidateData.candidate.voterEnrollment ? `
+                <div class="data-row">
+                  <div class="data-label">🗳️ Voter Enrollment</div>
+                  <div class="data-value">${safeText(candidateData.candidate.voterEnrollment)}</div>
+                </div>
+              ` : ''}
+              ${candidateData.candidate.education ? `
+                <div class="data-row">
+                  <div class="data-label">🎓 Education</div>
+                  <div class="data-value">${safeText(candidateData.candidate.education)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ========================================
+    // CRIMINAL CASES - DETAILED
+    // ========================================
+    if (candidateData.criminalCases) {
+      const pendingCases = candidateData.criminalCases.pendingCases?.filter(c => 
+        c.serialNo && c.serialNo !== '---------No Cases--------' && c.serialNo !== 'Serial No.'
+      ) || [];
+
+      const convictedCases = candidateData.criminalCases.convictedCases?.filter(c => 
+        c.serialNo && c.serialNo !== '---------No Cases--------'
+      ) || [];
+
+      const briefIPC = candidateData.criminalCases.briefIPC || [];
+
+      if (pendingCases.length > 0 || convictedCases.length > 0 || briefIPC.length > 0) {
+        detailsHTML += `
+          <div class="section-header-main reveal">
+            <h2><span class="icon">⚖️</span>Criminal Cases</h2>
+          </div>
+        `;
+
+        // IPC Sections Summary
+        if (briefIPC.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card" style="background: linear-gradient(135deg, #fef2f2, #fee2e2);">
+                <div class="summary-card-title" style="color: #991b1b;">⚠️ IPC Sections Summary</div>
+                <div class="grid-2">
+                  ${briefIPC.map(ipc => `
+                    <div class="card-item" style="border-left-color: #ef4444;">
+                      <div style="font-weight: 800; color: #991b1b; margin-bottom: 8px;">
+                        ${safeText(ipc.section)}
+                      </div>
+                      <div style="font-size: 1.5em; font-weight: 900; color: #dc2626;">
+                        ${ipc.count} ${ipc.count === 1 ? 'Case' : 'Cases'}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Pending Cases
+        if (pendingCases.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">⏳ Pending Cases (${pendingCases.length})</div>
+                <div style="overflow-x: auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>FIR No.</th>
+                        <th>Case No.</th>
+                        <th>Court</th>
+                        <th>IPC Sections</th>
+                        <th>Charges Framed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${pendingCases.map(c => `
+                        <tr>
+                          <td><strong>${safeText(c.serialNo)}</strong></td>
+                          <td>${safeText(c.firNo)}</td>
+                          <td>${safeText(c.caseNo)}</td>
+                          <td>${safeText(c.court)}</td>
+                          <td><span class="badge badge-danger">${safeText(c.ipcSections)}</span></td>
+                          <td><span class="badge ${c.chargesFramed === 'Yes' ? 'badge-danger' : 'badge-warning'}">${safeText(c.chargesFramed)}</span></td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Convicted Cases
+        if (convictedCases.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card" style="background: linear-gradient(135deg, #fef2f2, #fee2e2);">
+                <div class="summary-card-title" style="color: #991b1b;">🚨 Convicted Cases (${convictedCases.length})</div>
+                <div style="overflow-x: auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Details</th>
+                        <th>Punishment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${convictedCases.map(c => `
+                        <tr>
+                          <td><strong>${safeText(c.serialNo)}</strong></td>
+                          <td>${safeText(c.details || c.caseDetails || 'N/A')}</td>
+                          <td><span class="badge badge-danger">${safeText(c.punishment || 'N/A')}</span></td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // No Cases Message
+        if (pendingCases.length === 0 && convictedCases.length === 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7);">
+                <div style="text-align: center; padding: 40px;">
+                  <div style="font-size: 4em; margin-bottom: 15px;">✅</div>
+                  <div style="font-size: 1.3em; font-weight: 800; color: #166534;">No Criminal Cases</div>
+                  <div style="color: #15803d; margin-top: 10px;">Clean record - No pending or convicted cases</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // ========================================
+    // INCOME TAX RETURNS - DETAILED
+    // ========================================
+    if (candidateData.incomeTax && Array.isArray(candidateData.incomeTax)) {
+      const selfIncome = candidateData.incomeTax.find(i => i.relation === 'self');
+      const spouseIncome = candidateData.incomeTax.find(i => i.relation === 'spouse');
+      const hufIncome = candidateData.incomeTax.find(i => i.relation === 'huf');
+
+      if (selfIncome && selfIncome.income) {
+        detailsHTML += `
+          <div class="section-header-main reveal">
+            <h2><span class="icon">💵</span>Income Tax Returns</h2>
+          </div>
+        `;
+const parseIncomeSeries = (incomeText) => {
+  if (!incomeText) return [];
+  const parts = incomeText.split('**').filter(p => p.trim());
+  const years = [];
+  
+  for (let i = 0; i < parts.length; i += 2) {
+    if (i + 1 < parts.length) {
+      const year = parts[i].trim();
+      // Strip HTML tags from amount
+      const amount = parts[i + 1].trim()
+        .replace(/<\/?b>/g, '')  // Remove <b> and </b> tags
+        .replace(/<\/?[^>]+(>|$)/g, '');  // Remove any other HTML tags
+      
+      if (year && amount && year !== 'None' && !amount.includes('Rs 0')) {
+        years.push({ year, amount });
+      }
+    }
+  }
+  
+  return years;
+};
+        const selfYears = parseIncomeSeries(selfIncome.income);
+        const spouseYears = spouseIncome ? parseIncomeSeries(spouseIncome.income) : [];
+        const hufYears = hufIncome ? parseIncomeSeries(hufIncome.income) : [];
+
+        if (selfYears.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">👤 Self Income (Last 5 Years)</div>
+                <div class="grid-2">
+                  ${selfYears.map(y => `
+                    <div class="card-item income">
+                      <div style="font-weight: 700; color: #5b21b6; margin-bottom: 8px;">${safeText(y.year)}</div>
+                      <div style="font-size: 1.4em; font-weight: 900; color: #7c3aed;">${safeText(y.amount)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+                ${selfIncome.pan === 'Y' ? `
+                  <div style="margin-top: 15px; padding: 12px; background: #f0fdf4; border-radius: 10px; text-align: center;">
+                    <span class="badge badge-success">✓ PAN Available</span>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }
+
+        if (spouseYears.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">👰 Spouse Income (Last 5 Years)</div>
+                <div class="grid-2">
+                  ${spouseYears.map(y => `
+                    <div class="card-item income">
+                      <div style="font-weight: 700; color: #5b21b6; margin-bottom: 8px;">${safeText(y.year)}</div>
+                      <div style="font-size: 1.4em; font-weight: 900; color: #7c3aed;">${safeText(y.amount)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        if (hufYears.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🏠 HUF Income (Last 5 Years)</div>
+                <div class="grid-2">
+                  ${hufYears.map(y => `
+                    <div class="card-item income">
+                      <div style="font-weight: 700; color: #5b21b6; margin-bottom: 8px;">${safeText(y.year)}</div>
+                      <div style="font-size: 1.4em; font-weight: 900; color: #7c3aed;">${safeText(y.amount)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // ========================================
+    // MOVABLE ASSETS - DETAILED BREAKDOWN
+    // ========================================
+    if (candidateData.movableAssets && Array.isArray(candidateData.movableAssets)) {
+      detailsHTML += `
+        <div class="section-header-main reveal">
+          <h2><span class="icon">💎</span>Movable Assets</h2>
+        </div>
+      `;
+
+      // Cash
+      const cashAsset = candidateData.movableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('cash')
+      );
+      
+      if (cashAsset && cashAsset.self && cashAsset.self !== 'Nil') {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">💵 Cash in Hand</div>
+              <div class="asset-card" style="text-align: center; padding: 30px;">
+                <div style="font-size: 3em; margin-bottom: 15px;">💰</div>
+                <div class="amount-large">${formatCurrency(cashAsset.self)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Bank Accounts - DETAILED TABLE
+      const bankAsset = candidateData.movableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('deposits in banks')
+      );
+      
+      if (bankAsset && bankAsset.self && bankAsset.self !== 'Nil') {
+        const accounts = parseBankAccounts(bankAsset.self);
+        
+        if (accounts.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🏦 Bank Accounts & Fixed Deposits (${accounts.length})</div>
+                <div style="overflow-x: auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Bank</th>
+                        <th>Branch</th>
+                        <th>Account Number</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${accounts.map((acc, idx) => `
+                        <tr>
+                          <td><strong>${idx + 1}</strong></td>
+                          <td><span class="badge badge-info">${safeText(acc.bank)}</span></td>
+                          <td>${safeText(acc.branch)}</td>
+                          <td><code>${safeText(acc.accountNo)}</code></td>
+                          <td><span class="badge ${acc.type === 'Fixed Deposit' ? 'badge-success' : 'badge-purple'}">${safeText(acc.type)}</span></td>
+                          <td><strong>${formatCurrency(acc.amount)}</strong></td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Vehicles - DETAILED TABLE
+      const vehicleAsset = candidateData.movableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('motor vehicles')
+      );
+      
+      if (vehicleAsset && vehicleAsset.self && vehicleAsset.self !== 'Nil') {
+        const vehicles = parseVehicles(vehicleAsset.self);
+        
+        if (vehicles.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🚗 Motor Vehicles (${vehicles.length})</div>
+                <div class="grid-2">
+                  ${vehicles.map(v => `
+                    <div class="card-item vehicle">
+                      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <div>
+                          <div style="font-size: 1.4em; font-weight: 900; color: #d97706; margin-bottom: 5px;">
+                            ${safeText(v.make)} ${safeText(v.model)}
+                          </div>
+                          <div style="font-size: 0.9em; color: #78716c;">
+                            ${v.year ? `Year: ${safeText(v.year)}` : ''}
+                          </div>
+                        </div>
+                        <div style="font-size: 2em;">🚘</div>
+                      </div>
+                      ${v.registration ? `
+                        <div style="margin: 10px 0;">
+                          <span class="badge badge-warning">${safeText(v.registration)}</span>
+                        </div>
+                      ` : ''}
+                      <div style="font-size: 1.3em; font-weight: 800; color: #92400e; margin-top: 10px;">
+                        ${formatCurrency(v.amount)}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Jewellery
+      const jewelleryAsset = candidateData.movableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('jewellery')
+      );
+      
+      if (jewelleryAsset && jewelleryAsset.self && jewelleryAsset.self !== 'Nil') {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">💎 Jewellery</div>
+              <div class="card-item jewellery">
+                <div style="font-size: 2.5em; text-align: center; margin-bottom: 15px;">💍</div>
+                <div class="data-row">
+                  <div class="data-label">Details</div>
+                  <div class="data-value">${safeText(jewelleryAsset.self)}</div>
+                </div>
+                <div class="data-row">
+                  <div class="data-label">Total Value</div>
+                  <div class="amount-large">${formatCurrency(jewelleryAsset.total)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Insurance Policies
+      const insuranceAsset = candidateData.movableAssets.find(a => 
+        a.description && (a.description.toLowerCase().includes('lic') || a.description.toLowerCase().includes('insurance'))
+      );
+      
+      if (insuranceAsset && insuranceAsset.total && insuranceAsset.total !== 'Nil' && insuranceAsset.total !== 'Rs 70') {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">🛡️ Insurance Policies</div>
+              <div class="card-item insurance">
+                <div class="data-row">
+                  <div class="data-label">Policy Details</div>
+                  <div class="data-value">${safeText(insuranceAsset.description)}</div>
+                </div>
+                <div class="data-row">
+                  <div class="data-label">Total Coverage</div>
+                  <div class="amount-large">${formatCurrency(insuranceAsset.total)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Personal Loans Given
+      const loansGivenAsset = candidateData.movableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('personal loans')
+      );
+      
+      if (loansGivenAsset && loansGivenAsset.self && loansGivenAsset.self !== 'Nil') {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">📤 Personal Loans Given</div>
+              <div class="card-item income">
+                <div class="data-row">
+                  <div class="data-label">Loan Details</div>
+                  <div class="data-value">${safeText(loansGivenAsset.self)}</div>
+                </div>
+                <div class="data-row">
+                  <div class="data-label">Total Amount</div>
+                  <div class="amount-large">${formatCurrency(loansGivenAsset.total)}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ========================================
+    // IMMOVABLE ASSETS - DETAILED PROPERTIES
+    // ========================================
+    if (candidateData.immovableAssets && Array.isArray(candidateData.immovableAssets)) {
+      detailsHTML += `
+        <div class="section-header-main reveal">
+          <h2><span class="icon">🏠</span>Immovable Assets</h2>
+        </div>
+      `;
+
+      // Agricultural Land
+      const agricLand = candidateData.immovableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('agricultural land')
+      );
+      
+      if (agricLand && agricLand.self && agricLand.self !== 'Nil') {
+        const properties = parseProperty(agricLand.self);
+        
+        if (properties.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🌾 Agricultural Land (${properties.length})</div>
+                <div class="grid-2">
+                  ${properties.map((p, idx) => `
+                    <div class="card-item property">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">🌾</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Location</div>
+                        <div class="data-value">${safeText(p.address)}</div>
+                      </div>
+                      ${p.area ? `
+                        <div class="data-row">
+                          <div class="data-label">Area</div>
+                          <div class="data-value">${safeText(p.area)}</div>
+                        </div>
+                      ` : ''}
+                      <div class="data-row">
+                        <div class="data-label">Value</div>
+                        <div class="amount-large">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Non-Agricultural Land
+      const nonAgricLand = candidateData.immovableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('non agricultural land')
+      );
+      
+      if (nonAgricLand && nonAgricLand.self && nonAgricLand.self !== 'Nil') {
+        const properties = parseProperty(nonAgricLand.self);
+        
+        if (properties.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🏞️ Non-Agricultural Land (${properties.length})</div>
+                <div class="grid-2">
+                  ${properties.map((p, idx) => `
+                    <div class="card-item property">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">🏞️</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Location</div>
+                        <div class="data-value">${safeText(p.address)}</div>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Value</div>
+                        <div class="amount-large">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Residential Buildings
+      const residential = candidateData.immovableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('residential buildings')
+      );
+      
+      if (residential && residential.self && residential.self !== 'Nil') {
+        const properties = parseProperty(residential.self);
+        
+        if (properties.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🏘️ Residential Properties (${properties.length})</div>
+                <div class="grid-2">
+                  ${properties.map((p, idx) => `
+                    <div class="card-item property">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">🏠</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Address</div>
+                        <div class="data-value">${safeText(p.address)}</div>
+                      </div>
+                      ${p.area ? `
+                        <div class="data-row">
+                          <div class="data-label">Area</div>
+                          <div class="data-value">${safeText(p.area)}</div>
+                        </div>
+                      ` : ''}
+                      ${p.built ? `
+                        <div class="data-row">
+                          <div class="data-label">Built-up Area</div>
+                          <div class="data-value">${safeText(p.built)}</div>
+                        </div>
+                      ` : ''}
+                      ${p.purchaseDate ? `
+                        <div class="data-row">
+                          <div class="data-label">Purchase Date</div>
+                          <div class="data-value">${safeText(p.purchaseDate)}</div>
+                        </div>
+                      ` : ''}
+                      <div class="data-row">
+                        <div class="data-label">Value</div>
+                        <div class="amount-large">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Commercial Buildings
+      const commercial = candidateData.immovableAssets.find(a => 
+        a.description && a.description.toLowerCase().includes('commercial buildings')
+      );
+      
+      if (commercial && commercial.self && commercial.self !== 'Nil' && commercial.self !== 'Rs 70') {
+        const properties = parseProperty(commercial.self);
+        
+        if (properties.length > 0) {
+          detailsHTML += `
+            <div class="details-section reveal">
+              <div class="summary-card">
+                <div class="summary-card-title">🏢 Commercial Properties (${properties.length})</div>
+                <div class="grid-2">
+                  ${properties.map((p, idx) => `
+                    <div class="card-item property">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">🏢</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Address</div>
+                        <div class="data-value">${safeText(p.address)}</div>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">Value</div>
+                        <div class="amount-large">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    // ========================================
+    // LIABILITIES - DETAILED LOANS
+    // ========================================
+    if (candidateData.liabilities && Array.isArray(candidateData.liabilities)) {
+      const loans = candidateData.liabilities.filter(l => 
+        l.description && l.description.toLowerCase().includes('loan') && l.self && l.self !== 'Nil'
+      );
+      
+      if (loans.length > 0) {
+        detailsHTML += `
+          <div class="section-header-main reveal">
+            <h2><span class="icon">💳</span>Liabilities</h2>
+          </div>
+        `;
+
+        loans.forEach(loanCategory => {
+          const parsedLoans = parseLoans(loanCategory.self);
+          
+          if (parsedLoans.length > 0) {
+            detailsHTML += `
+              <div class="details-section reveal">
+                <div class="summary-card">
+                  <div class="summary-card-title">💳 ${safeText(loanCategory.description)}</div>
+                  <div style="overflow-x: auto;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Lender</th>
+                          <th>Type</th>
+                          <th>Account Number</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${parsedLoans.map((loan, idx) => `
+                          <tr>
+                            <td><strong>${idx + 1}</strong></td>
+                            <td><span class="badge badge-info">${safeText(loan.lender)}</span></td>
+                            <td><span class="badge badge-warning">${safeText(loan.type)}</span></td>
+                            <td><code>${safeText(loan.accountNo)}</code></td>
+                            <td><strong style="color: #dc2626;">${formatCurrency(loan.amount)}</strong></td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div style="margin-top: 20px; padding: 15px; background: #fef2f2; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 0.9em; color: #991b1b; font-weight: 700; margin-bottom: 5px;">TOTAL LIABILITY</div>
+                    <div class="amount-large" style="background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text;">
+                      ${formatCurrency(loanCategory.total)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+      }
+    }
+
+    // ========================================
+    // ASSET SUMMARY
+    // ========================================
+    if (candidateData.summary) {
+      detailsHTML += `
+        <div class="section-header-main reveal">
+          <h2><span class="icon">📊</span>Financial Summary</h2>
+        </div>
+        <div class="details-section reveal">
+          <div class="summary-card" style="background: linear-gradient(135deg, #fffbeb, #fef3c7);">
+            <div class="asset-summary">
+              <div class="asset-card">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">💰</div>
+                <div class="asset-card-title">Total Assets</div>
+                <div class="asset-card-value">${formatCurrency(candidateData.summary.totalAssets)}</div>
+              </div>
+              <div class="asset-card">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">💳</div>
+                <div class="asset-card-title">Total Liabilities</div>
+                <div class="asset-card-value" style="background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                  ${formatCurrency(candidateData.summary.totalLiabilities)}
+                </div>
+              </div>
+              <div class="asset-card" style="border-color: #10b981;">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+                <div class="asset-card-title">Net Worth</div>
+                <div class="asset-card-value" style="background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                  ${formatCurrency('Rs ' + (totalAssets - totalLiabilities))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ========================================
+  // HEADER INFO GRID
+  // ========================================
+  const infoItems = [];
+
+  if (data.state !== 'N/A' && data.state !== 'Unknown') {
+    infoItems.push(`
+      <div class="info-item">
+        <div class="info-label">📍 State</div>
+        <div class="info-value">${escapeHtml(data.state)}</div>
+      </div>
+    `);
+  }
+
+  if (data.age !== 'N/A') {
+    const ageDisplay = typeof data.age === 'number' ? `${data.age} years` : String(data.age).includes('year') ? data.age : `${data.age} years`;
+    
+    infoItems.push(`
+      <div class="info-item">
+        <div class="info-label">🎂 Age</div>
+        <div class="info-value">${escapeHtml(ageDisplay)}</div>
+      </div>
+    `);
+  }
+
+ if (data.education !== 'N/A') {
+  infoItems.push(`
+    <div class="info-item" style="grid-column: 1 ;">
+      <div class="info-label">🎓 Education</div>
+      <div class="info-value" style="line-height: 1.6;">${escapeHtml(data.education)}</div>
+    </div>
+  `);
+
+}
+
+  if (data.gender !== 'N/A') {
+    infoItems.push(`
+      <div class="info-item">
+        <div class="info-label">👤 Gender</div>
+        <div class="info-value">${escapeHtml(data.gender)}</div>
+      </div>
+    `);
+  }
+
+  if (data.termStart !== 'N/A') {
+    infoItems.push(`
+      <div class="info-item">
+        <div class="info-label">📅 Term Start</div>
+        <div class="info-value">${escapeHtml(data.termStart)}</div>
+      </div>
+    `);
+  }
+
+  if (data.termEnd !== 'N/A') {
+    infoItems.push(`
+      <div class="info-item">
+        <div class="info-label">📅 Term End</div>
+        <div class="info-value">${escapeHtml(data.termEnd)}</div>
+      </div>
+    `);
+  }
+
+  document.getElementById('content').innerHTML = `
+    <div class="header-card">
+      <div class="header-content">
+        <div class="profile-section">
+          <div class="profile-image-wrapper">
+            <img src="${escapeHtml(data.imageUrl || 'https://via.placeholder.com/200')}" alt="${escapeHtml(data.name)}" class="profile-image" onerror="this.src='https://via.placeholder.com/200'">
+            <div class="verification-badge" title="Verified Profile">✓</div>
+          </div>
+          <div class="profile-info">
+            <h1 class="member-name">${escapeHtml(data.name)}</h1>
+            <div class="member-role-section">
+              <span class="role-badge">
+                <span style="font-size: 1.3em;">🏛️</span>
+                <strong>${escapeHtml(data.type)}</strong>
+              </span>
+              <span class="constituency-badge">
+                <span style="font-size: 1.2em;">📍</span>
+                ${escapeHtml(data.constituency)}
+              </span>
+              ${data.party !== 'N/A' && data.party !== 'Unknown' ? `
+                <span class="party-badge">
+                  <span style="font-size: 1.1em;">🎯</span>
+                  ${escapeHtml(data.party)}
+                </span>
+              ` : ''}
+            </div>
+            
+            ${infoItems.length > 0 ? `<div class="info-grid">${infoItems.join('')}</div>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${quickStatsHTML}
+    ${statsHTML}
+    ${detailsHTML}
+  `;
+
+  console.log('✅ COMPLETE dashboard rendering done with ALL details');
+
+  setTimeout(() => {
+    createParticles();
+    add3DTilt();
+    addSparkles();
+    animateCounters();
+    revealOnScroll();
+  }, 100);
+}
+    async function loadMemberDataWithLoader() {
+      const loader = document.getElementById("loading-screen");
+      loader.style.display = "flex";
+      
+      startLoadingAnimation();
+      
+      try {
+        await loadMemberData();
+      } catch (error) {
+        console.error('Fatal error:', error);
+      } finally {
+        setTimeout(() => {
+          loader.style.display = "none";
+          clearInterval(messageInterval);
+        }, 500);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadMemberDataWithLoader);
+  </script>
+ 
+</body>
+</html>

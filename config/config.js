@@ -1,0 +1,29 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+const config = {
+  env: process.env.NODE_ENV || 'development',
+  server: {
+    port: parseInt(process.env.PORT) || 3000,
+    host: process.env.HOST || 'localhost',
+    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+  },
+  cache: {
+    ttl: {
+      prs: parseInt(process.env.CACHE_TTL_PRS) || 3600,
+      candidate: parseInt(process.env.CACHE_TTL_CANDIDATE) || 1800,
+      geojson: 86400 // 24 hours
+    }
+  },
+  rateLimit: {
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_MAX) || 100
+  },
+  scraper: {
+    timeout: parseInt(process.env.SCRAPER_TIMEOUT) || 30000,
+    retries: parseInt(process.env.SCRAPER_RETRIES) || 3,
+    maxBrowsers: parseInt(process.env.MAX_BROWSERS) || 2
+  }
+};
+
+export default config;

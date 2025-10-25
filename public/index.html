@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Constituency Map - Enhanced Analytics</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Particle Effect -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Enhanced Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-icon">
+                <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <div class="loader-text">Loading Constituency Data...</div>
+            <div class="loading-progress">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="loading-checkpoints">
+                    <div class="checkpoint" id="checkpoint1">
+                        <div class="checkpoint-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="checkpoint-text">Data</div>
+                    </div>
+                    <div class="checkpoint" id="checkpoint2">
+                        <div class="checkpoint-icon">
+                            <i class="fas fa-map"></i>
+                        </div>
+                        <div class="checkpoint-text">Map</div>
+                    </div>
+                    <div class="checkpoint" id="checkpoint3">
+                        <div class="checkpoint-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="checkpoint-text">Stats</div>
+                    </div>
+                    <div class="checkpoint" id="checkpoint4">
+                        <div class="checkpoint-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="checkpoint-text">Ready</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-map-marked-alt"></i>
+                India Constituency Analytics
+            </h1>
+            <div class="search-container">
+                <input type="text" id="searchBox" class="search-box" placeholder="Search constituencies, MPs, MLAs, parties...">
+                <i class="fas fa-search search-icon"></i>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="resetView()">
+                    <i class="fas fa-sync-alt"></i>
+                    Reset View
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-toggle">
+        <button id="assemblyBtn" class="active">Assembly</button>
+        <button id="parliamentaryBtn">Parliamentary</button>
+    </div>
+
+    <div class="stats-dashboard" id="statsDashboard">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <i class="fas fa-chart-line"></i>
+                National Overview
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-map"></i></div>
+                <div class="stat-label">Constituencies</div>
+                <div class="stat-value" id="totalConstituencies">543</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-landmark"></i></div>
+                <div class="stat-label">Lok Sabha MPs</div>
+                <div class="stat-value" id="totalLokSabhaMPs">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-university"></i></div>
+                <div class="stat-label">Rajya Sabha MPs</div>
+                <div class="stat-value" id="totalRajyaSabhaMPs">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-label">MLAs</div>
+                <div class="stat-value" id="totalMLAs">0</div>
+            </div>
+        </div>
+
+        <div class="party-section">
+            <div class="section-header">
+                <i class="fas fa-flag"></i>
+                Party Distribution - Lok Sabha
+            </div>
+            <div class="party-list" id="lokSabhaParties"></div>
+        </div>
+
+        <div class="party-section">
+            <div class="section-header">
+                <i class="fas fa-flag"></i>
+                Party Distribution - Rajya Sabha
+            </div>
+            <div class="party-list" id="rajyaSabhaParties"></div>
+        </div>
+
+        <div class="party-section">
+            <div class="section-header">
+                <i class="fas fa-flag"></i>
+                Party Distribution - MLAs
+            </div>
+            <div class="party-list" id="mlaParties"></div>
+        </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <div>
+                <div class="detail-title" id="detailTitle">Select a Constituency</div>
+                <div class="detail-subtitle" id="detailSubtitle">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Click on a constituency to view details
+                </div>
+            </div>
+        </div>
+        <div class="detail-body" id="detailBody"></div>
+    </div>
+
+    <div class="modal-overlay" id="stateModal" onclick="closeStateModal(event)">
+        <div class="state-modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <div class="modal-title" id="modalTitle">State Details</div>
+                    <div class="modal-subtitle" id="modalSubtitle">Rajya Sabha Members</div>
+                </div>
+                <button class="modal-close" onclick="closeStateModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+    <div class="header-actions">
+    <button class="action-btn" onclick="testNavigation('Narendra Modi', 'MP')">
+        <i class="fas fa-test"></i>
+        Test Navigation
+    </button>
+    <button class="action-btn" onclick="resetView()">
+        <i class="fas fa-sync-alt"></i>
+        Reset View
+    </button>
+</div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = (Math.random() * 5 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 25 + 's';
+                particle.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Loading progress simulation
+        let currentProgress = 0;
+        const progressBar = document.getElementById('progressBar');
+        
+        function updateProgress(target, checkpoint) {
+            const interval = setInterval(() => {
+                if (currentProgress < target) {
+                    currentProgress += 2;
+                    progressBar.style.width = currentProgress + '%';
+                } else {
+                    clearInterval(interval);
+                    if (checkpoint) {
+                        document.getElementById(checkpoint).classList.add('active');
+                    }
+                }
+            }, 30);
+        }
+
+        // Initialize map
+        const map = L.map('map', {
+            zoomControl: false
+        }).setView([22.9734, 78.6569], 5);
+
+        L.control.zoom({ position: 'topright' }).addTo(map);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap, &copy; CARTO',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Global variables
+        let constituencyData = {};
+        let rajyaSabhaData = {};
+        let geojsonLayer;
+        let selectedLayer = null;
+        let allFeatures = [];
+        let stateData = {};
+        let highlightedLayers = [];
+        let currentMapType = 'assembly';
+
+        const stats = {
+            lokSabha: {},
+            rajyaSabha: {},
+            mla: {},
+            totalLokSabha: 0,
+            totalRajyaSabha: 0,
+            totalMLAs: 0
+        };
+
+        // Map toggle functionality
+        const assemblyBtn = document.getElementById('assemblyBtn');
+        const parliamentaryBtn = document.getElementById('parliamentaryBtn');
+
+        assemblyBtn.addEventListener('click', () => switchMap('assembly'));
+        parliamentaryBtn.addEventListener('click', () => switchMap('parliamentary'));
+
+        function switchMap(type) {
+            if (currentMapType === type) return;
+            
+            currentMapType = type;
+            
+            if (type === 'assembly') {
+                assemblyBtn.classList.add('active');
+                parliamentaryBtn.classList.remove('active');
+            } else {
+                assemblyBtn.classList.remove('active');
+                parliamentaryBtn.classList.add('active');
+            }
+
+            if (selectedLayer) {
+                selectedLayer.setStyle(defaultStyle());
+                selectedLayer = null;
+            }
+            clearHighlightedLayers();
+            document.getElementById('detailPanel').classList.remove('active');
+            document.getElementById('searchBox').value = '';
+            document.getElementById('searchSuggestions').classList.remove('active');
+
+            if (geojsonLayer) {
+                map.removeLayer(geojsonLayer);
+            }
+
+            loadGeoJSON(type);
+        }
+
+        // Utility functions
+        function cleanName(name) {
+            if (!name) return "";
+            return name.trim().toUpperCase().replace(/[^\w\s]/g, '');
+        }
+
+        function getConstituencyName(properties) {
+            return properties.pc_name || properties.PC_NAME || 
+                   properties.ac_name || properties.AC_NAME || '';
+        }
+
+        function getStateName(properties) {
+            return properties.st_name || properties.ST_NAME || 'India';
+        }
+
+        function isCurrentTerm(startDate, endDate) {
+            const today = new Date();
+            const start = new Date(startDate);
+            const end = endDate.toLowerCase().includes('office') ? today : new Date(endDate);
+            return start <= today && today <= end;
+        }
+
+        // Load all data
+        updateProgress(25, 'checkpoint1');
+        
+        Promise.all([
+            fetch('/api/all-data').then(res => res.json()),
+            fetch('/api/rajya-sabha').then(res => res.json()).catch(() => ({}))
+        ])
+        .then(([allData, rajyaSabha]) => {
+            updateProgress(50, 'checkpoint2');
+            console.log('Loaded all_data.json:', allData);
+            console.log('Loaded rajya_sabha.json:', rajyaSabha);
+            
+            constituencyData = {};
+            rajyaSabhaData = rajyaSabha;
+            
+            for (let key in allData) {
+                const cleanKey = cleanName(key);
+                constituencyData[cleanKey] = allData[key];
+
+                if (allData[key].MP && isCurrentTerm(allData[key].MP.term_start_date, allData[key].MP.term_end_date)) {
+                    stats.totalLokSabha++;
+                    const party = allData[key].MP.party;
+                    stats.lokSabha[party] = (stats.lokSabha[party] || 0) + 1;
+                }
+
+                if (allData[key].Rajya_Sabha) {
+                    allData[key].Rajya_Sabha.forEach(rs => {
+                        if (isCurrentTerm(rs.term_start_date, rs.term_end_date)) {
+                            stats.totalRajyaSabha++;
+                            const party = rs.party;
+                            stats.rajyaSabha[party] = (stats.rajyaSabha[party] || 0) + 1;
+                        }
+                    });
+                }
+
+                if (allData[key].MLAs) {
+                    allData[key].MLAs.forEach(mla => {
+                        if (isCurrentTerm(mla.term_start_date, mla.term_end_date)) {
+                            stats.totalMLAs++;
+                            const party = mla.party;
+                            stats.mla[party] = (stats.mla[party] || 0) + 1;
+                        }
+                    });
+                }
+            }
+
+            for (let state in rajyaSabhaData) {
+                rajyaSabhaData[state].forEach(member => {
+                    const termEnd = member.term_end_date;
+                    if (termEnd === "In Office" || isCurrentTerm(member.term_start_date, termEnd)) {
+                        stats.totalRajyaSabha++;
+                        const party = member.party || "Unknown";
+                        stats.rajyaSabha[party] = (stats.rajyaSabha[party] || 0) + 1;
+                    }
+                });
+            }
+            
+            updateProgress(75, 'checkpoint3');
+            updateDashboard();
+            loadGeoJSON('assembly');
+        })
+        .catch(error => {
+            console.error('Error loading data:', error);
+            document.getElementById('loadingOverlay').classList.add('hidden');
+            alert('Error loading data. Please check console for details.');
+        });
+
+        function updateDashboard() {
+            document.getElementById('totalLokSabhaMPs').textContent = stats.totalLokSabha;
+            document.getElementById('totalRajyaSabhaMPs').textContent = stats.totalRajyaSabha;
+            document.getElementById('totalMLAs').textContent = stats.totalMLAs;
+            
+            updatePartyList('lokSabhaParties', stats.lokSabha);
+            updatePartyList('rajyaSabhaParties', stats.rajyaSabha);
+            updatePartyList('mlaParties', stats.mla);
+        }
+
+        function updatePartyList(elementId, partyData) {
+            const container = document.getElementById(elementId);
+            const sortedParties = Object.entries(partyData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            if (sortedParties.length === 0) {
+                container.innerHTML = '<p class="no-data">No data available</p>';
+                return;
+            }
+
+            let html = '';
+            sortedParties.forEach(([party, count]) => {
+                html += `
+                    <div class="party-item">
+                        <div class="party-info">
+                            <div class="party-color"></div>
+                            <div class="party-details">
+                                <div class="party-name">${party}</div>
+                                <div class="party-type">${count} member${count !== 1 ? 's' : ''}</div>
+                            </div>
+                        </div>
+                        <div class="party-count">${count}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function loadGeoJSON(type) {
+            updateProgress(85, null);
+
+            fetch(`/api/constituencies?type=${type}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to load GeoJSON: ' + res.status);
+                    return res.json();
+                })
+                .then(geojson => {
+                    console.log('Loaded GeoJSON:', type);
+                    allFeatures = geojson.features;
+
+                    geojsonLayer = L.geoJSON(geojson, {
+                        style: defaultStyle,
+                        onEachFeature: onEachFeature
+                    }).addTo(map);
+
+                    updateProgress(100, 'checkpoint4');
+                    setTimeout(() => {
+                        document.getElementById('loadingOverlay').classList.add('hidden');
+                    }, 500);
+                })
+                .catch(err => {
+                    console.error('Error loading GeoJSON:', err);
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                    alert('Error loading map data. Please check console for details.');
+                });
+        }
+
+        function defaultStyle(feature) {
+            return {
+                color: '#3b82f6',
+                weight: 2,
+                fillOpacity: 0.2,
+                fillColor: '#3b82f6'
+            };
+        }
+
+        function highlightStyle(feature) {
+            return {
+                color: '#667eea',
+                weight: 3,
+                fillOpacity: 0.5,
+                fillColor: '#667eea'
+            };
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: clickFeature
+            });
+        }
+
+        function highlightFeature(e) {
+            const layer = e.target;
+            if (layer !== selectedLayer && !highlightedLayers.includes(layer)) {
+                layer.setStyle({
+                    weight: 3,
+                    fillOpacity: 0.4,
+                    color: '#667eea'
+                });
+            }
+        }
+
+        function resetHighlight(e) {
+            const layer = e.target;
+            if (layer !== selectedLayer && !highlightedLayers.includes(layer)) {
+                layer.setStyle(defaultStyle());
+            }
+        }
+
+        function clickFeature(e) {
+            const layer = e.target;
+            const feature = layer.feature;
+            
+            if (selectedLayer && selectedLayer !== layer) {
+                selectedLayer.setStyle(defaultStyle());
+            }
+            
+            layer.setStyle(highlightStyle());
+            selectedLayer = layer;
+
+            const bounds = layer.getBounds();
+            const center = bounds.getCenter();
+            
+            map.flyTo(center, Math.max(map.getZoom(), 8), {
+                duration: 1.5,
+                easeLinearity: 0.25
+            });
+
+            setTimeout(() => {
+                showConstituencyDetails(feature);
+            }, 1600);
+        }
+
+function showConstituencyDetails(feature) {
+    const constituencyName = getConstituencyName(feature.properties);
+    const stateName = getStateName(feature.properties);
+    const cleanedName = cleanName(constituencyName);
+    const data = constituencyData[cleanedName];
+    
+    const detailPanel = document.getElementById('detailPanel');
+    const detailBody = document.getElementById('detailBody');
+    
+    document.getElementById('detailTitle').textContent = constituencyName;
+    document.getElementById('detailSubtitle').innerHTML = `
+        <i class="fas fa-map-marker-alt"></i>
+        ${stateName}
+    `;
+
+    console.log('Showing details for:', constituencyName, '(cleaned:', cleanedName, ')');
+    console.log('Found data:', data);
+
+    if (!data) {
+        detailBody.innerHTML = `
+            <p class="no-data">
+                No data available for this constituency<br>
+                <small>Searched for: ${cleanedName}</small>
+            </p>
+        `;
+        detailPanel.classList.add('active');
+        return;
+    }
+
+    let html = '';
+    const state = data.MP?.state || stateName;
+    
+    // ==================== LOK SABHA MP ====================
+    html += `<div class="detail-section">
+        <div class="detail-section-title">
+            <i class="fas fa-landmark"></i>
+            Lok Sabha Representative
+        </div>`;
+
+    if (data.MP && isCurrentTerm(data.MP.term_start_date, data.MP.term_end_date)) {
+        const mpName = data.MP.name.replace(/'/g, "\\'");
+        html += `
+            <div class="representative-card clickable-card" 
+                 data-member-name="${mpName}" 
+                 data-member-type="MP"
+                 onclick="handleCardClick(this)"
+                 style="cursor: pointer; position: relative;">
+                <div class="rep-header">
+                    <div>
+                        <div class="rep-name" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>${data.MP.name}</span>
+                            <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
+                        </div>
+                    </div>
+                    <div class="rep-party">${data.MP.party}</div>
+                </div>
+                <div class="rep-details">
+                    <div class="rep-detail-item">
+                        <i class="fas fa-venus-mars"></i>
+                        ${data.MP.gender || 'N/A'}
+                    </div>
+                    <div class="rep-detail-item">
+                        <i class="fas fa-birthday-cake"></i>
+                        ${data.MP.age ? data.MP.age + ' years' : 'N/A'}
+                    </div>
+                    <div class="rep-detail-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        ${data.MP.education || 'N/A'}
+                    </div>
+                    <div class="rep-detail-item">
+                        <i class="far fa-calendar-alt"></i>
+                        ${data.MP.term_start_date} - ${data.MP.term_end_date}
+                    </div>
+                    ${data.MP.attendance !== null && data.MP.attendance !== undefined ? `
+                    <div class="rep-detail-item">
+                        <i class="fas fa-check-circle"></i>
+                        Attendance: ${(data.MP.attendance * 100).toFixed(1)}%
+                    </div>` : ''}
+                </div>
+                <div class="card-click-hint">
+                    <i class="fas fa-arrow-right"></i>
+                    Click to view full profile
+                </div>
+            </div>
+        `;
+    } else {
+        html += '<p class="no-data">No current Lok Sabha MP</p>';
+    }
+    html += '</div>';
+
+    // ==================== MLAs ====================
+    html += `<div class="detail-section">
+        <div class="detail-section-title">
+            <i class="fas fa-users"></i>
+            Assembly Members (MLAs)
+        </div>`;
+
+    if (data.MLAs) {
+        const currentMLAs = data.MLAs.filter(mla => 
+            isCurrentTerm(mla.term_start_date, mla.term_end_date)
+        );
+
+        if (currentMLAs.length > 0) {
+            currentMLAs.forEach(mla => {
+                const mlaName = mla.name.replace(/'/g, "\\'");
+                html += `
+                    <div class="representative-card clickable-card" 
+                         data-member-name="${mlaName}" 
+                         data-member-type="MLA"
+                         onclick="handleCardClick(this)"
+                         style="cursor: pointer; position: relative;">
+                        <div class="rep-header">
+                            <div>
+                                <div class="rep-name" style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>${mla.name}</span>
+                                    <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
+                                </div>
+                            </div>
+                            <div class="rep-party">${mla.party}</div>
+                        </div>
+                        <div class="rep-details">
+                            <div class="rep-detail-item">
+                                <i class="fas fa-building"></i>
+                                ${mla.ac_name}
+                            </div>
+                            <div class="rep-detail-item">
+                                <i class="fas fa-venus-mars"></i>
+                                ${mla.gender || 'N/A'}
+                            </div>
+                            <div class="rep-detail-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                ${mla.age ? mla.age + ' years' : 'N/A'}
+                            </div>
+                            <div class="rep-detail-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                ${mla.education || 'N/A'}
+                            </div>
+                            <div class="rep-detail-item">
+                                <i class="far fa-calendar-alt"></i>
+                                ${mla.term_start_date} - ${mla.term_end_date}
+                            </div>
+                            ${mla.attendance !== null && mla.attendance !== undefined ? `
+                            <div class="rep-detail-item">
+                                <i class="fas fa-check-circle"></i>
+                                Attendance: ${mla.attendance}%
+                            </div>` : ''}
+                        </div>
+                        <div class="card-click-hint">
+                            <i class="fas fa-arrow-right"></i>
+                            Click to view full profile
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            html += '<p class="no-data">No current MLAs in office</p>';
+        }
+    } else {
+        html += '<p class="no-data">No MLA data available</p>';
+    }
+    html += '</div>';
+
+    // Rajya Sabha link
+    if (state) {
+        html += `
+            <div class="state-link" onclick="event.stopPropagation(); showStateModal('${state}')">
+                <i class="fas fa-arrow-right"></i>
+                <span>View ${state} Rajya Sabha Members</span>
+            </div>
+        `;
+    }
+
+    detailBody.innerHTML = html;
+    detailPanel.classList.add('active');
+}
+
+// Card click handler - ADD THIS NEW FUNCTION
+function handleCardClick(cardElement) {
+    const name = cardElement.getAttribute('data-member-name');
+    const type = cardElement.getAttribute('data-member-type');
+    
+    console.log('🎯 Card clicked:', { name, type });
+    
+    if (name && type) {
+        navigateToMember(name, type);
+    } else {
+        console.error('❌ Missing name or type in card data');
+    }
+}
+
+// Navigation function - MAKE SURE THIS EXISTS
+function navigateToMember(name, type) {
+    console.log('🚀 Navigating to member:', name, type);
+    const url = `/member?name=${encodeURIComponent(name)}&type=${type}`;
+    console.log('📍 URL:', url);
+    
+    // Add visual feedback
+    console.log('✅ Navigation triggered');
+    
+    // Navigate
+    window.location.href = url;
+}
+// Navigation function
+function navigateToMember(name, type) {
+    console.log("clicked",name," type",type)
+    console.log('🚀 Navigating to member:', name, type);
+    const url = `/member?name=${encodeURIComponent(name)}&type=${type}`;
+    console.log('📍 URL:', url);
+    
+    // Try different navigation methods
+    try {
+        window.location.href = url;
+    } catch (e) {
+        console.error('Navigation error:', e);
+        // Fallback
+        window.location.assign(url);
+    }
+}
+
+// Debug function to test navigation
+function testNavigation(name, type) {
+    console.log('🔍 Test Navigation Called:', name, type);
+    const url = `/member?name=${encodeURIComponent(name)}&type=${type}`;
+    console.log('📍 Navigating to:', url);
+    window.location.href = url;
+}
+
+// Test if member route is accessible
+function testMemberRoute() {
+    fetch('/member?name=Test&type=MP')
+        .then(response => {
+            console.log('✅ Member route status:', response.status);
+            if (response.ok) {
+                console.log('✅ Member route is accessible');
+            } else {
+                console.error('❌ Member route returned error:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Cannot reach member route:', error);
+        });
+}
+
+setTimeout(testMemberRoute, 2000);
+
+function showStateModal(stateName) {
+    const modal = document.getElementById('stateModal');
+    const modalBody = document.getElementById('modalBody');
+    
+    document.getElementById('modalTitle').textContent = stateName;
+
+    let rajyaSabhaMembers = rajyaSabhaData[stateName] || [];
+    rajyaSabhaMembers = rajyaSabhaMembers.filter(rs =>
+        isCurrentTerm(rs.term_start_date, rs.term_end_date)
+    );
+    rajyaSabhaMembers = rajyaSabhaMembers.filter((member, index, self) =>
+        index === self.findIndex(m => m.name === member.name && m.party === member.party)
+    );
+
+    console.log('Rajya Sabha members for', stateName, ':', rajyaSabhaMembers);
+
+    let html = '';
+    const partyCount = {};
+    rajyaSabhaMembers.forEach(member => {
+        partyCount[member.party] = (partyCount[member.party] || 0) + 1;
+    });
+
+    html += `
+        <div class="modal-stats">
+            <div class="modal-stat-card">
+                <div class="modal-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="modal-stat-value">${rajyaSabhaMembers.length}</div>
+                <div class="modal-stat-label">Total Members</div>
+            </div>
+            <div class="modal-stat-card">
+                <div class="modal-stat-icon">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <div class="modal-stat-value">${Object.keys(partyCount).length}</div>
+                <div class="modal-stat-label">Parties</div>
+            </div>
+            <div class="modal-stat-card">
+                <div class="modal-stat-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="modal-stat-value">${stateName.length}</div>
+                <div class="modal-stat-label">State Code</div>
+            </div>
+        </div>
+    `;
+
+    html += '<div class="detail-section"><div class="detail-section-title"><i class="fas fa-university"></i> Rajya Sabha Members</div>';
+
+    if (rajyaSabhaMembers.length > 0) {
+        rajyaSabhaMembers.forEach(member => {
+            const memberName = member.name.replace(/'/g, "\\'");
+            html += `
+                <div class="representative-card clickable-card" 
+                     data-member-name="${memberName}" 
+                     data-member-type="MP"
+                     onclick="handleCardClick(this)"
+                     style="cursor: pointer; position: relative;">
+                    <div class="rep-header">
+                        <div>
+                            <div class="rep-name" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span>${member.name}</span>
+                                <i class="fas fa-external-link-alt" style="font-size: 0.8rem; opacity: 0.5;"></i>
+                            </div>
+                        </div>
+                        <div class="rep-party">${member.party}</div>
+                    </div>
+                    <div class="rep-details">
+                        <div class="rep-detail-item">
+                            <i class="fas fa-venus-mars"></i>
+                            ${member.gender || 'N/A'}
+                        </div>
+                        <div class="rep-detail-item">
+                            <i class="fas fa-birthday-cake"></i>
+                            ${member.age ? member.age + ' years' : 'N/A'}
+                        </div>
+                        <div class="rep-detail-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            ${member.education || 'N/A'}
+                        </div>
+                        <div class="rep-detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            ${member.term_start_date} - ${member.term_end_date}
+                        </div>
+                        ${member.attendance !== null && member.attendance !== undefined ? `
+                        <div class="rep-detail-item">
+                            <i class="fas fa-check-circle"></i>
+                            Attendance: ${(member.attendance * 100).toFixed(2)}%
+                        </div>` : ''}
+                    </div>
+                    <div class="card-click-hint">
+                        <i class="fas fa-arrow-right"></i>
+                        Click to view full profile
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        html += '<p class="no-data">No Rajya Sabha members found for this state</p>';
+    }
+
+    html += '</div>';
+    modalBody.innerHTML = html;
+    modal.classList.add('active');
+}
+
+function closeStateModal(event) {
+            if (!event || event.target.id === 'stateModal') {
+                document.getElementById('stateModal').classList.remove('active');
+            }
+        }
+
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        const suggestionsBox = document.getElementById('searchSuggestions');
+        let searchTimeout;
+
+        searchBox.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const searchTerm = e.target.value.trim().toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                suggestionsBox.classList.remove('active');
+                clearHighlightedLayers();
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                performSearch(searchTerm);
+            }, 300);
+        });
+
+        function performSearch(searchTerm) {
+            const results = [];
+            
+            allFeatures.forEach(feature => {
+                const pcName = getConstituencyName(feature.properties);
+                const stName = getStateName(feature.properties);
+                
+                if (pcName.toLowerCase().includes(searchTerm) || 
+                    stName.toLowerCase().includes(searchTerm)) {
+                    results.push({
+                        type: 'constituency',
+                        name: pcName,
+                        state: stName,
+                        feature: feature
+                    });
+                }
+            });
+
+            for (let key in constituencyData) {
+                const data = constituencyData[key];
+                
+                if (data.MP && data.MP.name.toLowerCase().includes(searchTerm)) {
+                    const feature = allFeatures.find(f => {
+                        const fname = getConstituencyName(f.properties);
+                        return cleanName(fname) === key;
+                    });
+                    if (feature) {
+                        results.push({
+                            type: 'mp',
+                            name: data.MP.name,
+                            party: data.MP.party,
+                            constituency: getConstituencyName(feature.properties),
+                            feature: feature
+                        });
+                    }
+                }
+
+                if (data.MLAs) {
+                    data.MLAs.forEach(mla => {
+                        if (mla.name.toLowerCase().includes(searchTerm)) {
+                            const feature = allFeatures.find(f => {
+                                const fname = getConstituencyName(f.properties);
+                                return cleanName(fname) === key;
+                            });
+                            if (feature) {
+                                results.push({
+                                    type: 'mla',
+                                    name: mla.name,
+                                    party: mla.party,
+                                    constituency: getConstituencyName(feature.properties),
+                                    assembly: mla.ac_name,
+                                    feature: feature
+                                });
+                            }
+                        }
+                    });
+                }
+
+                if (data.MP && data.MP.party.toLowerCase().includes(searchTerm)) {
+                    const feature = allFeatures.find(f => {
+                        const fname = getConstituencyName(f.properties);
+                        return cleanName(fname) === key;
+                    });
+                    if (feature && !results.find(r => r.feature === feature && r.type === 'mp')) {
+                        results.push({
+                            type: 'mp',
+                            name: data.MP.name,
+                            party: data.MP.party,
+                            constituency: getConstituencyName(feature.properties),
+                            feature: feature
+                        });
+                    }
+                }
+            }
+
+            displaySearchResults(results.slice(0, 15));
+        }
+
+        function displaySearchResults(results) {
+            clearHighlightedLayers();
+
+            if (results.length === 0) {
+                suggestionsBox.innerHTML = `
+                    <div class="suggestion-item">
+                        <div class="suggestion-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="suggestion-content">
+                            <div class="suggestion-name">No results found</div>
+                            <div class="suggestion-state">Try a different search term</div>
+                        </div>
+                    </div>
+                `;
+                suggestionsBox.classList.add('active');
+                return;
+            }
+
+            let html = '';
+            results.forEach((result, index) => {
+                let icon = 'fa-map-pin';
+                let subtitle = result.state || '';
+                let badgeClass = 'badge-constituency';
+                let badgeText = 'PC';
+                
+                if (result.type === 'mp') {
+                    icon = 'fa-landmark';
+                    subtitle = `${result.party} • ${result.constituency}`;
+                    badgeClass = 'badge-mp';
+                    badgeText = 'Lok Sabha';
+                } else if (result.type === 'mla') {
+                    icon = 'fa-user-tie';
+                    subtitle = `${result.party} • ${result.assembly}`;
+                    badgeClass = 'badge-mla';
+                    badgeText = 'MLA';
+                }
+
+                html += `
+                    <div class="suggestion-item" data-index="${index}">
+                        <div class="suggestion-icon">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="suggestion-content">
+                            <div class="suggestion-name">${result.name}</div>
+                            <div class="suggestion-state">${subtitle}</div>
+                        </div>
+                        <span class="suggestion-type-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                `;
+
+                if (result.feature) {
+                    highlightConstituencyOnMap(result.feature);
+                }
+            });
+
+            suggestionsBox.innerHTML = html;
+            suggestionsBox.classList.add('active');
+
+            document.querySelectorAll('#searchSuggestions .suggestion-item').forEach((item, index) => {
+                item.addEventListener('click', () => selectSearchResult(results[index]));
+            });
+        }
+
+        function highlightConstituencyOnMap(feature) {
+            if (!geojsonLayer) return;
+            
+            geojsonLayer.eachLayer(function(layer) {
+                if (layer.feature === feature) {
+                    layer.setStyle({
+                        color: '#f59e0b',
+                        weight: 4,
+                        fillOpacity: 0.5,
+                        fillColor: '#f59e0b',
+                        dashArray: ''
+                    });
+                    highlightedLayers.push(layer);
+                    
+                    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                        layer.bringToFront();
+                    }
+                }
+            });
+        }
+
+        function clearHighlightedLayers() {
+            highlightedLayers.forEach(layer => {
+                if (layer !== selectedLayer) {
+                    layer.setStyle(defaultStyle());
+                }
+            });
+            highlightedLayers = [];
+        }
+
+        function selectSearchResult(result) {
+            suggestionsBox.classList.remove('active');
+            searchBox.value = result.name;
+            clearHighlightedLayers();
+
+            if (result.feature) {
+                geojsonLayer.eachLayer(function(layer) {
+                    if (layer.feature === result.feature) {
+                        const bounds = layer.getBounds();
+                        const center = bounds.getCenter();
+                        
+                        map.flyTo(center, 9, {
+                            duration: 2,
+                            easeLinearity: 0.25
+                        });
+                        
+                        setTimeout(() => {
+                            if (selectedLayer && selectedLayer !== layer) {
+                                selectedLayer.setStyle(defaultStyle());
+                            }
+                            layer.setStyle(highlightStyle());
+                            selectedLayer = layer;
+                            showConstituencyDetails(result.feature);
+                        }, 2100);
+                    }
+                });
+            }
+        }
+
+        function resetView() {
+            searchBox.value = '';
+            suggestionsBox.classList.remove('active');
+            clearHighlightedLayers();
+            
+            if (selectedLayer) {
+                selectedLayer.setStyle(defaultStyle());
+                selectedLayer = null;
+            }
+            
+            document.getElementById('detailPanel').classList.remove('active');
+            
+            map.flyTo([22.9734, 78.6569], 5, {
+                duration: 1.5,
+                easeLinearity: 0.5
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                suggestionsBox.classList.remove('active');
+                clearHighlightedLayers();
+            }
+        });
+
+        searchBox.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchBox.value = '';
+                suggestionsBox.classList.remove('active');
+                clearHighlightedLayers();
+            }
+        });
+    </script>
+</body>
+</html>
