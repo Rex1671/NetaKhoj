@@ -25,7 +25,7 @@
     "p-retry": "^7.1.0",
     "puppeteer": "^21.5.2",
     "useragent": "^2.3.0",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0",
     "ws": "^8.14.2"
