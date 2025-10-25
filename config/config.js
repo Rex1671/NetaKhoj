@@ -12,7 +12,7 @@ const config = {
     ttl: {
       prs: parseInt(process.env.CACHE_TTL_PRS) || 3600,
       candidate: parseInt(process.env.CACHE_TTL_CANDIDATE) || 1800,
-      geojson: 86400 // 24 hours
+      geojson: 86400
     }
   },
   rateLimit: {

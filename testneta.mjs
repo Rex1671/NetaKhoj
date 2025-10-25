@@ -1,7 +1,7 @@
-import { getCandidateData } from './findNeta.js'; // adjust path if needed
+import { getCandidateData } from './findNeta.js'; 
 
 (async () => {
-    // Hardcoded candidate details
+   
     const name = "Joba Majhi";
     const constituency = "Singhbhum";
     const party = "Jharkhand Mukti Morcha";

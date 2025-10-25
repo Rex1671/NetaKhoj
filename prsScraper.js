@@ -2,12 +2,12 @@ import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
 /**
- * Fetch missing tables from PRS page using Puppeteer.
- * @param {string} url - The PRS profile URL
- * @param {Object} options - Which tables to fetch
- * @param {boolean} options.fetchMovable - fetch movable_assets
- * @param {boolean} options.fetchImmovable - fetch immovable_assets
- * @param {boolean} options.fetchLiabilities - fetch liabilities
+ *
+ * @param {string} url 
+ * @param {Object} options 
+ * @param {boolean} options.fetchMovable 
+ * @param {boolean} options.fetchImmovable 
+ * @param {boolean} options.fetchLiabilities
  */
 export async function fetchAssetTables(url, options = {}) {
     const { fetchMovable = true, fetchImmovable = true, fetchLiabilities = true } = options;
@@ -27,7 +27,7 @@ export async function fetchAssetTables(url, options = {}) {
     const parseTable = (table) => {
         const data = [];
         table.find('tr').each((i, row) => {
-            if (i === 0) return; // skip header row
+            if (i === 0) return; 
 
             const cells = $(row).find('td');
             if (!cells.length) return;

@@ -12,14 +12,14 @@ import apiRoutes from './routes/api.js';
 import browserPool from './services/browserPool.js';
 import memberRoutes from './routes/member.js';
 
-import crypto from 'crypto'; // at the top of your file
+
+import crypto from 'crypto'; 
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Logging
 const log = (level, module, message) => {
   const timestamp = new Date().toLocaleTimeString();
   const emoji = { 
@@ -35,7 +35,6 @@ const log = (level, module, message) => {
   console.log(`${emoji} [${level.toUpperCase()}] [${module}] [${timestamp}] ${message}`);
 };
 
-// Security middleware
 app.use(helmet({
   contentSecurityPolicy: false,
 }));

@@ -9,10 +9,9 @@
    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Particle Effect -->
+ 
     <div class="particles" id="particles"></div>
 
-    <!-- Enhanced Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loader">
             <div class="loader-icon">
@@ -195,7 +194,6 @@
         }
         createParticles();
 
-        // Loading progress simulation
         let currentProgress = 0;
         const progressBar = document.getElementById('progressBar');
         
@@ -213,7 +211,6 @@
             }, 30);
         }
 
-        // Initialize map
         const map = L.map('map', {
             zoomControl: false
         }).setView([22.9734, 78.6569], 5);
@@ -225,7 +222,6 @@
             maxZoom: 19
         }).addTo(map);
 
-        // Global variables
         let constituencyData = {};
         let rajyaSabhaData = {};
         let geojsonLayer;
@@ -244,7 +240,6 @@
             totalMLAs: 0
         };
 
-        // Map toggle functionality
         const assemblyBtn = document.getElementById('assemblyBtn');
         const parliamentaryBtn = document.getElementById('parliamentaryBtn');
 
@@ -280,7 +275,6 @@
             loadGeoJSON(type);
         }
 
-        // Utility functions
         function cleanName(name) {
             if (!name) return "";
             return name.trim().toUpperCase().replace(/[^\w\s]/g, '');
@@ -302,7 +296,6 @@
             return start <= today && today <= end;
         }
 
-        // Load all data
         updateProgress(25, 'checkpoint1');
         
         Promise.all([
@@ -537,7 +530,6 @@ function showConstituencyDetails(feature) {
     let html = '';
     const state = data.MP?.state || stateName;
     
-    // ==================== LOK SABHA MP ====================
     html += `<div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-landmark"></i>

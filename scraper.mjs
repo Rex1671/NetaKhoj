@@ -2,9 +2,7 @@ import puppeteer from 'puppeteer';
 
 let browserInstance = null;
 
-/**
- * Get or create browser instance (reuse for multiple requests)
- */
+
 async function getBrowser() {
   if (!browserInstance) {
     console.log('🚀 Launching browser...');
@@ -21,9 +19,7 @@ async function getBrowser() {
   return browserInstance;
 }
 
-/**
- * Fetch HTML with Puppeteer - waits for dynamic tables
- */
+
 export async function fetchHTMLWithPuppeteer(url) {
   const browser = await getBrowser();
   const page = await browser.newPage();
@@ -36,7 +32,7 @@ export async function fetchHTMLWithPuppeteer(url) {
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     );
 
-    // Navigate
+
     await page.goto(url, {
       waitUntil: 'domcontentloaded',
       timeout: 30000
@@ -44,7 +40,7 @@ export async function fetchHTMLWithPuppeteer(url) {
 
     console.log('⏳ Waiting for dynamic tables...');
 
-    // Wait for critical tables (the ones with delayed loading)
+
     const tableWaits = [
       page.waitForSelector('#movable_assets', { timeout: 15000 }).catch(() => console.warn('  ⚠️ movable_assets timeout')),
       page.waitForSelector('#immovable_assets', { timeout: 15000 }).catch(() => console.warn('  ⚠️ immovable_assets timeout')),
@@ -54,7 +50,7 @@ export async function fetchHTMLWithPuppeteer(url) {
 
     await Promise.all(tableWaits);
 
-    // Wait for table rows to populate
+
     await page.waitForFunction(() => {
       const movable = document.querySelector('#movable_assets');
       const immovable = document.querySelector('#immovable_assets');
@@ -67,7 +63,7 @@ export async function fetchHTMLWithPuppeteer(url) {
       return movableRows > 2 || immovableRows > 2 || liabilityRows > 2;
     }, { timeout: 10000 }).catch(() => console.warn('  ⚠️ Table rows not populated'));
 
-    // Extra safety wait
+   
     await page.waitForTimeout(2000);
 
     const html = await page.content();
@@ -84,9 +80,7 @@ export async function fetchHTMLWithPuppeteer(url) {
   }
 }
 
-/**
- * Close browser instance (call at app shutdown)
- */
+
 export async function closeBrowser() {
   if (browserInstance) {
     console.log('🔒 Closing browser...');

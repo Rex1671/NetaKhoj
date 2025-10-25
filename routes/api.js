@@ -1,3 +1,4 @@
+// api.js
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
@@ -7,17 +8,18 @@ import { fileURLToPath } from 'url';
 import { memberQueryValidator, candidateQueryValidator } from '../middleware/validator.js';
 import { scraperLimiter } from '../middleware/rateLimiter.js';
 import prsService from '../services/prsService.js';
+import myNetaService from '../services/mynetaService.js';
 import cacheService from '../services/cacheService.js';
 import browserPool from '../services/browserPool.js';
 import { getCandidateData } from '../findNeta.js';
 
-// Needed for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// 🗺️ Serve GeoJSON files
+// ... keep existing routes (constituencies, all-data, rajya-sabha) ...
+
 router.get('/constituencies', async (req, res) => {
   try {
     const { type = 'assembly' } = req.query;
@@ -44,7 +46,6 @@ router.get('/constituencies', async (req, res) => {
   }
 });
 
-// 📊 All data
 router.get('/all-data', async (req, res) => {
   try {
     const cacheKey = 'all_data';
@@ -63,7 +64,6 @@ router.get('/all-data', async (req, res) => {
   }
 });
 
-// 🏛️ Rajya Sabha data
 router.get('/rajya-sabha', async (req, res) => {
   try {
     const cacheKey = 'rajya_sabha';
@@ -82,28 +82,56 @@ router.get('/rajya-sabha', async (req, res) => {
   }
 });
 
-// 🧩 PRS endpoint
 router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
   try {
-    const { name, type } = req.query;
-    console.log(`🌐 [REQ] /api/prs: ${name} (${type})`);
+    const { name, type, constituency, party } = req.query;
+    console.log(`🌐 [REQ] /api/prs: ${name} (${type}), Constituency: ${constituency || 'N/A'}, Party: ${party || 'N/A'}`);
 
-    const data = await prsService.getMemberData(name, type);
+    console.log(`🔍 [PRS] Attempting PRS lookup for ${name}...`);
+    const prsData = await prsService.getMemberData(name, type, constituency, party);
 
-    if (!data.found) {
-      return res
-        .status(404)
-        .send('<div class="text-center"><h3>Member not found</h3></div>');
+    if (prsData.found && prsData.html && prsData.html.length > 0) {
+      console.log(`✅ [PRS] Successfully fetched data from PRS for ${name}`);
+      return res.json({
+        source: 'prs',
+        ...prsData
+      });
     }
 
-    res.json(data);
+    console.log(`⚠️ [PRS] Failed or no data found, trying MyNeta fallback for ${name}...`);
+    
+    const myNetaData = await myNetaService.getCandidateData(name, constituency || '', party || '');
+    
+    if (myNetaData && myNetaData.data && !myNetaData.data.error) {
+      console.log(`✅ [MYNETA] Successfully fetched data from MyNeta for ${name}`);
+      return res.json({
+        source: 'myneta',
+        found: true,
+        data: myNetaData.data,
+        fallback: true
+      });
+    }
+
+    console.log(`❌ [API] Both PRS and MyNeta failed for ${name}`);
+    return res.status(404).json({
+      found: false,
+      error: 'Member not found in both PRS and MyNeta databases',
+      name,
+      type,
+      constituency,
+      party
+    });
+
   } catch (error) {
     console.error('❌ [API] /prs error:', error);
-    res.status(500).send('<div class="text-center"><h3>Error fetching data</h3></div>');
+    res.status(500).json({ 
+      error: 'Failed to fetch data',
+      message: error.message 
+    });
   }
 });
 
-// 🧑‍💼 Candidate endpoint
+// Keep existing /candidate endpoint
 router.get('/candidate', scraperLimiter, candidateQueryValidator, async (req, res) => {
   try {
     const { name, constituency, party } = req.query;
@@ -117,17 +145,16 @@ router.get('/candidate', scraperLimiter, candidateQueryValidator, async (req, re
       tempId,
     });
     console.log(candidateData.data)
-    console.log("Liabilities",candidateData.data.liabilities);
-    console.log("immovable asset",candidateData.data.immovableAssets)
-     console.log("immovable asset",candidateData.data.movableAssets)
-      console.log("immovable asset",candidateData.data.incomeTax)
+    console.log("Liabilities", candidateData.data.liabilities);
+    console.log("Immovable asset", candidateData.data.immovableAssets)
+    console.log("Movable asset", candidateData.data.movableAssets)
+    console.log("Income tax", candidateData.data.incomeTax)
   } catch (error) {
     console.error('❌ [API] /candidate error:', error);
     res.status(500).json({ error: 'Failed to fetch candidate data' });
   }
 });
 
-// 🩺 Health check
 router.get('/health', (req, res) => {
   const browserStats = browserPool.getStats();
   const cacheStats = cacheService.getStats();
@@ -145,7 +172,6 @@ router.get('/health', (req, res) => {
   });
 });
 
-// 🧹 Cache management
 router.post('/cache/clear', (req, res) => {
   const { type } = req.query;
   cacheService.flush(type);

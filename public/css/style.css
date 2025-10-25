@@ -543,7 +543,7 @@
             }
         }
 
-        /* Enhanced Suggestions with Glassmorphism */
+       
   .search-suggestions {
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -562,12 +562,12 @@
   animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2002;
 
-  /* 🔥 Add these lines to hide scrollbar but allow scrolling */
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE and Edge */
+
+  scrollbar-width: none;     
+  -ms-overflow-style: none;   
 }
 .search-suggestions::-webkit-scrollbar {
-  display: none;               /* Chrome, Safari, Opera */
+  display: none;              
 }
 
         @keyframes slideIn {
@@ -1479,9 +1479,9 @@
     transition: all 0.4s;
     position: relative;
     animation: gradientFlow 6s ease infinite;
-    pointer-events: auto; /* ADD THIS LINE */
-    cursor: pointer; /* ADD THIS LINE */
-    display: inline-block; /* ADD THIS LINE */
+    pointer-events: auto;
+    cursor: pointer;
+    display: inline-block; 
 }
 
         .rep-name a {

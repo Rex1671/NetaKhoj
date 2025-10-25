@@ -51,7 +51,8 @@ function normalizeParty(text) {
         'ekta shakti': 'ekta shakti party',
         'cpi(ml)(l)': 'communist party of india (marxist-leninist) (liberation)',
         'bkd': 'bahujan kranti dal',
-        'jmm': 'jharkhand mukti morcha'
+        'jmm': 'jharkhand mukti morcha',
+        'bjd': 'Biju Janata Dal'
     };
     const key = normalize(text);
     return partyMap[key] || key;
@@ -77,11 +78,21 @@ async function findCandidateURL(candidateQuery) {
         const constituencyText = normalize($(tds[2]).text());
 
     
-        if (
-            normalize(candidateQuery.name) === nameText &&
-            cleanConstituency(constituencyText) === cleanConstituency(candidateQuery.constituency) &&
-            normalizeParty(partyText) === normalizeParty(candidateQuery.party)
-        ) {
+        // Exact name match required
+const nameMatch = normalize(candidateQuery.name) === nameText;
+
+// Constituency match (if provided)
+const constituencyMatch = !candidateQuery.constituency || 
+                          candidateQuery.constituency === '' ||
+                          cleanConstituency(constituencyText) === cleanConstituency(candidateQuery.constituency);
+
+// Party match (if provided)
+const partyMatch = !candidateQuery.party || 
+                   candidateQuery.party === '' ||
+                   normalizeParty(partyText) === normalizeParty(candidateQuery.party);
+
+// Need name + (constituency OR party)
+if (nameMatch && (constituencyMatch || partyMatch)) {
             const link = nameAnchor.attr('href');
             candidateUrl = new URL(link, 'https://www.myneta.info').href;
             console.log(`  --> Match found! URL: ${candidateUrl}`);
@@ -100,6 +111,7 @@ export async function getCandidateData(name, constituency, party) {
         console.log('='.repeat(60));
 
         const candidateQuery = { name, constituency, party };
+        console.log("Candidate Query",candidateQuery);
         const candidatePage = await findCandidateURL(candidateQuery);
 
         const searchUrl = `https://www.myneta.info/search_myneta.php?q=${encodeURIComponent(name)}`;

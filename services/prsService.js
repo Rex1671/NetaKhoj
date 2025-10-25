@@ -1,4 +1,3 @@
-// services/prsService.js
 import * as cheerio from 'cheerio';
 import NodeCache from 'node-cache';
 import pRetry from 'p-retry';
@@ -7,9 +6,7 @@ import { fetchHTML } from '../webextract.mjs';
 const cache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
 
 class PRSService {
-  /**
-   * Get member data from PRS India
-   */
+
   async getMemberData(name, type, constituency = null, state = null) {
     const cacheKey = `prs:${type}:${name.toLowerCase()}`;
     const cached = cache.get(cacheKey);
@@ -27,7 +24,6 @@ class PRSService {
       let successfulUrl = null;
       let html = null;
 
-      // Try each possible URL
       for (const url of urls) {
         try {
           console.log(`🔗 [PRS] Trying: ${url}`);
@@ -40,7 +36,6 @@ class PRSService {
             }
           );
 
-          // Verify this is the correct page
           if (html && this.verifyPage(html, name)) {
             successfulUrl = url;
             console.log(`✅ [PRS] Success: ${url}`);
@@ -79,15 +74,11 @@ class PRSService {
     }
   }
 
-  /**
-   * Construct all possible URLs for a member
-   */
   constructPossibleURLs(name, type) {
     const slugs = this.generateNameSlugs(name);
     const urls = [];
 
     if (type === 'MP') {
-      // Try current and previous Lok Sabhas
       const lokSabhas = ['18th-lok-sabha', '17th-lok-sabha', '16th-lok-sabha'];
       
       for (const ls of lokSabhas) {
@@ -96,7 +87,6 @@ class PRSService {
         }
       }
     } else if (type === 'MLA') {
-      // MLA URLs are simpler: /mlatrack/{name-slug}
       for (const slug of slugs) {
         urls.push(`https://prsindia.org/mlatrack/${slug}`);
       }
@@ -105,13 +95,11 @@ class PRSService {
     return urls;
   }
 
-  /**
-   * Generate possible name slugs
-   */
+
   generateNameSlugs(name) {
     const slugs = [];
     
-    // Basic slug: lowercase, replace spaces with hyphens
+
     const basicSlug = name
       .toLowerCase()
       .trim()
@@ -122,10 +110,10 @@ class PRSService {
     
     slugs.push(basicSlug);
 
-    // Try without middle names/initials
+   
     const parts = name.split(/\s+/);
     if (parts.length > 2) {
-      // First and last name only
+   
       const firstLast = `${parts[0]} ${parts[parts.length - 1]}`
         .toLowerCase()
         .replace(/\s+/g, '-')
@@ -133,8 +121,7 @@ class PRSService {
       slugs.push(firstLast);
     }
 
-    // Try with common variations
-    // Remove 'Dr.', 'Shri', 'Smt.', etc.
+  
     const cleanedName = name
       .replace(/^(Dr\.?|Shri|Smt\.?|Prof\.?|Mr\.?|Mrs\.?|Ms\.?)\s+/gi, '')
       .toLowerCase()
@@ -146,32 +133,28 @@ class PRSService {
       slugs.push(cleanedName);
     }
 
-    // Remove duplicates
+  
     return [...new Set(slugs)];
   }
 
-  /**
-   * Verify if page matches the member we're looking for
-   */
+  
   verifyPage(html, name) {
-    // Check if page contains the member's name
+    
     const nameParts = name.toLowerCase().split(/\s+/);
     const htmlLower = html.toLowerCase();
 
-    // At least first and last name should appear
+
     const firstName = nameParts[0];
     const lastName = nameParts[nameParts.length - 1];
 
     return htmlLower.includes(firstName) && htmlLower.includes(lastName);
   }
 
-  /**
-   * Parse PRS HTML to extract structured data
-   */
+
   parseHTML(html, type) {
     const $ = cheerio.load(html);
     
-    // Extract image URL
+
     const imageSelectors = [
       '.field-name-field-image img',
       '.field-name-field-mla-profile-image img',
@@ -197,7 +180,6 @@ class PRSService {
           ? `https://prsindia.org/${imageUrl}`
           : '';
 
-    // Extract state
     let state = 'Unknown';
     $('.mp_state, .mla_state').each((i, elem) => {
       const text = $(elem).text();
@@ -208,7 +190,7 @@ class PRSService {
       }
     });
 
-    // Extract constituency
+
     let constituency = 'Unknown';
     const constituencySelectors = [
       '.mp_constituency',
@@ -224,7 +206,7 @@ class PRSService {
       }
     }
 
-    // Extract party
+ 
     let party = 'Unknown';
     $('.mp_state, .mla_state').each((i, elem) => {
       const text = $(elem).text();
@@ -238,10 +220,10 @@ class PRSService {
       }
     });
 
-    // Extract performance data (mainly for MPs)
+
     const performance = this.extractPerformanceData($);
 
-    // Extract personal info
+
     const personal = this.extractPersonalInfo($);
 
     console.log(`📊 [PRS] Parsed data:`, {
@@ -262,18 +244,11 @@ class PRSService {
     };
   }
 
-  /**
-   * Extract performance metrics (MPs mainly)
-   */
- /**
- * Extract performance metrics (MPs mainly)
- *//**
- * Extract performance metrics (MPs mainly)
- */
+  
 extractPerformanceData($) {
   console.log(`🔍 [PRS] Extracting performance data...`);
   
-  // ✅ Debug: Check if performance section exists
+
   const perfSection = $('.mp-parliamentary-performance');
   const perfSectionHTML = perfSection.html();
   console.log(`📄 [PRS] Performance section HTML length: ${perfSectionHTML?.length || 0}`);
@@ -284,7 +259,7 @@ extractPerformanceData($) {
     console.log(`✅ [PRS] Found performance section`);
   }
 
-  // ✅ Enhanced field value getter with better logging
+
   const getFieldValue = (label, selectors) => {
     if (typeof selectors === 'string') selectors = [selectors];
     
@@ -295,7 +270,7 @@ extractPerformanceData($) {
       if (el.length) {
         const text = el.text().trim();
         
-        // Log even if empty to see what was found
+  
         if (text) {
           console.log(`   ✅ ${label} [${i}] (${selector}): "${text}"`);
           
@@ -313,14 +288,14 @@ extractPerformanceData($) {
   };
 
   const performance = {
-    // Attendance
+
     attendance: getFieldValue('Attendance', [
       '.mp-attendance .field-name-field-attendance .field-item.even',
       '.mp-attendance .field-name-field-attendance .field-item',
       '.field-name-field-attendance .field-item.even',
       '.field-name-field-attendance .field-item',
       '.mp-attendance .attendance .field-item',
-      // Additional fallback selectors
+    
       '.mp-parliamentary-performance .mp-attendance .field-item',
       'div.mp-attendance div.field-item.even'
     ]),
@@ -337,14 +312,14 @@ extractPerformanceData($) {
       'div.mp-attendance div.field-name-field-state-attendance div.field-item'
     ]),
 
-    // Debates
+   
     debates: getFieldValue('Debates', [
       '.mp-debate .field-name-field-author .field-item.even',
       '.mp-debate .field-name-field-author .field-item',
       '.field-name-field-author .field-item.even',
       '.field-name-field-author .field-item',
       '.mp-debate .debate .field-item',
-      // Additional fallback selectors
+ 
       'div.mp-debate div.field-item.even',
       '.mp-parliamentary-performance .mp-debate .field-item'
     ]),
@@ -361,14 +336,14 @@ extractPerformanceData($) {
       'div.mp-debate div.field-name-field-state-debate div.field-item'
     ]),
 
-    // Questions
+ 
     questions: getFieldValue('Questions', [
       '.mp-questions .field-name-field-total-expenses-railway .field-item.even',
       '.mp-questions .field-name-field-total-expenses-railway .field-item',
       '.field-name-field-total-expenses-railway .field-item.even',
       '.field-name-field-total-expenses-railway .field-item',
       '.mp-questions .questions .field-item',
-      // Additional fallback selectors
+    
       'div.mp-questions div.field-item.even',
       '.mp-parliamentary-performance .mp-questions .field-item'
     ]),
@@ -385,14 +360,14 @@ extractPerformanceData($) {
       'div.mp-questions div.field-name-field-state-questions div.field-item'
     ]),
 
-    // Private Member Bills
+
     pmb: getFieldValue('PMB', [
       '.mp-pmb .field-name-field-source .field-item.even',
       '.mp-pmb .field-name-field-source .field-item',
       '.field-name-field-source .field-item.even',
       '.field-name-field-source .field-item',
       '.mp-pmb .pmb .field-item',
-      // Additional fallback selectors
+  
       'div.mp-pmb div.field-item.even',
       '.mp-parliamentary-performance .mp-pmb .field-item'
     ]),
@@ -404,7 +379,6 @@ extractPerformanceData($) {
     ])
   };
 
-  // ✅ Enhanced summary logging
   const foundCount = Object.values(performance).filter(v => v !== null).length;
   const totalFields = Object.keys(performance).length;
   
@@ -419,7 +393,7 @@ extractPerformanceData($) {
     natPMB: performance.natPMB || '❌ Not found'
   });
 
-  // ✅ Debug: If nothing found, dump all divs with "field-item" class
+
   if (foundCount === 0 && perfSection.length) {
     console.log(`⚠️ [PRS] No performance data found. Dumping all .field-item elements:`);
     perfSection.find('.field-item').each((i, el) => {
@@ -433,12 +407,7 @@ extractPerformanceData($) {
 
   return performance;
 }
-  /**
-   * Extract personal information
-   */
- /**
- * Extract personal information
- */
+
 extractPersonalInfo($) {
   const getText = (selectors) => {
     if (typeof selectors === 'string') selectors = [selectors];
@@ -446,7 +415,7 @@ extractPersonalInfo($) {
       const el = $(selector);
       if (el.length) {
         let text = el.text().trim();
-        // Clean up common labels
+      
         text = text.replace(/^(Age|Gender|Education)\s*:\s*/i, '');
         if (text && text !== 'N/A' && text !== '') return text;
       }
@@ -454,7 +423,7 @@ extractPersonalInfo($) {
     return null;
   };
 
-  // Age - can be in different places
+
   let age = null;
   $('.gender, .age').each((i, elem) => {
     const text = $(elem).text();
@@ -470,7 +439,7 @@ extractPersonalInfo($) {
     ]);
   }
 
-  // Gender
+
   let gender = null;
   $('.gender').each((i, elem) => {
     const text = $(elem).text();
@@ -480,14 +449,13 @@ extractPersonalInfo($) {
     }
   });
 
-  // Education
+
   const education = getText([
     '.education a',
     '.education .field-item',
     '.field-name-field-education a'
   ]);
 
-  // Term info
   const termStart = getText([
     '.term_start .date-display-single',
     '.field-name-field-date-of-introduction .date-display-single'
@@ -498,28 +466,28 @@ extractPersonalInfo($) {
     '.field-name-field-end-of-term .field-item'
   ]);
 
-  // ✅ FIX: Extract ONLY the term number, not the entire page
+
   let noOfTerm = null;
   
-  // Try to find in the profile section specifically
+
   const profileSection = $('.mp_profile_header_info, .mla_profile_header_info');
   
   profileSection.find('.age').each((i, elem) => {
     const text = $(elem).text();
     if (text.includes('No. of Term') || text.includes('Term') || text.includes('First Term') || text.includes('Second Term')) {
-      // Extract just the term info
+
       noOfTerm = text
         .replace(/No\.\s*of\s*Term\s*:\s*/i, '')
         .replace(/Terms?\s*Served\s*:\s*/i, '')
-        .split('\n')[0]  // Take only first line
+        .split('\n')[0]  
         .trim();
       
-      // Stop after first match
+ 
       if (noOfTerm) return false;
     }
   });
 
-  // Fallback: try other selectors
+  
   if (!noOfTerm) {
     const termDiv = $('.personal_profile_parent').find('div:contains("Term")').first();
     if (termDiv.length) {
@@ -527,7 +495,7 @@ extractPersonalInfo($) {
         .replace(/No\.\s*of\s*Term\s*:\s*/i, '')
         .replace(/Terms?\s*Served\s*:\s*/i, '')
         .trim()
-        .split('\n')[0];  // Only first line
+        .split('\n')[0]; 
     }
   }
 
@@ -550,9 +518,7 @@ extractPersonalInfo($) {
   };
 }
 
-  /**
-   * Return empty response structure
-   */
+
   getEmptyResponse() {
     return {
       found: false,
@@ -567,9 +533,7 @@ extractPersonalInfo($) {
     };
   }
 
-  /**
-   * Clear cache
-   */
+
   clearCache(pattern) {
     if (pattern) {
       const keys = cache.keys().filter(key => key.includes(pattern));
@@ -581,9 +545,7 @@ extractPersonalInfo($) {
     }
   }
 
-  /**
-   * Get cache stats
-   */
+
   getStats() {
     return cache.getStats();
   }

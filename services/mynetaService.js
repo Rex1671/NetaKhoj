@@ -1,44 +1,39 @@
-// services/mynetaService.js
-
 import { getCandidateData } from '../findNeta.js';
 import cacheService from './cacheService.js';
 
 class MyNetaService {
   /**
-   * Get candidate data with caching
-   * @param {string} name - Candidate name
-   * @param {string} constituency - Constituency name
-   * @param {string} party - Party name
-   * @returns {Promise<Object>} Candidate data
+   * @param {string} name 
+   * @param {string} constituency 
+   * @param {string} party 
+   * @returns {Promise<Object>} 
    */
-  async getCandidateData(name, constituency, party) {
-    // Create cache key
+  async getCandidateData(name, constituency = '', party = '') {
     const cacheKey = cacheService.getCacheKey('candidate', name, constituency, party);
     
-    // Check cache first
     const cached = await cacheService.get('candidate', cacheKey);
     if (cached) {
       console.log(`✅ [MYNETA] Cache hit for ${name}`);
       return cached;
     }
 
-    console.log(`🔍 [MYNETA] Fetching candidate data for ${name}`);
+    console.log(`🔍 [MYNETA] Fetching candidate data for ${name}, Constituency: ${constituency || 'N/A'}, Party: ${party || 'N/A'}`);
 
     try {
-      // Call existing findNeta function
       const data = await getCandidateData(name, constituency, party);
       
-      // Cache the result
-      cacheService.set('candidate', cacheKey, data);
-      
-      console.log(`✅ [MYNETA] Successfully fetched data for ${name}`);
+      if (data && data.data && !data.data.error) {
+        cacheService.set('candidate', cacheKey, data);
+        console.log(`✅ [MYNETA] Successfully fetched and cached data for ${name}`);
+      } else {
+        console.log(`⚠️ [MYNETA] No valid data found for ${name}`);
+      }
       
       return data;
 
     } catch (error) {
       console.error(`❌ [MYNETA] Error fetching ${name}:`, error.message);
       
-      // Return minimal data with error info
       return {
         data: {
           assetLink: `https://www.myneta.info/search_myneta.php?q=${encodeURIComponent(name)}`,
@@ -50,11 +45,13 @@ class MyNetaService {
   }
 
   /**
-   * Search candidate without full data fetch
-   * @param {string} name - Candidate name
-   * @returns {Promise<string|null>} Candidate URL or null
+   * Search candidate
+   * @param {string} name 
+   * @param {string} constituency
+   * @param {string} party
+   * @returns {Promise<string|null>}
    */
-  async searchCandidate(name, constituency, party) {
+  async searchCandidate(name, constituency = '', party = '') {
     try {
       const data = await this.getCandidateData(name, constituency, party);
       return data?.data?.assetLink || null;
@@ -65,12 +62,11 @@ class MyNetaService {
   }
 
   /**
-   * Clear cache for specific candidate
    * @param {string} name
    * @param {string} constituency
    * @param {string} party
    */
-  clearCache(name, constituency, party) {
+  clearCache(name, constituency = '', party = '') {
     const cacheKey = cacheService.getCacheKey('candidate', name, constituency, party);
     cacheService.delete('candidate', cacheKey);
     console.log(`🗑️ [MYNETA] Cleared cache for ${name}`);

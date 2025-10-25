@@ -17,7 +17,6 @@ export async function getCandidateAssetData(name, constituency, party) {
 
         console.log("Candidate URL found:", candidateUrl);
 
-        // Call PRS scraper with the candidate URL
         const jsonData = await fetchAssetTables(candidateUrl);
 
         console.log("Asset data fetched successfully");
@@ -98,8 +97,6 @@ async function findCandidateURL(candidateQuery) {
         const partyText = normalize($(tds[1]).text());
         const constituencyText = normalize($(tds[2]).text());
 
-        // Debug logs
-        // console.log(`Row ${i}: Name="${nameText}", Party="${partyText}", Constituency="${constituencyText}"`);
 
         if (
             normalize(candidateQuery.name) === nameText &&

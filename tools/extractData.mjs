@@ -14,10 +14,7 @@ export async function extractData(html) {
       return text === '' || text === 'Nil' ? 'Nil' : text;
     };
 
-    /**
-     * Extract ONLY the number, not the description
-     * e.g., "3,50,000 3 Lacs+" -> "Rs 3,50,000"
-     */
+    
     const extractAmount = (htmlString) => {
       if (!htmlString) return 'Nil';
       
@@ -26,25 +23,20 @@ export async function extractData(html) {
       
       if (plainText === 'Nil' || plainText === '') return 'Nil';
       
-      // Priority 1: Rs&nbsp;NUMBER format (in total columns)
+ 
       let rsMatch = htmlString.match(/Rs\s*&nbsp;\s*([\d,]+)/i);
       if (rsMatch) return `Rs ${rsMatch[1]}`;
-      
-      // Priority 2: Just NUMBER (before any descriptive span)
-      // Match: "3,50,000&nbsp;<span>..."
+
       const beforeSpanMatch = htmlString.match(/([\d,]+)\s*&nbsp;\s*<span/);
       if (beforeSpanMatch) return `Rs ${beforeSpanMatch[1]}`;
       
-      // Priority 3: Match plain number followed by whitespace and optional description
       const numberMatch = plainText.match(/^(\d[\d,]*)/);
       if (numberMatch) return `Rs ${numberMatch[1]}`;
       
       return 'Nil';
     };
 
-    /**
-     * Parse multi-entry cell - extract description and amount separately
-     */
+
     const parseMultiEntryCell = (cell) => {
       if (!cell) return 'Nil';
       
@@ -56,7 +48,6 @@ export async function extractData(html) {
         return 'Nil';
       }
 
-      // Split by double br tags
       const entries = htmlContent.split(/<br\s*\/?>\s*<br\s*\/?>/i);
       const parsedEntries = [];
 
@@ -67,7 +58,6 @@ export async function extractData(html) {
         const description = $entry.find('.desc').text().trim();
         
         if (description) {
-          // Extract the number that comes after the description
           const amount = extractAmount(entry);
           parsedEntries.push(`${description}: ${amount}`);
         }
@@ -76,9 +66,7 @@ export async function extractData(html) {
       return parsedEntries.length > 0 ? parsedEntries.join('\n') : 'Nil';
     };
 
-    /**
-     * Parse property cell with structured data
-     */
+
     const parsePropertyCell = (cell) => {
       if (!cell) return 'Nil';
       
@@ -101,7 +89,6 @@ export async function extractData(html) {
         
         if (!mainDesc) return;
 
-        // Extract current value (the number before the span)
         const valueMatch = prop.match(/([\d,]+)\s*&nbsp;\s*<span[^>]*>.*?(?:Lacs?|Crore?)/i);
         const currentValue = valueMatch ? `Rs ${valueMatch[1]}` : '';
 

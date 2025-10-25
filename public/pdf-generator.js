@@ -1,10 +1,7 @@
-// pdf-generator.js
-// Enhanced PDF Generation Module for MP/MLA Dashboard
 
 (function() {
   'use strict';
 
-  // PDF Generator Configuration
   const PDFConfig = {
     watermark: {
       text: 'OFFICIAL DOCUMENT',
@@ -29,9 +26,7 @@
     }
   };
 
-  // Utility Functions
   const PDFUtils = {
-    // Format current date and time
     getFormattedDateTime: function() {
       const now = new Date();
       const dateOptions = { 
@@ -56,15 +51,12 @@
         iso: now.toISOString()
       };
     },
-
-    // Generate unique document ID
     generateDocumentId: function() {
       const timestamp = Date.now();
       const random = Math.random().toString(36).substring(2, 9);
       return `DOC-${timestamp}-${random}`.toUpperCase();
     },
 
-    // Get member information from page
     getMemberInfo: function() {
       const memberName = document.querySelector('.member-name')?.textContent || 'Unknown';
       const memberType = document.querySelector('.role-badge strong')?.textContent || 'Unknown';
@@ -78,8 +70,6 @@
         party: party
       };
     },
-
-    // Calculate document statistics
     getDocumentStats: function() {
       const tables = document.querySelectorAll('table').length;
       const sections = document.querySelectorAll('.details-section').length;
@@ -95,13 +85,10 @@
     }
   };
 
-  // PDF Style Manager
   const PDFStyleManager = {
-    // Inject print-specific styles dynamically
     injectPrintStyles: function() {
       const styleId = 'pdf-print-styles';
       
-      // Remove existing styles if any
       const existingStyle = document.getElementById(styleId);
       if (existingStyle) {
         existingStyle.remove();
@@ -412,35 +399,29 @@
       document.head.appendChild(styleSheet);
     },
 
-    // Prepare document for printing
     prepareDocumentForPrint: function() {
-      // Add document ID to body
+     
       const docId = PDFUtils.generateDocumentId();
       document.body.setAttribute('data-doc-id', docId);
 
-      // Remove any existing loading indicators BEFORE printing
       const existingLoader = document.getElementById('pdf-loading-indicator');
       if (existingLoader) {
         existingLoader.remove();
       }
 
-      // Remove any error messages
       const errorMessages = document.querySelectorAll('.pdf-error-message');
       errorMessages.forEach(msg => msg.remove());
 
-      // Expand all collapsible sections
       document.querySelectorAll('.collapsible-content').forEach(content => {
         content.classList.add('active');
         content.style.maxHeight = 'none';
         content.style.display = 'block';
       });
 
-      // Update all toggle buttons
       document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.style.display = 'none';
       });
 
-      // Ensure all images are loaded
       const images = document.querySelectorAll('img');
       const imagePromises = Array.from(images).map(img => {
         return new Promise((resolve) => {
@@ -456,29 +437,24 @@
       return Promise.all(imagePromises);
     },
 
-    // Restore document after printing
     restoreDocumentAfterPrint: function() {
-      // Restore collapsible sections
+     
       document.querySelectorAll('.collapsible-content').forEach(content => {
         content.classList.remove('active');
         content.style.maxHeight = '';
         content.style.display = '';
       });
 
-      // Restore toggle buttons
       document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.style.display = '';
         btn.textContent = 'Show Details';
       });
 
-      // Remove document ID
       document.body.removeAttribute('data-doc-id');
 
-      // Remove temporary elements (but NOT while printing)
       const tempElements = document.querySelectorAll('.pdf-temp-element');
       tempElements.forEach(el => el.remove());
 
-      // Remove any remaining loading indicators
       const loader = document.getElementById('pdf-loading-indicator');
       if (loader) {
         loader.remove();
@@ -486,9 +462,7 @@
     }
   };
 
-  // PDF Content Enhancer
   const PDFContentEnhancer = {
-    // Add PDF header to document
     addPDFHeader: function() {
       const existingHeader = document.querySelector('.pdf-header-section');
       if (existingHeader) {
@@ -530,7 +504,6 @@
       }
     },
 
-    // Add PDF footer to document
     addPDFFooter: function() {
       const existingFooter = document.querySelector('.pdf-footer-section');
       if (existingFooter) {
@@ -570,11 +543,9 @@
       }
     },
 
-    // Add confidential stamp if needed
     addConfidentialStamp: function() {
       if (!PDFConfig.footer.showConfidential) return;
 
-      // Remove existing stamp if any
       const existingStamp = document.querySelector('.pdf-confidential-stamp');
       if (existingStamp) {
         existingStamp.remove();
@@ -589,9 +560,7 @@
       document.body.insertAdjacentHTML('beforeend', stampHTML);
     },
 
-    // Generate QR code for verification (placeholder)
     addQRCode: function() {
-      // Remove existing QR code if any
       const existingQR = document.querySelector('.pdf-qr-code');
       if (existingQR) {
         existingQR.remove();
@@ -611,34 +580,26 @@
     }
   };
 
-  // Main PDF Generator
   const PDFGenerator = {
-    // Initialize PDF generation
     init: function() {
       console.log('🖨️ PDF Generator initialized');
       
-      // Add event listeners for print
       window.addEventListener('beforeprint', this.handleBeforePrint.bind(this));
       window.addEventListener('afterprint', this.handleAfterPrint.bind(this));
     },
 
-    // Handle before print event
     handleBeforePrint: function() {
       console.log('📄 Preparing document for PDF generation...');
       
-      // IMPORTANT: Remove loading indicator before print
       const loader = document.getElementById('pdf-loading-indicator');
       if (loader) {
         loader.remove();
       }
       
-      // Inject print styles
       PDFStyleManager.injectPrintStyles();
       
-      // Prepare document
       PDFStyleManager.prepareDocumentForPrint();
       
-      // Add PDF elements
       PDFContentEnhancer.addPDFHeader();
       PDFContentEnhancer.addPDFFooter();
       PDFContentEnhancer.addConfidentialStamp();
@@ -647,23 +608,19 @@
       console.log('✅ Document ready for PDF generation');
     },
 
-    // Handle after print event
     handleAfterPrint: function() {
       console.log('🔄 Restoring document after PDF generation...');
       
-      // Restore document
       setTimeout(() => {
         PDFStyleManager.restoreDocumentAfterPrint();
         console.log('✅ Document restored');
       }, 500);
     },
 
-    // Generate PDF with enhanced features
     generatePDF: async function(options = {}) {
       console.log('🚀 Starting PDF generation with options:', options);
       
       try {
-        // Set custom configurations if provided
         if (options.watermark) {
           Object.assign(PDFConfig.watermark, options.watermark);
         }
@@ -674,28 +631,19 @@
           Object.assign(PDFConfig.footer, options.footer);
         }
         
-        // Show loading indicator
         this.showLoadingIndicator();
         
-        // Prepare document
         await PDFStyleManager.prepareDocumentForPrint();
         
-        // Small delay to ensure everything is rendered
         await new Promise(resolve => setTimeout(resolve, 300));
         
-        // IMPORTANT: Hide loading indicator before printing
         this.hideLoadingIndicator();
-        
-        // Small delay to ensure loader is removed
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Trigger print dialog
         window.print();
         
-        // Log success
         console.log('✅ PDF generation triggered successfully');
         
-        // Track event if analytics available
         if (typeof gtag !== 'undefined') {
           gtag('event', 'pdf_generated', {
             'member_name': PDFUtils.getMemberInfo().name,
@@ -711,9 +659,7 @@
       }
     },
 
-    // Show loading indicator
     showLoadingIndicator: function() {
-      // Remove any existing loader first
       this.hideLoadingIndicator();
       
       const loader = document.createElement('div');
@@ -726,7 +672,6 @@
       document.body.appendChild(loader);
     },
 
-    // Hide loading indicator
     hideLoadingIndicator: function() {
       const loader = document.getElementById('pdf-loading-indicator');
       if (loader) {
@@ -734,7 +679,6 @@
       }
     },
 
-    // Show error message
     showErrorMessage: function(message) {
       const errorDiv = document.createElement('div');
       errorDiv.className = 'pdf-error-message pdf-temp-element';
@@ -746,7 +690,6 @@
       }, 5000);
     },
 
-    // Export functions for external use
     exportAPI: function() {
       window.PDFGenerator = {
         generate: this.generatePDF.bind(this),
@@ -756,8 +699,6 @@
       };
     }
   };
-
-  // Auto-initialize on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
       PDFGenerator.init();

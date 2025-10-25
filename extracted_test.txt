@@ -1,39 +1,39 @@
 {
   "candidate": {
-    "name": "MANOJ TIWARI",
+    "name": "AVIMANYU SETHI",
     "party": "BJP",
-    "constituency": "NORTH EAST DELHI  (NATIONAL CAPITAL TERRITORY OF DELHI)",
-    "relation": "Late Chandradev Tiwari",
-    "age": 48,
-    "voterEnrollment": "North East Delhi (Delhi) constituency, at Serial no 110  in Part no   60",
-    "education": "Crime-O-Meter \n\t\t\t                          \n            \n          google.charts.load('current', {'packages':['gauge']});\n          google.charts.setOnLoadCallback(drawChart);\n\n          function drawChart() {\n\n            var data = google.visualization.arrayToDataTable([\n              ['Label', 'Value'],\n              ['Cases', 3]\n              \n            ]);\n\n            var options = {\n              min:0, max:5,\n              width: 400, height: 120,\n              greenFrom:0, greenTo:1,          \n              yellowFrom:1, yellowTo: 2,\n              redFrom:2, redTo: 5,\n              majorTicks: 6\n            };\n\n            var chart = new google.visualization.Gauge(document.getElementById('chart_div'));\n\n            chart.draw(data, options);\n\n            \n          } \n               \n\t\t\t     Number of Criminal Cases: 3\n     \t     \n                 \n\t\t\n\t\t    Assets & Liabilities \n                        \n             Assets:       Rs 24,40,67,031 ~24 Crore+ \n             Liabilities:  Rs 1,36,18,755 ~1 Crore+ \n            \n        \n         \n                  \n\t    \n        \n        \n         Post Graduate \n        M.P.Ed From Banaras Hindu University Varanas UP In The Year 1994\n        \n          \n            \n        \n        \n         Post Graduate \n        M.P.Ed From Banaras Hindu University Varanas UP In The Year 1994",
+    "constituency": "BHADRAK (SC)  (ODISHA)",
+    "relation": "Late Arjun Charan Sethi",
+    "age": 53,
+    "voterEnrollment": "43 Bhandaripokhari (Orissa) constituency, at Serial no 505  in Part no   73",
+    "education": "Post Graduate MA From Utkal University, Vanivihar, Bhubneswar in 1992",
     "professions": {
-      "self": "Singer-Actor and Member of Parliament",
-      "spouse": "NA"
+      "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
+      "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak"
     }
   },
   "otherElections": [
     {
-      "declarationIn": "Loksabha 2014",
-      "declaredAssets": "Rs19,94,83,924~19 Crore+",
+      "declarationIn": "Lok Sabha 2019",
+      "declaredAssets": "Rs4,72,23,493~4 Crore+",
       "declaredCases": 0
     }
   ],
   "crimeOMeter": {
-    "cases": 3
+    "cases": 0
   },
   "incomeTax": [
     {
       "relation": "self",
       "pan": "Y",
-      "year": "2017 - 2018",
-      "income": "2017 - 2018  **  <b>Rs 48,03,290</b>  48 Lacs+ ** 2016 - 2017  **  <b>Rs 80,79,130</b>  80 Lacs+ ** 2015 - 2016  **  <b>Rs 81,83,030</b>  81 Lacs+ ** 2014 - 2015  **  <b>Rs 59,08,770</b>  59 Lacs+ ** 2013 - 2014  **  <b>Rs 85,04,180</b>  85 Lacs+"
+      "year": "2022 - 2023",
+      "income": "2022 - 2023  **  <b>Rs 18,29,440</b>  18 Lacs+ ** 2021 - 2022  **  <b>Rs 15,55,910</b>  15 Lacs+ ** 2020 - 2021  **  <b>Rs 15,03,730</b>  15 Lacs+ ** 2019 - 2020  **  <b>Rs 12,70,090</b>  12 Lacs+ ** 2018 - 2019  **  <b>Rs 12,10,970</b>  12 Lacs+"
     },
     {
       "relation": "spouse",
-      "pan": "N",
-      "year": "None",
-      "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+      "pan": "Y",
+      "year": "2022 - 2023",
+      "income": "2022 - 2023  **  <b>Rs 8,25,280</b>  8 Lacs+ ** 2021 - 2022  **  <b>Rs 10,25,850</b>  10 Lacs+ ** 2020 - 2021  **  <b>Rs 9,06,640</b>  9 Lacs+ ** 2019 - 2020  **  <b>Rs 4,44,950</b>  4 Lacs+ ** 2018 - 2019  **  <b>Rs 4,12,628</b>  4 Lacs+"
     },
     {
       "relation": "huf",
@@ -43,7 +43,7 @@
     },
     {
       "relation": "dependent1",
-      "pan": "N",
+      "pan": "Y",
       "year": "None",
       "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
     },
@@ -61,101 +61,45 @@
     }
   ],
   "criminalCases": {
-    "briefIPC": [
-      {
-        "count": 1,
-        "section": "Punishment for criminal intimidation (IPC Section-506)"
-      },
-      {
-        "count": 2,
-        "section": "Disobedience to order duly promulgated by public servant (IPC Section-188)"
-      },
-      {
-        "count": 2,
-        "section": "Acts done by several persons in furtherance of common intention (IPC Section-34)"
-      },
-      {
-        "count": 1,
-        "section": "Punishment for voluntarily causing hurt (IPC Section-323)"
-      },
-      {
-        "count": 1,
-        "section": "Punishment for wrongful restraint (IPC Section-341)"
-      }
-    ],
-    "pendingCases": [
-      {
-        "serialNo": "1",
-        "firNo": "275/2018 PS Ravanwara Shivpuri,Dist Chhindwara MP",
-        "caseNo": "126/2019",
-        "court": "Shri Almas Rehman, JMFC, Parasia, Dist.Chhindwara(MP)",
-        "ipcSections": "188, 34",
-        "otherDetails": "Nil",
-        "chargesFramed": "No",
-        "dateChargesFramed": "Nil",
-        "appealFiled": "No",
-        "appealDetails": "Nil"
-      },
-      {
-        "serialNo": "2",
-        "firNo": "900/2018 PS New Usmanpur North East Dist. Delhi",
-        "caseNo": "Nil",
-        "court": "Nil",
-        "ipcSections": "323, 341, 506, 34",
-        "otherDetails": "Nil",
-        "chargesFramed": "No",
-        "dateChargesFramed": "Nil",
-        "appealFiled": "No",
-        "appealDetails": "Nil"
-      },
-      {
-        "serialNo": "3",
-        "firNo": "461/2018, PS Gokulpuri North East Dist. Delhi",
-        "caseNo": "Nil",
-        "court": "Nil",
-        "ipcSections": "188",
-        "otherDetails": "Section-461/465 of Delhi Municipal Corporation Act",
-        "chargesFramed": "No",
-        "dateChargesFramed": "Nil",
-        "appealFiled": "No",
-        "appealDetails": "Nil"
-      }
-    ],
-    "convictedCases": []
+    "briefIPC": [],
+    "pendingCases": [],
+    "convictedCases": [
+      "No Cases"
+    ]
   },
   "movableAssets": [
     {
       "srNo": "i",
       "description": "Cash",
-      "self": "Rs 3,50,000",
-      "spouse": "Nil",
+      "self": "Rs 2,13,533",
+      "spouse": "1,43,850 1 Lacs+",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 3,50,000"
+      "total": "Rs 3,57,383"
     },
     {
       "srNo": "ii",
       "description": "Deposits in Banks, Financial Institutions and Non-Banking Financial Companies",
-      "self": "SBI Br. Parliament Street No 3388576xxxxx: Rs 69,24,296\nICICI Bank Br. 13/16 Samratha Bhaibhav,Off New Link Road,Mumbai(Joint Ac) No 2630151xxxxx: Rs 31,09,342\nICICI Bank Br. 13/16 Samratha Bhaibhav,Off New Link Road,Mumbai No 2630150xxxxx: Rs 92,68,436\nCanara Bank Br. Lokhandwala Andheri West Mumbai No 267710100xxxxx: Rs 27,06,034\nBOB Br. 3-122 Lokhandwala Complex Mumbai No 3122010000xxxxx: Rs 88,108\nAxis Bank Br. Goregaon RAC,Mumbai No 91101006766xxxxx: Rs 3,69,645\nCanara Bank Br. Lokhandwala Andheri,Mumbai No 267710100xxxxx: Rs 432\nSBI Br. CSC,619 B Rajesh Classic Andheri West Mumbai-400058,No 200017xxxxx: Rs 60,000\nICICI Bank Br. Lokhandwala Andheri Mumbai 400058 No 62830150xxxxx: Rs 1,22,01,714\nOBC Br. Bandra West,No 1045215100xxxxx: Rs 4,35,198\nSBI Br. Lodhi Road New Delhi,No 2019178xxxxx: Rs 3,934\nSBI Main Br. Varanasi No 1110338xxxxx: Rs 1,43,261\nSBI Main Br. Varanasi No 3302021xxxxx: Rs 18,02,703\nSBI Br. Shopping Centro,Varanasi No 1037612xxxxx: Rs 3,76,460\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,88,490\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nSBI Br. Varanasi,UP No 3178629xxxxx: Rs 13,69,940\nFD in SBI Br. Varanasi,UP No 307728xxxxx: Rs 31,86,143\nFD in SBI Br. Varanasi,UP No 3135691xxxxx: Rs 16,18,638\nFD in SBI Br. New Delhi No 3178629xxxxx: Rs 11,69,940\nFD in SBI Br. New Delhi No 3360186xxxxx: Rs 16,83,827\nFD in SBI Br. New Delhi No 3360026xxxxx: Rs 44,903\nFD in SBI Br. New Delhi No 3396110xxxxx: Rs 6,59,566\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831403xxxxx: Rs 3,46,698\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 23,594\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831403xxxxx: Rs 1,98,143\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 34,896\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 47,254\nFD in Canara Bank Mumbai Lokhandwala Br. No 267740100xxxxx: Rs 69,05,956\nFD in OBC Br. Bandra West Mumbai No 1045353100xxxxx: Rs 52,36,815",
-      "spouse": "Nil",
+      "self": "FD Indusland Bank No 39801010000xxxxx: Rs 753\nAxis Bank No 91101006085xxxxx: Rs 33,819\nIDBI Bank No 4021040000xxxxx: Rs 3,098\nIDBI No 40210200000xxxxx: Rs 1,19,193\nSBI No 1140344xxxxx: Rs 1,05,917\nFD In Indusind Bank No 18231901: Rs 4,08,797\nHDFC No 1956193000xxxxx: Rs 6,088",
+      "spouse": "IDBI No 40210400009xxxxx 1,93,565 1 Lacs+",
       "huf": "Nil",
-      "dependent1": "Nil",
-      "dependent2": "Nil",
+      "dependent1": "No 5010007521xxxxx 13,531 13 Thou+",
+      "dependent2": "No 5010007521xxxxx 25,429 25 Thou+",
       "dependent3": "Nil",
-      "total": "Rs 7,35,74,960"
+      "total": "Rs 9,10,190"
     },
     {
       "srNo": "iii",
       "description": "Bonds, Debentures and Shares in companies",
-      "self": "Nil",
-      "spouse": "Nil",
+      "self": "SBI Mutual Funds No 1447xxxxx: Rs 54,32,028\nABSL Mutual Fund No 101601xxxxx: Rs 5,16,000\nFranklin Templeton Mutual No 1933xxxxx: Rs 65,796\nInvestment in shree Jagannath Gas agency: Rs 77,10,473\nDSP Mutual Fund No 2766396: Rs 19,910",
+      "spouse": "Investment in shree Jagannath Gas agency 54,33,348 54 Lacs+",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 70"
+      "total": "Rs 1,91,77,555"
     },
     {
       "srNo": "iv",
@@ -170,82 +114,82 @@
     },
     {
       "srNo": "(b)LIC or other insurance Policies",
-      "description": "LIC Insurance Policy No 28491xxxxx & 282192195 12,50,000 12 Lacs+",
-      "self": "Nil",
+      "description": "Health Insurance MET LifeNo 0053xxxxx 6,94,319 6 Lacs+ Max Life No 87307xxxxx 6,00,000 6 Lacs+ LIC No 58736xxxxx 2,14,022 2 Lacs+ LIC No 8449xxxxx 16,06,878 16 Lacs+ LIC No 42xxxxx 4,27,500 4 Lacs+ LIC No 85818xxxxx 5,28,833 5 Lacs+ LIC No 58540xxxxx 6,62,421 6 Lacs+ LIC No 58540xxxxx 3,98,040 3 Lacs+",
+      "self": "Max Life No 873079xxxxx: Rs 6,00,000\nLIC No 85818xxxxx: Rs 5,54,149",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
-      "dependent3": "Rs 12,50,000 12 Lacs+",
+      "dependent3": "Rs 62,86,162 62 Lacs+",
       "total": "Nil"
     },
     {
       "srNo": "v",
       "description": "Personal loans/advance given",
-      "self": "Rhiti Production Pvt Ltd.: Rs 9,32,635",
+      "self": "Nil",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 9,32,635"
+      "total": "Rs 70"
     },
     {
       "srNo": "vi",
       "description": "Motor Vehicles (details of make, etc.)",
-      "self": "Audi Q7 Model No-07.3.OTD1 Reg No-MH-04-EX-9882: Rs 24,00,000\nInnova Car Toyota 2013 reg No-UP-65-BL-2222: Rs 6,24,011\nMercedes Benz,Date Of Purchased 23-07-07,Model E280,Reg No-MH-02-AY-8620: Rs 15,29,071\nHonda City Date Of Purchased,Model New Honda City GXI,Reg No-MH-43A-1260: Rs 1,00,000\nDate Of Purchased 13-04-2010 Fortuner,Model 3.OL 4WD MT/2982,Reg No-UP-65-AV-2222: Rs 7,50,354",
+      "self": "Maruti S-Cross OD33AD1933: Rs 13,00,000\nToyota Fortunner OD33AC1933: Rs 37,00,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 54,03,436"
+      "total": "Rs 50,00,000"
     },
     {
       "srNo": "vii",
       "description": "Jewellery (give details weight value)",
-      "self": "134 Gram Gold: Rs 4,00,000",
-      "spouse": "Nil",
+      "self": "Gold 313gm: Rs 20,34,500",
+      "spouse": "Gold 385gm 25,02,500 25 Lacs+",
       "huf": "Nil",
-      "dependent1": "Nil",
-      "dependent2": "Nil",
+      "dependent1": "Gold 10gm 65,000 65 Thou+",
+      "dependent2": "Gold 15mg 97,500 97 Thou+",
       "dependent3": "Nil",
-      "total": "Rs 4,00,000"
+      "total": "Rs 46,99,500"
     },
     {
       "srNo": "viii",
       "description": "Other assets, such as values of claims / interests",
-      "self": "Rs 45,00,000",
-      "spouse": "Nil",
+      "self": "Household article: Rs 4,92,850",
+      "spouse": "3,45,650 3 Lacs+",
       "huf": "Nil",
-      "dependent1": "Nil",
-      "dependent2": "Nil",
+      "dependent1": "7,500 7 Thou+",
+      "dependent2": "7,500 7 Thou+",
       "dependent3": "Nil",
-      "total": "Rs 45,00,000"
+      "total": "Rs 8,53,500"
     }
   ],
   "immovableAssets": [
     {
       "srNo": "i",
       "description": "Agricultural Land",
-      "self": "Khasra No-11 Mauza Patakpur A Anchal Mohaniya Dist Kaimur,Share 10 % of 2.72 Acres, | Value: Rs 5,00,000\n\nKhasra No-52,Plot No-469,Mauza Sagra Anchal Mohaniya Dist Kaimur 100% | Value: Rs 10,00,000\n\nKhasra No-52,Mauza Sagra Anchal Mohaniya Dist Kaimur 100% | Value: Rs 10,00,000",
+      "self": "Mouza Mathasahi\nKh. No  776/2678 | Value: Rs 1,28,00,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 25,00,000"
+      "total": "Rs 1,28,00,000"
     },
     {
       "srNo": "ii",
       "description": "Non Agricultural Land",
-      "self": "Chandrama Nagar,Kandawa Vranasi UP-22100 | Value: Rs 82,16,000\n\nAnand Nagar Kandawa Varanasi UP-221005 | Value: Rs 1,26,40,000",
+      "self": "Mouza Odanga\nKh. No. 286 | Value: Rs 12,10,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 2,08,56,000"
+      "total": "Rs 12,10,000"
     },
     {
       "srNo": "iii",
@@ -261,13 +205,13 @@
     {
       "srNo": "iv",
       "description": "Residential Buildings",
-      "self": "Flat No-1603/1604 Shiv Shakti Apartment Sundervan Beside Shastri Nagar,Lokhandwala Andheri West Mumbai 400053 | Value: Rs 4,40,00,000\n\n172 Mhada Bunglows S.V.P Nagar Near Telephone Exchange Andheri West Mumbai 400053 | Value: Rs 3,00,00,000\n\nHariom Complex CTS No-81\n80\nVillage Mogra Ambewwadi RK Singh Marg Andheri East Mumbai 400093 | Value: Rs 1,50,00,000\n\nVeena Surshyam Complex Nest To Vasant Nagri Nallasopara Link Road Nallasopara East Dist Thane 401208 | Value: Rs 38,00,000\n\nFlat No-A 103 Plot No-30\nBahawalpur CGHS Ltd Sec-6 Dwarka New Delhi-110075 | Value: Rs 1,50,00,000\n\nKh No-96\nto 104 Flat No-D Floor,H No-J-59 & 60 J,Block Saidulajaib Ext. Neb Sarai New Delhi | Value: Rs 75,00,000\n\nB-33/14 A-21 Kaushlesh Nagar Sunderpur Varanasi UP-221005 | Value: Rs 1,20,00,000\n\nFlat No-1103 Block-I,Tridev Dham SM Plot No-145\n14711\nSamneghat Varanasi UP-221005 | Value: Rs 70,00,000",
+      "self": "Ranasinghpur\nBhubneswar\nKh. No. 254\nPlot No. 11/737 | Value: Rs 1,95,00,000",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 13,43,00,000"
+      "total": "Rs 1,95,00,000"
     },
     {
       "srNo": "v",
@@ -285,23 +229,23 @@
     {
       "srNo": "i",
       "description": "Loans from Banks / FIs",
-      "self": "Axis Bank Ac No-PHR064700479486 House Loan: Rs 51,18,755",
+      "self": "HDFC Bank Maruti S-Cross: Rs 6,13,324\nHDFC Bank Car: Rs 2,71,691\nIB Fortuner Loan: Rs 13,73,422\nHDFC PL: Rs 2,27,006\nAxis Bank HB Loan: Rs 30,76,923\nHDFC Credit Card: Rs 1,58,081\nSBI Credit Card: Rs 1,59,222\nLoan from LIC: Rs 13,01,567\nLoan from LIC: Rs 6,27,936",
       "spouse": "Nil",
       "huf": "Nil",
       "dependent1": "Nil",
       "dependent2": "Nil",
       "dependent3": "Nil",
-      "total": "Rs 51,18,755"
+      "total": "Rs 78,09,172"
     }
   ],
   "profession": {
-    "self": "Singer-Actor and Member of Parliament",
-    "spouse": "NA"
+    "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
+    "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak"
   },
   "sourcesOfIncome": {
-    "self": "Singer, Acting, Salary, Rental Income And Interest",
-    "spouse": "NA",
-    "dependent": "NA"
+    "self": "Partner Shree Jagannath Gas Agency, Bhadrak",
+    "spouse": "Partner Shree Jagannath Gas Agency, Bhadrak",
+    "dependent": "Nil"
   },
   "contracts": {
     "candidate": "NA",
@@ -312,7 +256,7 @@
     "privateCompanies": "NA"
   },
   "summary": {
-    "totalAssets": "Rs 24,40,67,031 ~24 Crore+",
-    "totalLiabilities": "Rs 1,36,18,755 ~1 Crore+"
+    "totalAssets": "Rs 7,07,94,290 ~7 Crore+",
+    "totalLiabilities": "Rs 1,06,59,172 ~1 Crore+"
   }
 }

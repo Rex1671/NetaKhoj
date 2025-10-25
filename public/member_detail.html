@@ -1675,7 +1675,7 @@
         font-family: 'Inter', sans-serif;
       }
 
-      /* Header with timestamp */
+     
       .pdf-header {
         display: block !important;
         text-align: center;
@@ -1697,7 +1697,6 @@
         border-top: 1px solid #ddd;
       }
 
-      /* Hide non-print elements */
       .action-buttons,
       .toggle-btn,
       #backToTop,
@@ -1707,21 +1706,19 @@
         display: none !important;
       }
 
-      /* Show all collapsed content */
+    
       .collapsible-content {
         display: block !important;
         max-height: none !important;
         opacity: 1 !important;
       }
 
-      /* Dashboard container adjustments */
       .dashboard-container {
         max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
       }
 
-      /* Enhanced header card for PDF */
       .header-card {
         background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%) !important;
         border: 2px solid #667eea !important;
@@ -1737,7 +1734,6 @@
         display: none !important;
       }
 
-      /* Profile section optimization */
       .profile-section {
         display: flex !important;
         gap: 20px !important;
@@ -1765,7 +1761,6 @@
         margin-bottom: 10px !important;
       }
 
-      /* Role badges for print */
       .role-badge, .constituency-badge, .party-badge {
         display: inline-block !important;
         padding: 6px 12px !important;
@@ -1795,7 +1790,6 @@
         color: #c2410c !important;
       }
 
-      /* Info grid for print */
       .info-grid {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
@@ -1811,7 +1805,6 @@
         page-break-inside: avoid !important;
       }
 
-      /* Quick stats banner for print */
       .quick-stats-banner {
         background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%) !important;
         border: 2px solid #8b5cf6 !important;
@@ -1851,7 +1844,6 @@
         letter-spacing: 0.5px !important;
       }
 
-      /* Section headers for print */
       .section-header-main {
         background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%) !important;
         border: 2px solid #6366f1 !important;
@@ -1869,7 +1861,6 @@
         margin: 0 !important;
       }
 
-      /* Performance stats for print */
       .stat-card {
         background: white !important;
         border: 1px solid #e2e8f0 !important;
@@ -1885,7 +1876,6 @@
         margin: 10px 0 !important;
       }
 
-      /* Tables for print */
       table {
         width: 100% !important;
         border-collapse: collapse !important;
@@ -1921,7 +1911,6 @@
         background: #f8fafc !important;
       }
 
-      /* Summary cards for print */
       .summary-card {
         background: white !important;
         border: 1px solid #e2e8f0 !important;
@@ -1940,7 +1929,6 @@
         border-bottom: 2px solid #e9d5ff !important;
       }
 
-      /* Card items for print */
       .card-item {
         background: white !important;
         border: 1px solid #e2e8f0 !important;
@@ -1970,7 +1958,6 @@
         background: #fef2f2 !important;
       }
 
-      /* Data rows for print */
       .data-row {
         padding: 8px !important;
         margin: 5px 0 !important;
@@ -1992,7 +1979,6 @@
         font-weight: 500 !important;
       }
 
-      /* Badges for print */
       .badge {
         display: inline-block !important;
         padding: 2px 6px !important;
@@ -2031,14 +2017,12 @@
         border: 1px solid #8b5cf6 !important;
       }
 
-      /* Amount display for print */
       .amount-large {
         font-size: 14pt !important;
         font-weight: 800 !important;
         color: #059669 !important;
       }
 
-      /* Asset summary for print */
       .asset-summary {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
@@ -2067,7 +2051,6 @@
         color: #6366f1 !important;
       }
 
-      /* Page breaks */
       .section-divider {
         page-break-after: avoid !important;
       }
@@ -2076,7 +2059,6 @@
         page-break-inside: avoid !important;
       }
 
-      /* Grids for print */
       .grid-2 {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
@@ -2089,19 +2071,16 @@
         gap: 10px !important;
       }
 
-      /* Ensure images print */
       img {
         max-width: 100% !important;
         display: block !important;
       }
 
-      /* Animation removal */
       * {
         animation: none !important;
         transition: none !important;
       }
 
-      /* PDF-specific footer info */
       .pdf-timestamp {
         display: block !important;
         text-align: right;
@@ -2113,7 +2092,6 @@
       }
     }
 
-    /* PDF-specific elements (hidden on screen) */
     .pdf-header,
     .pdf-footer,
     .pdf-timestamp {
@@ -2217,7 +2195,6 @@
 </head>
 
 <body>
-  <!-- Animated Background Particles -->
   <div class="background-particles" id="particles"></div>
 
   <div class="dashboard-container">
@@ -2603,13 +2580,12 @@ function cleanEducation(educationText) {
     const matches = cleaned.match(pattern);
     if (matches) {
       matches.forEach(match => {
-        // Clean up the match
+      
         const cleanMatch = match
           .replace(/\s+/g, ' ')
           .replace(/Others\s*/gi, '')
           .trim();
         
-        // Only add if it's meaningful and not a duplicate
         if (cleanMatch.length > 10 && !educationMatches.some(em => em.includes(cleanMatch) || cleanMatch.includes(em))) {
           educationMatches.push(cleanMatch);
         }
@@ -2617,31 +2593,27 @@ function cleanEducation(educationText) {
     }
   }
   
-  // If we found education patterns, use them
   if (educationMatches.length > 0) {
-    // Join multiple qualifications with " & "
+   
     return educationMatches.join(' & ');
   }
-  
-  // Fallback: Try to extract anything that looks like education from the cleaned text
-  // Remove any remaining noise and look for education keywords
+ 
   const fallbackPatterns = [
     'diploma', 'degree', 'engineering', 'medical', 'arts', 'science', 'commerce',
     'university', 'college', 'institute', 'school', 'pass', 'graduate', 'master',
     'bachelor', 'phd', 'doctorate', 'certificate'
   ];
   
-  // Check if the cleaned text contains education-related content
   const hasEducationKeywords = fallbackPatterns.some(keyword => 
     cleaned.toLowerCase().includes(keyword)
   );
   
   if (hasEducationKeywords && cleaned.length > 10 && cleaned.length < 500) {
-    // Remove any remaining artifacts and return
+  
     return cleaned
-      .replace(/^\W+/, '') // Remove leading non-word characters
-      .replace(/\W+$/, '') // Remove trailing non-word characters
-      .replace(/\s{2,}/g, ' ') // Replace multiple spaces with single space
+      .replace(/^\W+/, '') 
+      .replace(/\W+$/, '') 
+      .replace(/\s{2,}/g, ' ') 
       .trim();
   }
   
@@ -3345,7 +3317,6 @@ function parseBankAccounts(text) {
           </div>
         `;
 
-        // IPC Sections Summary
         if (briefIPC.length > 0) {
           detailsHTML += `
             <div class="details-section reveal">
@@ -3368,7 +3339,6 @@ function parseBankAccounts(text) {
           `;
         }
 
-        // Pending Cases
         if (pendingCases.length > 0) {
           detailsHTML += `
             <div class="details-section reveal">
@@ -3405,7 +3375,6 @@ function parseBankAccounts(text) {
           `;
         }
 
-        // Convicted Cases
         if (convictedCases.length > 0) {
           detailsHTML += `
             <div class="details-section reveal">
@@ -3436,7 +3405,6 @@ function parseBankAccounts(text) {
           `;
         }
 
-        // No Cases Message
         if (pendingCases.length === 0 && convictedCases.length === 0) {
           detailsHTML += `
             <div class="details-section reveal">
@@ -3475,10 +3443,9 @@ const parseIncomeSeries = (incomeText) => {
   for (let i = 0; i < parts.length; i += 2) {
     if (i + 1 < parts.length) {
       const year = parts[i].trim();
-      // Strip HTML tags from amount
       const amount = parts[i + 1].trim()
-        .replace(/<\/?b>/g, '')  // Remove <b> and </b> tags
-        .replace(/<\/?[^>]+(>|$)/g, '');  // Remove any other HTML tags
+        .replace(/<\/?b>/g, '')  
+        .replace(/<\/?[^>]+(>|$)/g, '');  
       
       if (year && amount && year !== 'None' && !amount.includes('Rs 0')) {
         years.push({ year, amount });
@@ -3563,7 +3530,6 @@ const parseIncomeSeries = (incomeText) => {
         </div>
       `;
 
-      // Cash
       const cashAsset = candidateData.movableAssets.find(a => 
         a.description && a.description.toLowerCase().includes('cash')
       );
@@ -3582,7 +3548,6 @@ const parseIncomeSeries = (incomeText) => {
         `;
       }
 
-      // Bank Accounts - DETAILED TABLE
       const bankAsset = candidateData.movableAssets.find(a => 
         a.description && a.description.toLowerCase().includes('deposits in banks')
       );
@@ -3627,7 +3592,6 @@ const parseIncomeSeries = (incomeText) => {
         }
       }
 
-      // Vehicles - DETAILED TABLE
       const vehicleAsset = candidateData.movableAssets.find(a => 
         a.description && a.description.toLowerCase().includes('motor vehicles')
       );
@@ -3671,7 +3635,6 @@ const parseIncomeSeries = (incomeText) => {
         }
       }
 
-      // Jewellery
       const jewelleryAsset = candidateData.movableAssets.find(a => 
         a.description && a.description.toLowerCase().includes('jewellery')
       );

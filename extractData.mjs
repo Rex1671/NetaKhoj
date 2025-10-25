@@ -16,7 +16,7 @@ export async function extractData(html) {
     const extractAmount = (htmlString) => {
       if (!htmlString) return 'Nil';
       
-      // Priority 1: Match "Rs&nbsp;" followed by actual number
+    
       let rsMatch = htmlString.match(/Rs\s*&nbsp;\s*([\d,]+)/i);
       if (!rsMatch) {
         rsMatch = htmlString.match(/Rs\s+([\d,]+)/i);
@@ -25,13 +25,11 @@ export async function extractData(html) {
         return `Rs ${rsMatch[1]}`;
       }
       
-      // Priority 2: Get number BEFORE tilde or description
       const beforeDescMatch = htmlString.match(/([\d,]+)\s*(?:&nbsp;|~)/);
       if (beforeDescMatch) {
         return `Rs ${beforeDescMatch[1]}`;
       }
       
-      // Priority 3: Fallback to first number found
       const numMatch = htmlString.match(/([\d,]+)/);
       return numMatch ? `Rs ${numMatch[1]}` : 'Nil';
     };
@@ -47,7 +45,6 @@ export async function extractData(html) {
         return 'Nil';
       }
 
-      // Split by double br tags
       const entries = htmlContent.split(/<br\s*\/?>\s*<br\s*\/?>/i);
       const parsedEntries = [];
 
@@ -155,16 +152,48 @@ export async function extractData(html) {
     const voterDiv = $('div:contains("Name Enrolled as Voter in:")').first();
     const voterEnrollment = voterDiv.length ? voterDiv.text().match(/Name Enrolled as Voter in:\s*(.+)/)?.[1]?.trim() : null;
 
-    const educationDiv = $('div.w3-panel:contains("Educational Details")');
-    let education = 'N/A';
-    if (educationDiv.length) {
-      const eduText = educationDiv.text()
-        .replace(/Educational Details/gi, '')
-        .replace(/Category:/gi, '')
-        .trim();
-      if (eduText) education = eduText;
-    }
 
+    let education = 'N/A';
+   
+const educationDiv = $('div:contains("Educational Details")').first();
+
+if (educationDiv.length) {
+  let fullText = educationDiv.text();
+  
+  // Find where "Educational Details" starts
+  const startMarker = 'Educational Details';
+  const startIndex = fullText.indexOf(startMarker);
+  
+  if (startIndex !== -1) {
+    // Extract text after "Educational Details"
+    let eduText = fullText.substring(startIndex + startMarker.length);
+    
+    // Remove content after common section markers
+    const endMarkers = [
+      'Crime-O-Meter',
+      'Assets & Liabilities',
+      'google.charts',
+      'No criminal cases',
+      'function drawChart'
+    ];
+    
+    for (const marker of endMarkers) {
+      const markerIndex = eduText.indexOf(marker);
+      if (markerIndex !== -1) {
+        eduText = eduText.substring(0, markerIndex);
+      }
+    }
+    
+    // Clean up the text
+    eduText = eduText
+      .replace(/Category:/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    if (eduText && eduText.length > 0) {
+      education = eduText;
+    }
+  }}
     // ============================================================================
     // PROFESSION & INCOME SOURCES (Fixed indices)
     // ============================================================================

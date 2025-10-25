@@ -38,10 +38,21 @@ class CacheService {
     });
   }
 
-  getCacheKey(type, ...params) {
-    return `${type}:${params.map(p => String(p).toLowerCase().trim()).join(':')}`;
+ 
+
+getCacheKey(type, ...args) {
+  if (type === 'candidate_search') {
+  
+    return `${type}:${args[0].toLowerCase()}:${args[1] || 'any'}`;
+  }
+  
+  if (type === 'candidate') {
+   
+    return `${type}:${args[0].toLowerCase()}:${args[1] || ''}:${args[2] || ''}`;
   }
 
+  return args.join(':').toLowerCase();
+}
   async get(cacheType, key) {
     const cache = this[`${cacheType}Cache`];
     const value = cache.get(key);
