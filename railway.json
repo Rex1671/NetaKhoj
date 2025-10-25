@@ -1,0 +1,23 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "npm start",
+    "healthcheckPath": "/health"
+  },
+  "nixpacks": {
+    "setup": {
+      "packages": ["chromium"]
+    },
+    "phases": {
+      "install": {
+        "dependsOn": ["setup"]
+      }
+    },
+    "variables": {
+      "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
+      "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/chromium-browser"
+    }
+  }
+}

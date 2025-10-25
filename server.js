@@ -20,10 +20,10 @@ const wss = new WebSocketServer({ server });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Detect if running on Render
-const IS_RENDER = process.env.RENDER === 'true' || !!process.env.RENDER_SERVICE_NAME;
+// Detect if running on Railway
+const IS_RAILWAY = !!process.env.RAILWAY_PROJECT_ID;
 
-// Create logs directory (Note: On Render, this will be ephemeral)
+// Create logs directory (Note: On Railway, this will be ephemeral)
 const logsDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
@@ -32,10 +32,10 @@ if (!fs.existsSync(logsDir)) {
 // Simple logging function
 const log = (level, module, message, toFile = false) => {
   const timestamp = new Date().toISOString();
-  const emoji = { 
-    info: '📝', 
-    success: '✅', 
-    error: '❌', 
+  const emoji = {
+    info: '📝',
+    success: '✅',
+    error: '❌',
     warn: '⚠️',
     ws: '🔌',
     req: '🌐',
@@ -43,12 +43,12 @@ const log = (level, module, message, toFile = false) => {
     browser: '🚀',
     security: '🔒'
   }[level] || 'ℹ️';
-  
+
   const consoleMessage = `${emoji} [${level.toUpperCase()}] [${module}] [${new Date().toLocaleTimeString()}] ${message}`;
   console.log(consoleMessage);
-  
-  // On Render, avoid excessive file writes (ephemeral filesystem)
-  if (!IS_RENDER && (toFile || level === 'error' || level === 'security')) {
+
+  // On Railway, avoid excessive file writes (ephemeral filesystem)
+  if (!IS_RAILWAY && (toFile || level === 'error' || level === 'security')) {
     const logEntry = {
       timestamp,
       level,
@@ -56,7 +56,7 @@ const log = (level, module, message, toFile = false) => {
       message,
       date: new Date().toLocaleDateString()
     };
-    
+
     const logFile = path.join(logsDir, `app-${new Date().toISOString().split('T')[0]}.log`);
     fs.appendFileSync(logFile, JSON.stringify(logEntry) + '\n');
   }
@@ -64,28 +64,28 @@ const log = (level, module, message, toFile = false) => {
 
 // Helper function to get client IP
 const getClientIP = (req) => {
-  // On Render, the real IP is in these headers
-  if (IS_RENDER) {
-    // Render provides the client IP in these headers
-    return req.headers['x-forwarded-for']?.split(',')[0].trim() || 
-           req.headers['x-real-ip'] || 
+  // On Railway, the real IP is in these headers
+  if (IS_RAILWAY) {
+    // Railway provides the client IP in these headers
+    return req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+           req.headers['x-real-ip'] ||
            req.headers['cf-connecting-ip'] || // If using Cloudflare
-           req.connection?.remoteAddress?.replace('::ffff:', '') || 
+           req.connection?.remoteAddress?.replace('::ffff:', '') ||
            'unknown';
   }
-  
+
   const forwarded = req.headers['x-forwarded-for'];
   const realIp = req.headers['x-real-ip'];
   const cfIp = req.headers['cf-connecting-ip'];
-  
+
   if (process.env.BEHIND_PROXY === 'true') {
     if (cfIp) return cfIp;
     if (realIp) return realIp;
     if (forwarded) return forwarded.split(',')[0].trim();
   }
-  
-  return req.connection?.remoteAddress?.replace('::ffff:', '') || 
-         req.socket?.remoteAddress?.replace('::ffff:', '') || 
+
+  return req.connection?.remoteAddress?.replace('::ffff:', '') ||
+         req.socket?.remoteAddress?.replace('::ffff:', '') ||
          'unknown';
 };
 
@@ -94,12 +94,12 @@ app.use(helmet({
   contentSecurityPolicy: false,
 }));
 
-// CORS configuration for Render
+// CORS configuration for Railway
 app.use(cors({
-  origin: IS_RENDER 
+  origin: IS_RAILWAY
     ? [
-        process.env.RENDER_EXTERNAL_URL, // Your Render app URL
-        'https://*.onrender.com',
+        process.env.RAILWAY_STATIC_URL, // Your Railway app URL
+        'https://*.up.railway.app',
         ...(process.env.ALLOWED_ORIGINS?.split(',') || [])
       ]
     : config.server.allowedOrigins,
@@ -110,11 +110,11 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Trust proxy configuration - ALWAYS true on Render
-if (IS_RENDER) {
-  // Render runs apps behind a proxy
+// Trust proxy configuration - ALWAYS true on Railway
+if (IS_RAILWAY) {
+  // Railway runs apps behind a proxy
   app.set('trust proxy', true);
-  log('info', 'server', 'Trust proxy enabled (Render environment)');
+  log('info', 'server', 'Trust proxy enabled (Railway environment)');
 } else if (process.env.BEHIND_PROXY === 'true') {
   app.set('trust proxy', 'loopback');
   log('info', 'server', 'Trust proxy enabled for localhost');
@@ -134,24 +134,24 @@ app.use((req, res, next) => {
   
   req.clientIP = clientIP;
   
-  // Reduce logging on Render to avoid noise
-  if (!IS_RENDER || req.path !== '/health') {
+  // Reduce logging on Railway to avoid noise
+  if (!IS_RAILWAY || req.path !== '/health') {
     log('req', 'server', `${req.method} ${req.path} | IP: ${clientIP}`);
   }
-  
+
   const originalSend = res.send;
   res.send = function(data) {
     res.send = originalSend;
     const responseTime = Date.now() - startTime;
-    
+
     if (responseTime > 1000) {
-      log('warn', 'server', `Slow request: ${req.method} ${req.path} (${responseTime}ms)`, !IS_RENDER);
+      log('warn', 'server', `Slow request: ${req.method} ${req.path} (${responseTime}ms)`, !IS_RAILWAY);
     }
-    
+
     if (res.statusCode >= 400) {
-      log('error', 'server', `${req.method} ${req.path} → ${res.statusCode} | IP: ${clientIP}`, !IS_RENDER);
+      log('error', 'server', `${req.method} ${req.path} → ${res.statusCode} | IP: ${clientIP}`, !IS_RAILWAY);
     }
-    
+
     return originalSend.call(this, data);
   };
   
@@ -171,7 +171,7 @@ app.get('/health', (req, res) => {
 app.use('/api/', (req, res, next) => {
   apiLimiter(req, res, (err) => {
     if (err && err.statusCode === 429) {
-      log('security', 'rate-limit', `API rate limit exceeded | IP: ${req.clientIP} | Path: ${req.path}`, !IS_RENDER);
+      log('security', 'rate-limit', `API rate limit exceeded | IP: ${req.clientIP} | Path: ${req.path}`, !IS_RAILWAY);
     }
     next(err);
   });
@@ -180,7 +180,7 @@ app.use('/api/', (req, res, next) => {
 app.use('/member/', (req, res, next) => {
   memberLimiter(req, res, (err) => {
     if (err && err.statusCode === 429) {
-      log('security', 'rate-limit', `Member rate limit exceeded | IP: ${req.clientIP} | Path: ${req.path}`, !IS_RENDER);
+      log('security', 'rate-limit', `Member rate limit exceeded | IP: ${req.clientIP} | Path: ${req.path}`, !IS_RAILWAY);
     }
     next(err);
   });
@@ -256,7 +256,7 @@ wss.on('connection', (ws, req) => {
   });
 
   ws.on('error', (error) => {
-    log('error', 'ws', `Error for ${sessionId}: ${error.message}`, !IS_RENDER);
+    log('error', 'ws', `Error for ${sessionId}: ${error.message}`, !IS_RAILWAY);
   });
   
   const pingInterval = setInterval(() => {
@@ -286,15 +286,15 @@ setInterval(() => {
   }
 }, 60000);
 
-// Skip log cleanup on Render (ephemeral filesystem)
-if (!IS_RENDER) {
+// Skip log cleanup on Railway (ephemeral filesystem)
+if (!IS_RAILWAY) {
   setInterval(() => {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
-    
+
     fs.readdir(logsDir, (err, files) => {
       if (err) return;
-      
+
       files.forEach(file => {
         const filePath = path.join(logsDir, file);
         fs.stat(filePath, (err, stats) => {
@@ -311,10 +311,10 @@ if (!IS_RENDER) {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  log('error', 'server', `${err.message} | Stack: ${err.stack}`, !IS_RENDER);
-  
+  log('error', 'server', `${err.message} | Stack: ${err.stack}`, !IS_RAILWAY);
+
   const statusCode = err.statusCode || err.status || 500;
-  res.status(statusCode).json({ 
+  res.status(statusCode).json({
     error: config.env === 'development' ? err.message : 'Internal server error',
     requestId: req.sessionId
   });
@@ -358,18 +358,18 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
 process.on('uncaughtException', (error) => {
-  log('error', 'server', `Uncaught Exception: ${error.message}`, !IS_RENDER);
+  log('error', 'server', `Uncaught Exception: ${error.message}`, !IS_RAILWAY);
   console.error(error.stack);
   shutdown('uncaughtException');
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  log('error', 'server', `Unhandled Rejection: ${reason}`, !IS_RENDER);
+  log('error', 'server', `Unhandled Rejection: ${reason}`, !IS_RAILWAY);
   console.error(reason);
 });
 
-// Health monitoring - reduced frequency on Render
-const monitoringInterval = IS_RENDER ? 15 * 60 * 1000 : 5 * 60 * 1000;
+// Health monitoring - reduced frequency on Railway
+const monitoringInterval = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 setInterval(() => {
   const memUsage = process.memoryUsage();
   const healthInfo = {
@@ -384,33 +384,33 @@ setInterval(() => {
     },
     uptime: `${Math.round(process.uptime() / 60)} minutes`
   };
-  
-  // Skip file writing on Render
-  if (!IS_RENDER) {
+
+  // Skip file writing on Railway
+  if (!IS_RAILWAY) {
     const statsFile = path.join(logsDir, `stats-${new Date().toISOString().split('T')[0]}.log`);
     fs.appendFileSync(statsFile, JSON.stringify({ timestamp: new Date().toISOString(), ...healthInfo }) + '\n');
   }
-  
+
   if (memUsage.heapUsed > 500 * 1024 * 1024) {
-    log('warn', 'server', `High memory usage: ${healthInfo.memory.heapUsed}`, !IS_RENDER);
+    log('warn', 'server', `High memory usage: ${healthInfo.memory.heapUsed}`, !IS_RAILWAY);
   }
 }, monitoringInterval);
 
-// Start server - Render provides PORT
+// Start server - Railway provides PORT
 const PORT = process.env.PORT || config.server.port || 3000;
-const HOST = '0.0.0.0'; // Always use 0.0.0.0 on Render
+const HOST = '0.0.0.0'; // Always use 0.0.0.0 on Railway
 
 server.listen(PORT, HOST, () => {
   log('success', 'server', `Running at http://${HOST}:${PORT}`);
   log('info', 'server', `Environment: ${config.env || process.env.NODE_ENV || 'production'}`);
-  log('info', 'server', `Platform: ${IS_RENDER ? 'Render' : 'Local/Other'}`);
+  log('info', 'server', `Platform: ${IS_RAILWAY ? 'Railway' : 'Local/Other'}`);
   log('info', 'server', `Trust Proxy: ${app.get('trust proxy')}`);
-  
-  if (IS_RENDER) {
-    log('info', 'server', `Render Service: ${process.env.RENDER_SERVICE_NAME}`);
-    log('info', 'server', `External URL: ${process.env.RENDER_EXTERNAL_URL}`);
+
+  if (IS_RAILWAY) {
+    log('info', 'server', `Railway Project: ${process.env.RAILWAY_PROJECT_ID}`);
+    log('info', 'server', `Railway Environment: ${process.env.RAILWAY_ENVIRONMENT_ID}`);
   }
-  
+
   log('info', 'server', `Cache TTL - PRS: ${config.cache.ttl.prs}s, Candidate: ${config.cache.ttl.candidate}s`);
   log('info', 'server', `Max browsers: ${config.scraper.maxBrowsers}`);
 });
