@@ -1,8 +1,14 @@
-# Deployment Plan for Hosting on Railway
+# Integrate Appwrite Client for Candidate Data Fetching
 
-## Steps to Complete
-- [ ] Check Git status and add remote to GitHub repo (https://github.com/Rex1671/NetaKhoj.git)
-- [ ] Add all files to Git, commit with message "Initial commit for deployment"
-- [ ] Push code to GitHub
-- [ ] Instruct user to create Railway account and project, connect GitHub repo
-- [ ] Set environment variables on Railway (PORT=3000, NODE_ENV=production, etc.)
+## Tasks
+- [ ] Update `findNeta.js` to use `fetchCandidateDataViaAppwrite` instead of direct HTML fetching
+- [ ] Transform Appwrite response to match existing data structure expectations
+- [ ] Update error handling in `getCandidateData`
+- [ ] Test the integration locally
+- [ ] Deploy and verify in Railway environment
+- [ ] Remove unused Puppeteer dependencies if no longer needed
+
+## Notes
+- Appwrite function returns structured JSON data directly
+- Need to map Appwrite response fields to existing code expectations (liabilities, immovableAssets, etc.)
+- Ensure fallback to search URL if Appwrite fails

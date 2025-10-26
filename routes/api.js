@@ -178,4 +178,49 @@ router.post('/cache/clear', (req, res) => {
   res.json({ message: `Cache cleared: ${type || 'all'}` });
 });
 
+router.post('/candidate', async (req, res) => {
+  try {
+    const { name, constituency = '', party = '' } = req.body;
+
+    if (!name || name.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        error: 'Candidate name is required'
+      });
+    }
+
+    // Check cache first
+    const cacheKey = `${name.toLowerCase()}_${constituency.toLowerCase()}_${party.toLowerCase()}`;
+    const cached = cache.get(cacheKey);
+    
+    if (cached) {
+      console.log(`💾 [Cache] Hit for: ${name}`);
+      return res.json({
+        ...cached,
+        cached: true
+      });
+    }
+
+    console.log(`📋 [API] Fetching: ${name}`);
+
+    // Call Appwrite function
+    const result = await fetchCandidateDataViaAppwrite(name, constituency, party);
+
+    // Cache successful results
+    if (result.success && result.data) {
+      cache.set(cacheKey, result);
+      console.log(`💾 [Cache] Stored: ${name}`);
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('❌ [API] Error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 export default router;
