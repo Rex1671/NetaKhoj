@@ -45,7 +45,6 @@ class MyNetaService {
   }
 
   /**
-   * Search candidate
    * @param {string} name 
    * @param {string} constituency
    * @param {string} party

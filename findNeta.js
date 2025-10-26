@@ -7,7 +7,6 @@ const APPWRITE_API_KEY = process.env.APPWRITE_API_KEY;
 
 export async function getCandidateData(name, constituency = '', party = '') {
     try {
-        // Validate input
         if (!name || name.trim() === '') {
             console.error('❌ Candidate name is required');
             return {
@@ -25,7 +24,6 @@ export async function getCandidateData(name, constituency = '', party = '') {
 
         const searchUrl = `https://www.myneta.info/search_myneta.php?q=${encodeURIComponent(name)}`;
 
-        // Direct Appwrite call as per sample
         console.log(`📡 [Appwrite] Fetching data for ${name}...`);
 
         const body = { test: 'search', name, constituency, party };
@@ -59,9 +57,8 @@ export async function getCandidateData(name, constituency = '', party = '') {
         const result = await response.json();
 
         console.log(`⏱️  Total time: ${duration}ms`);
-        console.log(`📥 Response:`, JSON.stringify(result, null, 2));
+        // console.log(`📥 Response:`, JSON.stringify(result, null, 2));
 
-        // Parse the response body if it's a string
         let parsedResponse;
         try {
             parsedResponse = typeof result.responseBody === 'string'
@@ -75,11 +72,10 @@ export async function getCandidateData(name, constituency = '', party = '') {
         console.log(`⏱️  Execution time: ${result.duration}s`);
 
         if (parsedResponse) {
-            console.log(`\n📊 Result:`);
-            console.log(JSON.stringify(parsedResponse, null, 2));
+            // console.log(`\n📊 Result:`);
+            // console.log(JSON.stringify(parsedResponse, null, 2));
         }
 
-        // Check if test passed
         const success = parsedResponse?.success !== false && result.status === 'completed';
 
         if (success) {

@@ -165,10 +165,8 @@ if (educationDiv.length) {
   const startIndex = fullText.indexOf(startMarker);
   
   if (startIndex !== -1) {
-    // Extract text after "Educational Details"
     let eduText = fullText.substring(startIndex + startMarker.length);
     
-    // Remove content after common section markers
     const endMarkers = [
       'Crime-O-Meter',
       'Assets & Liabilities',
@@ -184,7 +182,6 @@ if (educationDiv.length) {
       }
     }
     
-    // Clean up the text
     eduText = eduText
       .replace(/Category:/gi, '')
       .replace(/\s+/g, ' ')

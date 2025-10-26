@@ -6,7 +6,6 @@ class SearchService {
     this.searchIndex = new Map();
     this.initialized = false;
     
-    // HARDCODED TEST DATA
     this.testData = [
       {
         name: "Narendra Modi",
@@ -166,16 +165,13 @@ class SearchService {
     
     console.log('🔍 Initializing search index with TEST DATA...');
     
-    // Build search index from test data
     this.testData.forEach(member => {
       const key = this.normalizeString(member.name);
       this.searchIndex.set(key, member);
       
-      // Also index by party and constituency for better search
       const partyKey = this.normalizeString(member.party);
       const constituencyKey = this.normalizeString(member.constituency);
       
-      // Create additional index entries for party/constituency searches
       this.searchIndex.set(`${partyKey}_${key}`, member);
       this.searchIndex.set(`${constituencyKey}_${key}`, member);
     });
@@ -195,7 +191,6 @@ class SearchService {
     const results = [];
     const seen = new Set();
     
-    // Search through test data
     for (const member of this.testData) {
       const nameMatch = this.normalizeString(member.name).includes(normalizedQuery);
       const partyMatch = this.normalizeString(member.party).includes(normalizedQuery);
@@ -211,7 +206,6 @@ class SearchService {
       }
     }
     
-    // Sort by relevance and name
     results.sort((a, b) => {
       if (a.relevance !== b.relevance) {
         return b.relevance - a.relevance;
@@ -219,20 +213,17 @@ class SearchService {
       return a.name.localeCompare(b.name);
     });
     
-    // Return top results
     return results.slice(0, limit).map(r => {
       const { relevance, ...member } = r;
       return member;
     });
   }
 
-  // For testing: get random members
   getRandomMembers(count = 3) {
     const shuffled = [...this.testData].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
 
-  // For testing: get member by exact name
   getMemberByName(name) {
     return this.testData.find(m => 
       this.normalizeString(m.name) === this.normalizeString(name)

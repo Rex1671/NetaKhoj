@@ -49,14 +49,12 @@ export async function fetchHTML(url, retries = 3, timeout = 15000) {
   }
 }
 
-// Special fetch for print pages (with extra delay for content loading)
 export async function fetchPrintPage(url, retries = 3) {
   console.log(`📄 Fetching print page: ${url}`);
   
   try {
-    const html = await fetchHTML(url, retries, 20000); // 20s timeout for print pages
+    const html = await fetchHTML(url, retries, 20000); 
     
-    // Give it a small delay to ensure all content is in the HTML
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     return html;

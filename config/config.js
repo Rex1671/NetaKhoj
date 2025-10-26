@@ -21,6 +21,10 @@ const config = {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000,
     max: parseInt(process.env.RATE_LIMIT_MAX) || 100
   },
+   member: {
+      windowMs: 1 * 60 * 1000,
+      max: process.env.MEMBER_RATE_LIMIT || 30
+    },
   scraper: {
     timeout: parseInt(process.env.SCRAPER_TIMEOUT) || 30000,
     retries: parseInt(process.env.SCRAPER_RETRIES) || 3,

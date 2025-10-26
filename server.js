@@ -337,7 +337,6 @@ app.get('/api/memory/export', (req, res) => {
   }
 });
 
-// Apply rate limiting
 app.use('/api/', (req, res, next) => {
   apiLimiter(req, res, (err) => {
     if (err && err.statusCode === 429) {
@@ -356,10 +355,8 @@ app.use('/member/', (req, res, next) => {
   });
 });
 
-// Static files
 app.use(express.static('public'));
 
-// Routes
 app.use('/api', apiRoutes);
 app.use('/member', memberRoutes); 
 
@@ -513,7 +510,6 @@ app.use((req, res) => {
 const shutdown = async (signal) => {
   log('warn', 'server', `Shutting down gracefully... (${signal})`);
   
-  // Save memory stats
   memoryMonitor.saveStats();
   log('success', 'memory', 'Memory stats saved');
   
@@ -555,7 +551,6 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const monitoringInterval = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 setInterval(() => {
-  // Record memory stats
   const record = memoryMonitor.record();
   
   const memUsage = process.memoryUsage();
