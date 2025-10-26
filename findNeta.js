@@ -2,8 +2,7 @@ import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
-import { fetchHTML } from './webextract.mjs';
-import { fetchHTMLWithPuppeteer } from './scraper.mjs';
+import { fetchHTML, fetchPrintPage } from './webextract.mjs';
 import { extractData } from './extractData.mjs';
 
 function normalize(text) {
@@ -52,7 +51,7 @@ function normalizeParty(text) {
         'cpi(ml)(l)': 'communist party of india (marxist-leninist) (liberation)',
         'bkd': 'bahujan kranti dal',
         'jmm': 'jharkhand mukti morcha',
-        'bjd': 'Biju Janata Dal'
+        'bjd': 'biju janata dal'
     };
     const key = normalize(text);
     return partyMap[key] || key;
@@ -64,11 +63,17 @@ async function findCandidateURL(candidateQuery) {
     const $ = cheerio.load(html);
 
     let candidateUrl = null;
+    let allMatches = [];
 
-    console.log(`Parsing search results table for "${candidateQuery.name}"...`);
+    console.log(`\n🔍 Searching for: "${candidateQuery.name}"`);
+    if (candidateQuery.constituency) console.log(`   Constituency: "${candidateQuery.constituency}"`);
+    if (candidateQuery.party) console.log(`   Party: "${candidateQuery.party}"`);
+
+    const hasConstituency = candidateQuery.constituency && candidateQuery.constituency.trim() !== '';
+    const hasParty = candidateQuery.party && candidateQuery.party.trim() !== '';
 
     $('table.w3-table tr').each((i, tr) => {
-        if (i === 0) return;
+        if (i === 0) return; // Skip header
         const tds = $(tr).children('td');
         if (tds.length < 5) return;
 
@@ -77,41 +82,62 @@ async function findCandidateURL(candidateQuery) {
         const partyText = normalize($(tds[1]).text());
         const constituencyText = normalize($(tds[2]).text());
 
-    
         // Exact name match required
-const nameMatch = normalize(candidateQuery.name) === nameText;
+        const nameMatch = normalize(candidateQuery.name) === nameText;
+        
+        if (!nameMatch) return;
 
-// Constituency match (if provided)
-const constituencyMatch = !candidateQuery.constituency || 
-                          candidateQuery.constituency === '' ||
-                          cleanConstituency(constituencyText) === cleanConstituency(candidateQuery.constituency);
+        allMatches.push({ nameText, partyText, constituencyText });
 
-// Party match (if provided)
-const partyMatch = !candidateQuery.party || 
-                   candidateQuery.party === '' ||
-                   normalizeParty(partyText) === normalizeParty(candidateQuery.party);
+        // Check additional criteria
+        const constituencyMatch = hasConstituency 
+            ? cleanConstituency(constituencyText) === cleanConstituency(candidateQuery.constituency)
+            : true; // If not provided, consider it a match
+        
+        const partyMatch = hasParty 
+            ? normalizeParty(partyText) === normalizeParty(candidateQuery.party)
+            : true; // If not provided, consider it a match
 
-// Need name + (constituency OR party)
-if (nameMatch && (constituencyMatch || partyMatch)) {
+        // Match logic
+        if (nameMatch && constituencyMatch && partyMatch) {
             const link = nameAnchor.attr('href');
             candidateUrl = new URL(link, 'https://www.myneta.info').href;
-            console.log(`  --> Match found! URL: ${candidateUrl}`);
-            return false; 
+            console.log(`✅ Match found!`);
+            console.log(`   Party: ${partyText}`);
+            console.log(`   Constituency: ${constituencyText}`);
+            return false; // Stop iteration
         }
     });
 
-    if (!candidateUrl) console.log(`No exact match found for ${candidateQuery.name}`);
+    if (!candidateUrl && allMatches.length > 0) {
+        console.log(`\n⚠️  Found ${allMatches.length} candidate(s) with name "${candidateQuery.name}" but criteria didn't match:`);
+        allMatches.forEach((c, idx) => {
+            console.log(`   ${idx + 1}. ${c.partyText} | ${c.constituencyText}`);
+        });
+    }
+
     return candidateUrl;
 }
 
-export async function getCandidateData(name, constituency, party) {
+export async function getCandidateData(name, constituency = '', party = '') {
     try {
+        // Validate input
+        if (!name || name.trim() === '') {
+            console.error('❌ Candidate name is required');
+            return { 
+                data: { 
+                    assetLink: null, 
+                    content: null,
+                    error: 'Candidate name is required'
+                } 
+            };
+        }
+
         console.log('\n' + '='.repeat(60));
         console.log(`📋 Processing: ${name}`);
         console.log('='.repeat(60));
 
         const candidateQuery = { name, constituency, party };
-        console.log("Candidate Query",candidateQuery);
         const candidatePage = await findCandidateURL(candidateQuery);
 
         const searchUrl = `https://www.myneta.info/search_myneta.php?q=${encodeURIComponent(name)}`;
@@ -120,7 +146,7 @@ export async function getCandidateData(name, constituency, party) {
             console.log('❌ Candidate not found!');
             return { 
                 data: { 
-                    assetLink: "Nhin dunga :)", 
+                    assetLink: searchUrl, 
                     content: null,
                     error: 'Candidate not found in search results'
                 } 
@@ -128,14 +154,15 @@ export async function getCandidateData(name, constituency, party) {
         }
 
         const printUrl = candidatePage + '&print=true';
-        console.log(`📄 Fetching candidate page...`);
+        console.log(`📄 Candidate URL: ${printUrl}`);
 
-
-        const html = await fetchHTMLWithPuppeteer(printUrl);
+        // ✅ USE fetchHTML instead of Puppeteer
+        console.log(`⏳ Fetching candidate page...`);
+        const html = await fetchPrintPage(printUrl);
         
         console.log(`📊 HTML received: ${(html.length / 1024).toFixed(2)} KB`);
 
- 
+        // Optional: Save for debugging
         const tempDir = path.join(process.cwd(), 'temp_website');
         if (!fs.existsSync(tempDir)) {
             fs.mkdirSync(tempDir, { recursive: true });
@@ -145,24 +172,30 @@ export async function getCandidateData(name, constituency, party) {
         fs.writeFileSync(tempFilePath, html, 'utf-8');
         console.log(`💾 Debug HTML saved: ${tempFilePath}`);
 
-        
+        // Extract data
         console.log('🔬 Extracting data...');
         const extractedData = await extractData(html);
 
-        fs.unlinkSync(tempFilePath);
-        console.log('🗑️  Temp file removed');
+        // Clean up temp file
+        try {
+            fs.unlinkSync(tempFilePath);
+            console.log('🗑️  Temp file removed');
+        } catch (e) {
+            // Ignore cleanup errors
+        }
 
-        if (extractedData) {
-            extractedData.assetLink = searchUrl;
+        if (extractedData && !extractedData.error) {
+            extractedData.assetLink = candidatePage;
+            extractedData.searchUrl = searchUrl;
             console.log('✅ Extraction successful!\n');
             return { data: extractedData };
         } else {
-            console.log('⚠️  Extraction returned null\n');
+            console.log('⚠️  Extraction returned null or error\n');
             return { 
                 data: { 
                     assetLink: searchUrl, 
                     content: null,
-                    error: 'Data extraction failed'
+                    error: extractedData?.error || 'Data extraction failed'
                 } 
             };
         }
@@ -179,5 +212,3 @@ export async function getCandidateData(name, constituency, party) {
         };
     }
 }
-
-export { closeBrowser } from './scraper.mjs';

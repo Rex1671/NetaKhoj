@@ -9,7 +9,6 @@ import compression from 'compression';
 import config from './config/config.js';
 import { apiLimiter, memberLimiter } from './middleware/rateLimiter.js';
 import apiRoutes from './routes/api.js';
-import browserPool from './services/browserPool.js';
 import memberRoutes from './routes/member.js';
 import crypto from 'crypto'; 
 import fs from 'fs';
@@ -23,13 +22,19 @@ const __dirname = path.dirname(__filename);
 // Detect if running on Railway
 const IS_RAILWAY = !!process.env.RAILWAY_PROJECT_ID;
 
-// Create logs directory (Note: On Railway, this will be ephemeral)
+// Create necessary directories
 const logsDir = path.join(__dirname, 'logs');
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir, { recursive: true });
-}
+const dataDir = path.join(__dirname, 'data');
+[logsDir, dataDir].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
-// Simple logging function
+// ============================================================================
+// LOGGING - DEFINE FIRST (MOVED UP)
+// ============================================================================
+
 const log = (level, module, message, toFile = false) => {
   const timestamp = new Date().toISOString();
   const emoji = {
@@ -41,13 +46,13 @@ const log = (level, module, message, toFile = false) => {
     req: '🌐',
     cache: '💾',
     browser: '🚀',
-    security: '🔒'
+    security: '🔒',
+    memory: '🧠'
   }[level] || 'ℹ️';
 
   const consoleMessage = `${emoji} [${level.toUpperCase()}] [${module}] [${new Date().toLocaleTimeString()}] ${message}`;
   console.log(consoleMessage);
 
-  // On Railway, avoid excessive file writes (ephemeral filesystem)
   if (!IS_RAILWAY && (toFile || level === 'error' || level === 'security')) {
     const logEntry = {
       timestamp,
@@ -62,14 +67,142 @@ const log = (level, module, message, toFile = false) => {
   }
 };
 
-// Helper function to get client IP
+// ============================================================================
+// MEMORY MONITORING (NOW log IS DEFINED)
+// ============================================================================
+
+const MEMORY_STORAGE_FILE = path.join(dataDir, 'memory-stats.json');
+const MEMORY_CHECK_INTERVAL = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
+const MAX_MEMORY_RECORDS = 1000;
+
+class MemoryMonitor {
+  constructor() {
+    this.stats = this.loadStats();
+  }
+
+  loadStats() {
+    try {
+      if (fs.existsSync(MEMORY_STORAGE_FILE)) {
+        const data = fs.readFileSync(MEMORY_STORAGE_FILE, 'utf-8');
+        const parsed = JSON.parse(data);
+        log('info', 'memory', `Loaded ${parsed.records?.length || 0} historical memory records`);
+        return parsed;
+      }
+    } catch (error) {
+      log('warn', 'memory', `Could not load memory stats: ${error.message}`);
+    }
+    
+    return {
+      records: [],
+      metadata: {
+        createdAt: new Date().toISOString(),
+        platform: IS_RAILWAY ? 'Railway' : 'Local',
+        nodeVersion: process.version
+      }
+    };
+  }
+
+  saveStats() {
+    try {
+      if (this.stats.records.length > MAX_MEMORY_RECORDS) {
+        this.stats.records = this.stats.records.slice(-MAX_MEMORY_RECORDS);
+      }
+
+      this.stats.metadata.lastUpdated = new Date().toISOString();
+      this.stats.metadata.totalRecords = this.stats.records.length;
+
+      fs.writeFileSync(MEMORY_STORAGE_FILE, JSON.stringify(this.stats, null, 2), 'utf-8');
+    } catch (error) {
+      log('error', 'memory', `Failed to save memory stats: ${error.message}`);
+    }
+  }
+
+  record() {
+    const memUsage = process.memoryUsage();
+    const cpuUsage = process.cpuUsage();
+    
+    const record = {
+      timestamp: new Date().toISOString(),
+      uptime: Math.round(process.uptime()),
+      memory: {
+        rss: Math.round(memUsage.rss / 1024 / 1024),
+        heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+        heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+        external: Math.round(memUsage.external / 1024 / 1024),
+        arrayBuffers: Math.round(memUsage.arrayBuffers / 1024 / 1024)
+      },
+      cpu: {
+        user: Math.round(cpuUsage.user / 1000),
+        system: Math.round(cpuUsage.system / 1000)
+      },
+      connections: {
+        websocket: wss.clients.size,
+        http: server._connections || 0
+      }
+    };
+
+    this.stats.records.push(record);
+    
+    if (this.stats.records.length % 10 === 0 || record.memory.heapUsed > 400) {
+      this.saveStats();
+    }
+
+    return record;
+  }
+
+  getStats() {
+    const recent = this.stats.records.slice(-100);
+    
+    if (recent.length === 0) {
+      return {
+        current: this.record(),
+        average: null,
+        peak: null,
+        total: 0
+      };
+    }
+
+    const avgMemory = {
+      rss: Math.round(recent.reduce((sum, r) => sum + r.memory.rss, 0) / recent.length),
+      heapUsed: Math.round(recent.reduce((sum, r) => sum + r.memory.heapUsed, 0) / recent.length)
+    };
+
+    const peakMemory = {
+      rss: Math.max(...recent.map(r => r.memory.rss)),
+      heapUsed: Math.max(...recent.map(r => r.memory.heapUsed)),
+      timestamp: recent.find(r => r.memory.heapUsed === Math.max(...recent.map(x => x.memory.heapUsed)))?.timestamp
+    };
+
+    return {
+      current: recent[recent.length - 1],
+      average: avgMemory,
+      peak: peakMemory,
+      total: this.stats.records.length,
+      retention: `${Math.round((Date.now() - new Date(this.stats.metadata.createdAt).getTime()) / (1000 * 60 * 60))} hours`
+    };
+  }
+
+  exportCSV() {
+    const headers = 'timestamp,uptime,rss,heapTotal,heapUsed,external,websocket_connections\n';
+    const rows = this.stats.records.map(r => 
+      `${r.timestamp},${r.uptime},${r.memory.rss},${r.memory.heapTotal},${r.memory.heapUsed},${r.memory.external},${r.connections?.websocket || 0}`
+    ).join('\n');
+    
+    return headers + rows;
+  }
+}
+
+const memoryMonitor = new MemoryMonitor();
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
 const getClientIP = (req) => {
-  // On Railway, the real IP is in these headers
   if (IS_RAILWAY) {
-    // Railway provides the client IP in these headers
     return req.headers['x-forwarded-for']?.split(',')[0].trim() ||
            req.headers['x-real-ip'] ||
-           req.headers['cf-connecting-ip'] || // If using Cloudflare
+           req.headers['cf-connecting-ip'] ||
            req.connection?.remoteAddress?.replace('::ffff:', '') ||
            'unknown';
   }
@@ -89,16 +222,18 @@ const getClientIP = (req) => {
          'unknown';
 };
 
-// Middleware setup
+// ============================================================================
+// MIDDLEWARE
+// ============================================================================
+
 app.use(helmet({
   contentSecurityPolicy: false,
 }));
 
-// CORS configuration for Railway
 app.use(cors({
   origin: IS_RAILWAY
     ? [
-        process.env.RAILWAY_STATIC_URL, // Your Railway app URL
+        process.env.RAILWAY_STATIC_URL,
         'https://*.up.railway.app',
         ...(process.env.ALLOWED_ORIGINS?.split(',') || [])
       ]
@@ -110,9 +245,8 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Trust proxy configuration - ALWAYS true on Railway
+// Trust proxy configuration
 if (IS_RAILWAY) {
-  // Railway runs apps behind a proxy
   app.set('trust proxy', true);
   log('info', 'server', 'Trust proxy enabled (Railway environment)');
 } else if (process.env.BEHIND_PROXY === 'true') {
@@ -134,7 +268,6 @@ app.use((req, res, next) => {
   
   req.clientIP = clientIP;
   
-  // Reduce logging on Railway to avoid noise
   if (!IS_RAILWAY || req.path !== '/health') {
     log('req', 'server', `${req.method} ${req.path} | IP: ${clientIP}`);
   }
@@ -158,13 +291,50 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check endpoint for Render
+// ============================================================================
+// ROUTES
+// ============================================================================
+
+// Health check endpoint
 app.get('/health', (req, res) => {
+  const memStats = memoryMonitor.getStats();
   res.status(200).json({ 
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    memory: memStats.current?.memory || process.memoryUsage(),
+    connections: {
+      websocket: wss.clients.size
+    }
   });
+});
+
+// Memory stats endpoint
+app.get('/api/memory/stats', (req, res) => {
+  try {
+    const stats = memoryMonitor.getStats();
+    res.json({
+      success: true,
+      data: stats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    log('error', 'memory', `Failed to get stats: ${error.message}`);
+    res.status(500).json({ error: 'Failed to retrieve memory stats' });
+  }
+});
+
+// Export memory stats as CSV
+app.get('/api/memory/export', (req, res) => {
+  try {
+    const csv = memoryMonitor.exportCSV();
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="memory-stats-${Date.now()}.csv"`);
+    res.send(csv);
+  } catch (error) {
+    log('error', 'memory', `Failed to export: ${error.message}`);
+    res.status(500).json({ error: 'Failed to export memory stats' });
+  }
 });
 
 // Apply rate limiting
@@ -197,7 +367,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// WebSocket handling
+// ============================================================================
+// WEBSOCKET HANDLING
+// ============================================================================
+
 const clients = new Map();
 const CLIENT_TIMEOUT = 5 * 60 * 1000;
 const wsConnections = new Map();
@@ -268,7 +441,6 @@ wss.on('connection', (ws, req) => {
   }, 30000);
 });
 
-// WebSocket cleanup interval
 setInterval(() => {
   const now = Date.now();
   let cleaned = 0;
@@ -286,7 +458,10 @@ setInterval(() => {
   }
 }, 60000);
 
-// Skip log cleanup on Railway (ephemeral filesystem)
+// ============================================================================
+// LOG CLEANUP
+// ============================================================================
+
 if (!IS_RAILWAY) {
   setInterval(() => {
     const cutoffDate = new Date();
@@ -309,7 +484,10 @@ if (!IS_RAILWAY) {
   }, 24 * 60 * 60 * 1000);
 }
 
-// Error handling middleware
+// ============================================================================
+// ERROR HANDLING
+// ============================================================================
+
 app.use((err, req, res, next) => {
   log('error', 'server', `${err.message} | Stack: ${err.stack}`, !IS_RAILWAY);
 
@@ -320,7 +498,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
 app.use((req, res) => {
   log('warn', 'server', `404 Not Found: ${req.method} ${req.path} | IP: ${req.clientIP}`);
   res.status(404).json({ 
@@ -329,9 +506,16 @@ app.use((req, res) => {
   });
 });
 
-// Graceful shutdown
+// ============================================================================
+// GRACEFUL SHUTDOWN
+// ============================================================================
+
 const shutdown = async (signal) => {
   log('warn', 'server', `Shutting down gracefully... (${signal})`);
+  
+  // Save memory stats
+  memoryMonitor.saveStats();
+  log('success', 'memory', 'Memory stats saved');
   
   let wsCount = 0;
   wss.clients.forEach(client => {
@@ -339,9 +523,6 @@ const shutdown = async (signal) => {
     wsCount++;
   });
   log('info', 'server', `Closed ${wsCount} WebSocket connections`);
-  
-  await browserPool.closeAll();
-  log('info', 'server', 'Browser pool closed');
   
   server.close(() => {
     log('success', 'server', 'Server closed successfully');
@@ -368,9 +549,15 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error(reason);
 });
 
-// Health monitoring - reduced frequency on Railway
+// ============================================================================
+// HEALTH MONITORING
+// ============================================================================
+
 const monitoringInterval = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 setInterval(() => {
+  // Record memory stats
+  const record = memoryMonitor.record();
+  
   const memUsage = process.memoryUsage();
   const healthInfo = {
     memory: {
@@ -385,7 +572,6 @@ setInterval(() => {
     uptime: `${Math.round(process.uptime() / 60)} minutes`
   };
 
-  // Skip file writing on Railway
   if (!IS_RAILWAY) {
     const statsFile = path.join(logsDir, `stats-${new Date().toISOString().split('T')[0]}.log`);
     fs.appendFileSync(statsFile, JSON.stringify({ timestamp: new Date().toISOString(), ...healthInfo }) + '\n');
@@ -396,9 +582,12 @@ setInterval(() => {
   }
 }, monitoringInterval);
 
-// Start server - Railway provides PORT
+// ============================================================================
+// START SERVER
+// ============================================================================
+
 const PORT = process.env.PORT || config.server.port || 3000;
-const HOST = '0.0.0.0'; // Always use 0.0.0.0 on Railway
+const HOST = '0.0.0.0';
 
 server.listen(PORT, HOST, () => {
   log('success', 'server', `Running at http://${HOST}:${PORT}`);
@@ -412,7 +601,7 @@ server.listen(PORT, HOST, () => {
   }
 
   log('info', 'server', `Cache TTL - PRS: ${config.cache.ttl.prs}s, Candidate: ${config.cache.ttl.candidate}s`);
-  log('info', 'server', `Max browsers: ${config.scraper.maxBrowsers}`);
+  log('info', 'memory', `Memory monitoring enabled (interval: ${monitoringInterval / 1000 / 60} min)`);
 });
 
-export { app, server };
+export { app, server, clients, wss };
