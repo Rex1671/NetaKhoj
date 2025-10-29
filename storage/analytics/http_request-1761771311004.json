@@ -1,0 +1,15 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:55:11.004Z",
+  "data": {
+    "sessionId": "sess_1761771310992_70f7ba91fb7f83c4",
+    "method": "GET",
+    "path": "/pdf-generator.js",
+    "query": {},
+    "statusCode": 304,
+    "duration": 11,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:55:11.004Z"
+  }
+}

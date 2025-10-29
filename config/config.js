@@ -1,35 +1,60 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-const config = {
-  env: process.env.NODE_ENV || 'development',
+export default {
+  // Server configuration
   server: {
-    port: parseInt(process.env.PORT) || 3000,
-    host: process.env.HOST || '0.0.0.0' || localhost,
-    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
-    behindProxy: process.env.BEHIND_PROXY === 'true',
-    trustedProxies: process.env.TRUSTED_PROXIES?.split(',') || []
+    port: 3000,
+    allowedOrigins: ['http://localhost:3000']
   },
+
+  // Authentication tokens
+  adminToken: process.env.ADMIN_TOKEN || 'change-me-in-production',
+
+  // IP Whitelist (for admin endpoints)
+  adminWhitelist: process.env.ADMIN_IPS?.split(',') || ['127.0.0.1', '::1'],
+
+  // CORS
+  allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+
+  // Scraper configuration
+  scraper: {
+    maxBrowsers: parseInt(process.env.MAX_BROWSERS) || 3
+  },
+
+  // Cache configuration
   cache: {
     ttl: {
-      prs: parseInt(process.env.CACHE_TTL_PRS) || 3600,
-      candidate: parseInt(process.env.CACHE_TTL_CANDIDATE) || 1800,
-      geojson: 86400
+      prs: 3600,
+      candidate: 3600
     }
   },
-  rateLimit: {
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000,
-    max: parseInt(process.env.RATE_LIMIT_MAX) || 100
+
+  // Cleanup configuration
+  cleanup: {
+    enabled: true,
+    retention: {
+      logs: 30, // days
+      candidates: 24, // hours
+      prs: 24, // hours
+      analytics: 24, // hours
+      cache: 1 // hours
+    }
   },
-   member: {
-      windowMs: 1 * 60 * 1000,
-      max: process.env.MEMBER_RATE_LIMIT || 30
+
+  // Rate Limits
+  rateLimits: {
+    api: {
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100 // requests per window
     },
-  scraper: {
-    timeout: parseInt(process.env.SCRAPER_TIMEOUT) || 30000,
-    retries: parseInt(process.env.SCRAPER_RETRIES) || 3,
-    maxBrowsers: parseInt(process.env.MAX_BROWSERS) || 2
+    websocket: {
+      maxConnectionsPerIP: parseInt(process.env.MAX_WS_CONNECTIONS_PER_IP) || 5,
+      maxMessagesPerConnection: 100
+    }
+  },
+
+  // Request Limits
+  requestLimits: {
+    jsonBodySize: '10kb',
+    urlEncodedBodySize: '10kb',
+    maxMessageSize: 10 * 1024 // 10KB
   }
 };
-
-export default config;

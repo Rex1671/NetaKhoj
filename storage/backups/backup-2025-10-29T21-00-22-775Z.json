@@ -1,0 +1,1248 @@
+{
+  "timestamp": "2025-10-29T21:00:22.775Z",
+  "version": "1.0",
+  "data": {
+    "candidates": [
+      {
+        "name": "Manoj+Tiwari",
+        "timestamp": "2025-10-29T20:56:30.678Z",
+        "metadata": {
+          "constituency": "North+East+Delhi",
+          "party": "Bharatiya+Janata+Party",
+          "source": "appwrite-candidate"
+        },
+        "data": {
+          "name": "MANOJ TIWARI",
+          "age": 48,
+          "constituency": "NORTH EAST DELHI  (NATIONAL CAPITAL TERRITORY OF DELHI)",
+          "party": "BJP",
+          "imageUrl": "https://myneta.info/images_candidate/mynetai_ews5LokSabha2019/94d2bffccdc9aa53df53d41e510c2596aa997c9a.jpg",
+          "state": "Delhi",
+          "relation": "Late Chandradev Tiwari",
+          "voterEnrollment": "North East Delhi (Delhi) constituency, at Serial no 110  in Part no   60",
+          "education": "Post Graduate M.P.Ed From Banaras Hindu University Varanas UP In The Year 1994",
+          "professions": {
+            "self": "Singer-Actor and Member of Parliament",
+            "spouse": "NA"
+          },
+          "candidate": {
+            "name": "MANOJ TIWARI",
+            "age": 48,
+            "constituency": "NORTH EAST DELHI  (NATIONAL CAPITAL TERRITORY OF DELHI)",
+            "party": "BJP",
+            "imageUrl": "https://myneta.info/images_candidate/mynetai_ews5LokSabha2019/94d2bffccdc9aa53df53d41e510c2596aa997c9a.jpg",
+            "state": "Delhi",
+            "relation": "Late Chandradev Tiwari",
+            "voterEnrollment": "North East Delhi (Delhi) constituency, at Serial no 110  in Part no   60",
+            "education": "Post Graduate M.P.Ed From Banaras Hindu University Varanas UP In The Year 1994",
+            "professions": {
+              "self": "Singer-Actor and Member of Parliament",
+              "spouse": "NA"
+            }
+          },
+          "otherElections": [
+            {
+              "declarationIn": "Loksabha 2014",
+              "declaredAssets": "Rs19,94,83,924~19 Crore+",
+              "declaredCases": 0
+            }
+          ],
+          "crimeOMeter": {
+            "cases": 3
+          },
+          "incomeTax": [
+            {
+              "relation": "self",
+              "pan": "Y",
+              "year": "2017 - 2018",
+              "income": "2017 - 2018  **  <b>Rs 48,03,290</b>  48 Lacs+ ** 2016 - 2017  **  <b>Rs 80,79,130</b>  80 Lacs+ ** 2015 - 2016  **  <b>Rs 81,83,030</b>  81 Lacs+ ** 2014 - 2015  **  <b>Rs 59,08,770</b>  59 Lacs+ ** 2013 - 2014  **  <b>Rs 85,04,180</b>  85 Lacs+"
+            },
+            {
+              "relation": "spouse",
+              "pan": "N",
+              "year": "None",
+              "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+            },
+            {
+              "relation": "huf",
+              "pan": "N",
+              "year": "None",
+              "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+            },
+            {
+              "relation": "dependent1",
+              "pan": "N",
+              "year": "None",
+              "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+            },
+            {
+              "relation": "dependent2",
+              "pan": "N",
+              "year": "None",
+              "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+            },
+            {
+              "relation": "dependent3",
+              "pan": "N",
+              "year": "None",
+              "income": "None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>   ** None  **  <b>Rs 0</b>"
+            }
+          ],
+          "criminalCases": {
+            "briefIPC": [
+              {
+                "count": 1,
+                "section": "Punishment for criminal intimidation (IPC Section-506)"
+              },
+              {
+                "count": 2,
+                "section": "Disobedience to order duly promulgated by public servant (IPC Section-188)"
+              },
+              {
+                "count": 2,
+                "section": "Acts done by several persons in furtherance of common intention (IPC Section-34)"
+              },
+              {
+                "count": 1,
+                "section": "Punishment for voluntarily causing hurt (IPC Section-323)"
+              },
+              {
+                "count": 1,
+                "section": "Punishment for wrongful restraint (IPC Section-341)"
+              }
+            ],
+            "pendingCases": [
+              {
+                "serialNo": "1",
+                "firNo": "275/2018 PS Ravanwara Shivpuri,Dist Chhindwara MP",
+                "caseNo": "126/2019",
+                "court": "Shri Almas Rehman, JMFC, Parasia, Dist.Chhindwara(MP)",
+                "ipcSections": "188, 34",
+                "otherDetails": "Nil",
+                "chargesFramed": "No",
+                "dateChargesFramed": "Nil",
+                "appealFiled": "No",
+                "appealDetails": "Nil"
+              },
+              {
+                "serialNo": "2",
+                "firNo": "900/2018 PS New Usmanpur North East Dist. Delhi",
+                "caseNo": "Nil",
+                "court": "Nil",
+                "ipcSections": "323, 341, 506, 34",
+                "otherDetails": "Nil",
+                "chargesFramed": "No",
+                "dateChargesFramed": "Nil",
+                "appealFiled": "No",
+                "appealDetails": "Nil"
+              },
+              {
+                "serialNo": "3",
+                "firNo": "461/2018, PS Gokulpuri North East Dist. Delhi",
+                "caseNo": "Nil",
+                "court": "Nil",
+                "ipcSections": "188",
+                "otherDetails": "Section-461/465 of Delhi Municipal Corporation Act",
+                "chargesFramed": "No",
+                "dateChargesFramed": "Nil",
+                "appealFiled": "No",
+                "appealDetails": "Nil"
+              }
+            ],
+            "convictedCases": []
+          },
+          "movableAssets": [
+            {
+              "srNo": "i",
+              "description": "Cash",
+              "self": "Rs 3,50,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 3,50,000"
+            },
+            {
+              "srNo": "ii",
+              "description": "Deposits in Banks, Financial Institutions and Non-Banking Financial Companies",
+              "self": "SBI Br. Parliament Street No 3388576xxxxx: Rs 69,24,296\nICICI Bank Br. 13/16 Samratha Bhaibhav,Off New Link Road,Mumbai(Joint Ac) No 2630151xxxxx: Rs 31,09,342\nICICI Bank Br. 13/16 Samratha Bhaibhav,Off New Link Road,Mumbai No 2630150xxxxx: Rs 92,68,436\nCanara Bank Br. Lokhandwala Andheri West Mumbai No 267710100xxxxx: Rs 27,06,034\nBOB Br. 3-122 Lokhandwala Complex Mumbai No 3122010000xxxxx: Rs 88,108\nAxis Bank Br. Goregaon RAC,Mumbai No 91101006766xxxxx: Rs 3,69,645\nCanara Bank Br. Lokhandwala Andheri,Mumbai No 267710100xxxxx: Rs 432\nSBI Br. CSC,619 B Rajesh Classic Andheri West Mumbai-400058,No 200017xxxxx: Rs 60,000\nICICI Bank Br. Lokhandwala Andheri Mumbai 400058 No 62830150xxxxx: Rs 1,22,01,714\nOBC Br. Bandra West,No 1045215100xxxxx: Rs 4,35,198\nSBI Br. Lodhi Road New Delhi,No 2019178xxxxx: Rs 3,934\nSBI Main Br. Varanasi No 1110338xxxxx: Rs 1,43,261\nSBI Main Br. Varanasi No 3302021xxxxx: Rs 18,02,703\nSBI Br. Shopping Centro,Varanasi No 1037612xxxxx: Rs 3,76,460\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,88,490\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nFD In BOB Br. 3-122 Lokhandwala Complex Mumbai,No 3122030000xxxxx: Rs 33,90,198\nSBI Br. Varanasi,UP No 3178629xxxxx: Rs 13,69,940\nFD in SBI Br. Varanasi,UP No 307728xxxxx: Rs 31,86,143\nFD in SBI Br. Varanasi,UP No 3135691xxxxx: Rs 16,18,638\nFD in SBI Br. New Delhi No 3178629xxxxx: Rs 11,69,940\nFD in SBI Br. New Delhi No 3360186xxxxx: Rs 16,83,827\nFD in SBI Br. New Delhi No 3360026xxxxx: Rs 44,903\nFD in SBI Br. New Delhi No 3396110xxxxx: Rs 6,59,566\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831403xxxxx: Rs 3,46,698\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 23,594\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831403xxxxx: Rs 1,98,143\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 34,896\nFD In ICICI Bank,Br. Kaulesh Nagar,Sunderpur Varanasi No 62831402xxxxx: Rs 47,254\nFD in Canara Bank Mumbai Lokhandwala Br. No 267740100xxxxx: Rs 69,05,956\nFD in OBC Br. Bandra West Mumbai No 1045353100xxxxx: Rs 52,36,815",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 7,35,74,960"
+            },
+            {
+              "srNo": "iii",
+              "description": "Bonds, Debentures and Shares in companies",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            },
+            {
+              "srNo": "iv",
+              "description": "(a) NSS, Postal Savings etc",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            },
+            {
+              "srNo": "(b)LIC or other insurance Policies",
+              "description": "LIC Insurance Policy No 28491xxxxx & 282192195 12,50,000 12 Lacs+",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 12,50,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "v",
+              "description": "Personal loans/advance given",
+              "self": "Rhiti Production Pvt Ltd.: Rs 9,32,635",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 9,32,635"
+            },
+            {
+              "srNo": "vi",
+              "description": "Motor Vehicles (details of make, etc.)",
+              "self": "Audi Q7 Model No-07.3.OTD1 Reg No-MH-04-EX-9882: Rs 24,00,000\nInnova Car Toyota 2013 reg No-UP-65-BL-2222: Rs 6,24,011\nMercedes Benz,Date Of Purchased 23-07-07,Model E280,Reg No-MH-02-AY-8620: Rs 15,29,071\nHonda City Date Of Purchased,Model New Honda City GXI,Reg No-MH-43A-1260: Rs 1,00,000\nDate Of Purchased 13-04-2010 Fortuner,Model 3.OL 4WD MT/2982,Reg No-UP-65-AV-2222: Rs 7,50,354",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 54,03,436"
+            },
+            {
+              "srNo": "vii",
+              "description": "Jewellery (give details weight value)",
+              "self": "134 Gram Gold: Rs 4,00,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 4,00,000"
+            },
+            {
+              "srNo": "viii",
+              "description": "Other assets, such as values of claims / interests",
+              "self": "Rs 45,00,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 45,00,000"
+            }
+          ],
+          "immovableAssets": [
+            {
+              "srNo": "i",
+              "description": "Agricultural Land",
+              "self": "Khasra No-11 Mauza Patakpur A Anchal Mohaniya Dist Kaimur,Share 10 % of 2.72 Acres, | Value: Rs 5,00,000\n\nKhasra No-52,Plot No-469,Mauza Sagra Anchal Mohaniya Dist Kaimur 100% | Value: Rs 10,00,000\n\nKhasra No-52,Mauza Sagra Anchal Mohaniya Dist Kaimur 100% | Value: Rs 10,00,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 25,00,000"
+            },
+            {
+              "srNo": "ii",
+              "description": "Non Agricultural Land",
+              "self": "Chandrama Nagar,Kandawa Vranasi UP-22100 | Value: Rs 82,16,000\n\nAnand Nagar Kandawa Varanasi UP-221005 | Value: Rs 1,26,40,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 2,08,56,000"
+            },
+            {
+              "srNo": "iii",
+              "description": "Commercial Buildings",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            },
+            {
+              "srNo": "iv",
+              "description": "Residential Buildings",
+              "self": "Flat No-1603/1604 Shiv Shakti Apartment Sundervan Beside Shastri Nagar,Lokhandwala Andheri West Mumbai 400053 | Value: Rs 4,40,00,000\n\n172 Mhada Bunglows S.V.P Nagar Near Telephone Exchange Andheri West Mumbai 400053 | Value: Rs 3,00,00,000\n\nHariom Complex CTS No-81\n80\nVillage Mogra Ambewwadi RK Singh Marg Andheri East Mumbai 400093 | Value: Rs 1,50,00,000\n\nVeena Surshyam Complex Nest To Vasant Nagri Nallasopara Link Road Nallasopara East Dist Thane 401208 | Value: Rs 38,00,000\n\nFlat No-A 103 Plot No-30\nBahawalpur CGHS Ltd Sec-6 Dwarka New Delhi-110075 | Value: Rs 1,50,00,000\n\nKh No-96\nto 104 Flat No-D Floor,H No-J-59 & 60 J,Block Saidulajaib Ext. Neb Sarai New Delhi | Value: Rs 75,00,000\n\nB-33/14 A-21 Kaushlesh Nagar Sunderpur Varanasi UP-221005 | Value: Rs 1,20,00,000\n\nFlat No-1103 Block-I,Tridev Dham SM Plot No-145\n14711\nSamneghat Varanasi UP-221005 | Value: Rs 70,00,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 13,43,00,000"
+            },
+            {
+              "srNo": "v",
+              "description": "Others",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            }
+          ],
+          "liabilities": [
+            {
+              "srNo": "i",
+              "description": "Loans from Banks / FIs",
+              "self": "Axis Bank Ac No-PHR064700479486 House Loan: Rs 51,18,755",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 51,18,755"
+            },
+            {
+              "srNo": "Loans due to Individual / Entity",
+              "description": "Glory Export Unsecured Loan 50,00,000 50 Lacs+ Ishwardev Dudnath Unsecured Loan 35,00,000 35 Lacs+",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 85,00,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "Grand Total of Liabilities (as per affidavit)",
+              "description": "1,36,18,755 1 Crore+",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 1,36,18,755",
+              "total": "Nil"
+            },
+            {
+              "srNo": "ii",
+              "description": "Dues to departments dealing with government accommodation",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            },
+            {
+              "srNo": "iv",
+              "description": "Whether any other liabilities are in dispute, if so, mention the amount involved and the authority before which it is pending",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Rs 70"
+            },
+            {
+              "srNo": "Totals (Calculated as Sum of Values)",
+              "description": "Rs 1,36,18,755 1 Crore+",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 1,36,18,755",
+              "total": "Nil"
+            }
+          ],
+          "profession": {
+            "self": "Singer-Actor and Member of Parliament",
+            "spouse": "NA"
+          },
+          "sourcesOfIncome": {
+            "self": "Singer, Acting, Salary, Rental Income And Interest",
+            "spouse": "NA",
+            "dependent": "NA"
+          },
+          "contracts": {
+            "candidate": "NA",
+            "spouse": "NA",
+            "dependents": "NA",
+            "huf": "NA",
+            "partnerships": "NA",
+            "privateCompanies": "NA"
+          },
+          "summary": {
+            "totalAssets": "Rs 24,40,67,031 ~24 Crore+",
+            "totalLiabilities": "Rs 1,36,18,755 ~1 Crore+"
+          },
+          "assetLink": "https://www.myneta.info/LokSabha2019/candidate.php?candidate_id=12699",
+          "source": "appwrite",
+          "fetchedAt": "2025-10-29T20:56:28.922Z",
+          "aiSummary": {
+            "available": true,
+            "politician": "Manoj Tiwari",
+            "summary": {
+              "identity": "Manoj Tiwari is a prominent Bhojpuri actor, singer, and politician currently serving as the Member of Parliament (MP) for North East Delhi, representing the Bharatiya Janata Party (BJP).",
+              "promisesVsReality": "Pledged significant infrastructure upgrades for unauthorized colonies and improving civic amenities, with mixed success in implementation due to bureaucratic hurdles and the sheer scale of the area's development needs. Focused heavily on regularization and infrastructure projects like roads and drainage.",
+              "controversies": "Has faced criticism regarding his frequent absenteeism from parliamentary duties in his early tenure and occasional controversial statements related to local governance and migrant populations.",
+              "criticView": "Critics often label him as an 'outsider' politician who relies heavily on his celebrity status rather than deep local administrative understanding. They point to slow progress on promised large-scale urban renewal projects.",
+              "supporterView": "Supporters praise his accessibility, his connection to the Bhojpuri and Purvanchali diaspora vote bank, and his efforts in bringing central government schemes and funding to the constituency.",
+              "economicRecord": "His tenure has seen focus on improving connectivity and sanitation under central schemes like Swachh Bharat and infrastructure development funded by central grants, though the overall economic upliftment remains a long-term goal for the densely populated area.",
+              "definingMoments": "His successful transition from a popular film star to a winning MP in 2014, establishing the BJP's dominance in a previously complex constituency. His role as Delhi BJP Chief during challenging election cycles.",
+              "threats": "Faces strong anti-incumbency in certain pockets, competition from established local leaders within the opposition (AAP/Congress), and the challenge of managing the diverse and often volatile demographic mix of North East Delhi.",
+              "currentTalk": "Current discussions revolve around his performance in the upcoming election, his ability to retain the Purvanchali vote against potential consolidation by rivals, and the status of ongoing major infrastructure projects.",
+              "bottomLine": "Manoj Tiwari remains a powerful electoral force due to his celebrity appeal and strong party machinery, but he must demonstrate tangible results on infrastructure to counter persistent anti-incumbency sentiment."
+            },
+            "parsedAt": "2025-10-29T20:56:30.055Z",
+            "totalWordCount": 312,
+            "responseTime": 2093
+          },
+          "metadata": {
+            "totalTime": 2096,
+            "concurrentTime": 2096,
+            "timestamp": "2025-10-29T20:56:30.055Z",
+            "mode": "search",
+            "sources": {
+              "myneta": true,
+              "ai": true
+            },
+            "performance": {
+              "myNetaTime": 963,
+              "aiTime": 2093,
+              "efficiency": 1.46
+            }
+          },
+          "meow": "9f782584c2b5d90489423de4b606d069:dedaec25bd93a2ea57fe335298bf2435",
+          "bhaw": "d262f012e19a8fa5e0e707f0e686071d:6797941a5c6ee61c5252c573ab606b1f",
+          "searchUrl": "https://www.myneta.info/search_myneta.php?q=Manoj%2BTiwari",
+          "timestamp": "2025-10-29T20:56:30.675Z"
+        },
+        "version": "1.0"
+      },
+      {
+        "name": "SACHIN+PILOT",
+        "timestamp": "2025-10-29T20:55:11.071Z",
+        "metadata": {
+          "constituency": "Ajmer",
+          "party": "INC",
+          "source": "appwrite-candidate"
+        },
+        "data": {
+          "name": "SACHIN PILOT",
+          "age": 31,
+          "constituency": "Ajmer  (RAJASTHAN)",
+          "party": "INC",
+          "imageUrl": "N/A",
+          "state": "N/A",
+          "relation": "LATE RAJESH PIALOT",
+          "voterEnrollment": null,
+          "education": "Post Graduate 10TH AND 12TH FROM AIR FORCE BAL BHARTI, NEW DELHI.B.A. HONS. IN ENGLISH FROM ST. STEPHENS COLLEGE, DELHI UNIVERSITY, NEW DELHI.DIPLOMA IN MARKETING FROM I.M.T. GHAZIABAD,U.P. M.B.A. FROM WHARTON BUSINESS SCHOOL FROM THE UNIVERSITY OF PENNYSYLVANIA, U.S.A",
+          "professions": {
+            "self": "NA",
+            "spouse": "NA"
+          },
+          "candidate": {
+            "name": "SACHIN PILOT",
+            "age": 31,
+            "constituency": "Ajmer  (RAJASTHAN)",
+            "party": "INC",
+            "imageUrl": "N/A",
+            "state": "N/A",
+            "relation": "LATE RAJESH PIALOT",
+            "voterEnrollment": null,
+            "education": "Post Graduate 10TH AND 12TH FROM AIR FORCE BAL BHARTI, NEW DELHI.B.A. HONS. IN ENGLISH FROM ST. STEPHENS COLLEGE, DELHI UNIVERSITY, NEW DELHI.DIPLOMA IN MARKETING FROM I.M.T. GHAZIABAD,U.P. M.B.A. FROM WHARTON BUSINESS SCHOOL FROM THE UNIVERSITY OF PENNYSYLVANIA, U.S.A",
+            "professions": {
+              "self": "NA",
+              "spouse": "NA"
+            }
+          },
+          "otherElections": [
+            {
+              "declarationIn": "Loksabha 2014",
+              "declaredAssets": "Rs5,39,34,000~5 Crore+",
+              "declaredCases": 0
+            },
+            {
+              "declarationIn": "Union Council of Ministers 2013",
+              "declaredAssets": "Rs5,36,81,203~5 Crore+",
+              "declaredCases": 0
+            },
+            {
+              "declarationIn": "Union Council of Ministers 2012",
+              "declaredAssets": "Rs5,47,05,000~5 Crore+",
+              "declaredCases": 0
+            },
+            {
+              "declarationIn": "Union Council of Ministers 2011",
+              "declaredAssets": "Rs4,96,52,000~4 Crore+",
+              "declaredCases": 0
+            },
+            {
+              "declarationIn": "Lok Sabha 2004",
+              "declaredAssets": "Rs25,55,000~25 Lacs+",
+              "declaredCases": 0
+            }
+          ],
+          "crimeOMeter": {
+            "cases": 0
+          },
+          "incomeTax": [],
+          "criminalCases": {
+            "briefIPC": [],
+            "pendingCases": [],
+            "convictedCases": [
+              "No Cases"
+            ]
+          },
+          "movableAssets": [
+            {
+              "srNo": "i",
+              "description": "Cash",
+              "self": "Rs 70,000",
+              "spouse": "Rs 25,000",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 95,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "ii",
+              "description": "Deposits in Banks, Financial Institutions and Non-Banking Financial Companies",
+              "self": "UNION BANK OF INDIA, NEW DELHIS.B.I. SANSAD BHAVAN, NEW DELHISTATE BANK OF PATIALA, GHAZIABAD, U.P.: Rs 10,95,946",
+              "spouse": "UNION BANK OF INDIA, NEW DELHIH.D.F.C. BANK, NEW DELHI: Rs 23,758",
+              "huf": "UNION BANK OF INDIA, NEW DELHIF.D.R. UNION BANK OF INDIA, NEW DELHI: Rs 2,14,750",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 35,88,233",
+              "total": "Nil"
+            },
+            {
+              "srNo": "iii",
+              "description": "Bonds, Debentures and Shares in companies",
+              "self": "3000 SHARES@ RS10 EACH: Rs 30,000",
+              "spouse": "3500 SHARES @ RS 10 EACH: Rs 10",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 65,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "iv",
+              "description": "(a) NSS, Postal Savings etc",
+              "self": "P.P.F.UIT ULIP: Rs 99,724",
+              "spouse": "P.P.F.: Rs 1,79,946",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 4,69,325",
+              "total": "Nil"
+            },
+            {
+              "srNo": "iv",
+              "description": "(b)LIC or other insurance Policies **Not counted in total assets",
+              "self": "L.I.C. POLICY: Rs 6,34,000",
+              "spouse": "L.I.C. POLICY: Rs 1,52,000",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 7,86,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "v",
+              "description": "Motor Vehicles (details of make, etc.)",
+              "self": "Nil",
+              "spouse": "XILO MAHINDRA,MODEL 2009: Rs 7,50,000",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 7,50,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "vi",
+              "description": "Jewellery (give details weight value)",
+              "self": "1 TOLA GOLD CHAINRING: Rs 16,000",
+              "spouse": "20 TOLAS GOLD15 KGS SILVER: Rs 3,00,000",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 6,22,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "vii",
+              "description": "Other assets, such as values of claims / interests",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Nil"
+            }
+          ],
+          "immovableAssets": [
+            {
+              "srNo": "i",
+              "description": "Agricultural Land",
+              "self": "DANKAUR, ZILLA GAUTAMBUDDHANAGAR, U.P. 38BIGHAS,15 BISWIS,14 BISWANSIS | Value: Rs 2,54,00,000",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 3,50,00,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "ii",
+              "description": "Non Agricultural Land",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Nil"
+            },
+            {
+              "srNo": "iii",
+              "description": "Buildings",
+              "self": "500 VARG GAZ ANCESTRAL HOME. GAUTAMBUDDHA NAGAR, U.P. | Value: Rs 9,00,000",
+              "spouse": "UNITECH TRADE CENTRE,SUSHANT LOK - 1,SECTOR 43, GURGAON, HARYANA. 1738 SQR. FT. | Value: Rs 50,00,000",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Rs 59,00,000",
+              "total": "Nil"
+            },
+            {
+              "srNo": "iv",
+              "description": "Houses",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Nil"
+            },
+            {
+              "srNo": "v",
+              "description": "Others",
+              "self": "Nil",
+              "spouse": "Nil",
+              "huf": "Nil",
+              "dependent1": "Nil",
+              "dependent2": "Nil",
+              "dependent3": "Nil",
+              "total": "Nil"
+            }
+          ],
+          "liabilities": [],
+          "profession": {
+            "self": "NA",
+            "spouse": "NA"
+          },
+          "sourcesOfIncome": {
+            "self": "Nil",
+            "spouse": "NA",
+            "dependent": "NA"
+          },
+          "contracts": {
+            "candidate": "NA",
+            "spouse": "NA",
+            "dependents": "NA",
+            "huf": "NA",
+            "partnerships": "NA",
+            "privateCompanies": "NA"
+          },
+          "summary": {
+            "totalAssets": "Rs 4,64,89,558 ~4 Crore+",
+            "totalLiabilities": "Nil"
+          },
+          "assetLink": "https://www.myneta.info/ls2009/candidate.php?candidate_id=5847",
+          "source": "appwrite",
+          "fetchedAt": "2025-10-29T20:50:27.014Z",
+          "aiSummary": {
+            "available": true,
+            "politician": "SACHIN PILOT",
+            "summary": {
+              "identity": "Sachin Pilot is a prominent young leader of the Indian National Congress (INC), known for his organizational skills and having served as a Union Minister and Deputy Chief Minister of Rajasthan.",
+              "promisesVsReality": "As Deputy CM, he focused on farm loan waivers and rural development schemes, achieving partial success but facing internal friction regarding implementation speed. His promise of internal party balance often clashed with the reality of factional politics.",
+              "controversies": "The most significant controversy was the 2020 political crisis in Rajasthan where he led a rebellion against CM Ashok Gehlot, leading to his temporary sidelining from the state government.",
+              "criticView": "Critics often label him as overly ambitious, accusing him of prioritizing personal power gains over party unity, particularly during the 2020 political standoff.",
+              "supporterView": "Supporters view him as a dynamic, modern face of the INC, praising his administrative experience, connect with youth, and ability to mobilize support in the Jat-Meena belt.",
+              "economicRecord": "During his tenure as Deputy CM, the focus was on reviving stalled infrastructure projects and managing the state's finances post-elections, though major structural reforms were limited by the short tenure.",
+              "definingMoments": "His successful tenure as the Rajasthan Congress President leading the party to victory in 2018; the 2020 political rebellion; and his subsequent reinstatement in a key role.",
+              "threats": "The primary threat remains the deeply entrenched factional rivalry with Ashok Gehlot, which limits his current influence within the Rajasthan unit. He also faces pressure to deliver electoral wins in his constituency.",
+              "currentTalk": "Current discussions revolve around his role in the post-election setup in Rajasthan, his potential future ministerial berth, and whether he will be given a larger organizational role at the national level.",
+              "bottomLine": "Pilot is a high-potential leader whose career is currently defined by navigating internal party power dynamics in Rajasthan while aiming for a larger role in national politics."
+            },
+            "parsedAt": "2025-10-29T20:50:28.425Z",
+            "totalWordCount": 294,
+            "responseTime": 1579
+          },
+          "metadata": {
+            "totalTime": 1582,
+            "concurrentTime": 1582,
+            "timestamp": "2025-10-29T20:50:28.425Z",
+            "mode": "direct-link",
+            "sources": {
+              "myneta": true,
+              "ai": true
+            },
+            "performance": {
+              "myNetaTime": 171,
+              "aiTime": 1579,
+              "efficiency": 1.11
+            }
+          },
+          "meow": "2993d2fcd9f8d634da75e49ac5f3b789:fbea0387b9066ac74de8353adb17fe0d",
+          "bhaw": "e68b7738f2161a4ef17ac439b2d5ef4c:4b8ee348ce177cdfd70748fb67b228aa",
+          "searchUrl": "https://www.myneta.info/search_myneta.php?q=SACHIN%2BPILOT",
+          "timestamp": "2025-10-29T20:50:29.077Z"
+        },
+        "version": "1.0"
+      }
+    ],
+    "prs": [
+      {
+        "name": "Manoj+Tiwari",
+        "type": "MP",
+        "timestamp": "2025-10-29T20:56:28.895Z",
+        "metadata": {
+          "constituency": "North+East+Delhi",
+          "source": "appwrite-sdk"
+        },
+        "data": {
+          "found": true,
+          "type": "MP",
+          "name": "Manoj Tiwari",
+          "imageUrl": "https://prsindia.org/files/mptrack/18-lok-sabha/profile_image/180100.jpg",
+          "state": "Delhi",
+          "constituency": "North East Delhi",
+          "party": "Bharatiya Janata Party",
+          "termStart": "09-06-2024",
+          "termEnd": "In Office",
+          "noOfTerm": "Third Term",
+          "membership": "Elected",
+          "age": "54",
+          "gender": "Male",
+          "education": "Post Graduate and above",
+          "attendance": "91 %",
+          "natAttendance": "87 %",
+          "stateAttendance": "95 %",
+          "debates": "11",
+          "natDebates": "13.5",
+          "stateDebates": "10.2",
+          "questions": "155",
+          "natQuestions": "65",
+          "stateQuestions": "96",
+          "pmb": "0",
+          "natPMB": "0.1",
+          "statePMB": "N/A",
+          "attendanceTable": "<table class=\"views-table table table-hover table-striped\">\n<thead>\n<tr>\n<th class=\"views-field views-field-field-intro-et\">\nSession\n</th>\n<th class=\"views-field views-field-field-attendance\">\nAttendance\n</th>\n</tr>\n</thead>\n<tbody>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Session\" class=\"views-field views-field-field-intro-et\">\nMonsoon Session 2025 </td>\n<td data-title=\"Attendance\" class=\"views-field views-field-field-attendance\">\n90% </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Session\" class=\"views-field views-field-field-intro-et\">\nBudget Session 2025 </td>\n<td data-title=\"Attendance\" class=\"views-field views-field-field-attendance\">\n88% </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Session\" class=\"views-field views-field-field-intro-et\">\nBudget Session 2024 of 18th LS </td>\n<td data-title=\"Attendance\" class=\"views-field views-field-field-attendance\">\n100% </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Session\" class=\"views-field views-field-field-intro-et\">\nFirst Session of 18th LS </td>\n<td data-title=\"Attendance\" class=\"views-field views-field-field-attendance\">\n86% </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Session\" class=\"views-field views-field-field-intro-et\">\nWinter Session 2024 </td>\n<td data-title=\"Attendance\" class=\"views-field views-field-field-attendance\">\n90% </td>\n</tr>\n</tbody>\n</table>",
+          "debatesTable": "<table class=\"views-table table table-hover table-striped\">\n<thead>\n<tr>\n<th class=\"views-field views-field-field-date-of-introduction active\">\nDate\n</th>\n<th class=\"views-field views-field-title-field\">\nDebate title/Bill name\n</th>\n<th class=\"views-field views-field-field-debate-type\">\nDebate Type\n</th>\n</tr>\n</thead>\n<tbody>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2025 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"/mptrack/debatenotfound\" target=\"_blank\">\nRegarding need to construct a building complex for police department in North East Delhi district </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Matters under (Rule-377) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.03.2025 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/IV/27.03.2025.pdf?source=loksabhadocs\" target=\"_blank\">\nRegarding need to establish a Medical college and 500-bedded Hospital in North East Delhi Parliamentary Constituency </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Matters under (Rule-377) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.03.2025 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/IV/10.03.2025.pdf?source=loksabhadocs\" target=\"_blank\">\nRequest for Establishment of Purvanchal Bhavan in Delhi to Represent Diverse Communities </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nSpecial Mention </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n13.02.2025 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/IV/13.02.2025 final.pdf?source=loksabhadocs\" target=\"_blank\">\nRegarding need to establish Sports Stadium in North East Delhi Parliamentary Constituency </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Matters under (Rule-377) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.02.2025 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/IV/04.02.2025checked.pdf?source=loksabhadocs\" target=\"_blank\">\nMotion of Thanks on the President's Address </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nMotion of Thanks on the President's Address </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n14.12.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/III/14.12.2024.pdf?source=loksabhadocs\" target=\"_blank\">\nDiscussion on the glorious journey of 75 years of the Constitution of India </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Short Duration Discussions (Rule-193) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.12.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/III/3.12.2024.pdf?source=loksabhadocs\" target=\"_blank\">\nRequest to govt set up an AIIMS screening centre in north-east district of delhi </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nSpecial Mention </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n02.08.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/II/02.08.2024.pdf?source=loksabhadocs\" target=\"_blank\">\nDiscussion on the Demands for Grants Nos. 46 and 47 under the control of the Ministry of Health and Family Welfare </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nBudget (General) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.08.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/II/01.08.2024.pdf?source=loksabhadocs\" target=\"_blank\">\nRegarding desilting of Yamuna River </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Matters under (Rule-377) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/II/24.07.2024 (1).pdf?source=loksabhadocs\" target=\"_blank\">\nRegarding problem of water logging in North East Delhi </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nLS - Matters under (Rule-377) </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n02.07.2024 </td>\n<td data-title=\"Debate title/Bill name\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/debatestextmk/18/I/2.7.2024.pdf?source=loksabhadocs\" target=\"_blank\">\nMotion of Thanks on the President's Address </a></td>\n<td data-title=\"Debate Type\" class=\"views-field views-field-abc\">\nMotion of Thanks on the President's Address </td>\n</tr>\n</tbody>\n</table>",
+          "questionsTable": "<table class=\"views-table table table-hover table-striped\">\n<thead>\n<tr>\n<th class=\"views-field views-field-field-date-of-introduction active\">\nDate\n</th>\n<th class=\"views-field views-field-title-field\">\nTitle\n</th>\n<th class=\"views-field views-field-field-question-type\">\nType\n</th>\n<th class=\"views-field views-field-field-ministry\">\nMinistry or Category\n</th>\n</tr>\n</thead>\n<tbody>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4657_qVGF6h.pdf?source=pqals\" target=\"_blank\">\nFood Fortification Project </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFood Processing Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4661_PBkBBF.pdf?source=pqals\" target=\"_blank\">\nDomestic Gas Allocation Policy </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4425_6SDyqB.pdf?source=pqals\" target=\"_blank\">\nModernisation Of Television Rating System </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nInformation and Broadcasting </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4428_kVBHZA.pdf?source=pqals\" target=\"_blank\">\nImplementation Of Critical Mineral Mission </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMines </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4472_EtmObx.pdf?source=pqals\" target=\"_blank\">\nFirst Mile Connectivity Projects In Coal Transportation </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCoal </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n18.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3913_81E1TA.pdf?source=pqals\" target=\"_blank\">\nELI Schemes </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLabour and Employment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n18.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3916_UGBUBs.pdf?source=pqals\" target=\"_blank\">\nWomen Empowerment via Digital Skills </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSkill Development and Entrepreneurship </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n18.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU4024_0BfO4d.pdf?source=pqals\" target=\"_blank\">\nUpcoming Khelo India University Games </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AS326_cEbkaC.pdf?source=pqals\" target=\"_blank\">\nConstruction of Houses under PMAY-G </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRural Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3702_8LNsLF.pdf?source=pqals\" target=\"_blank\">\nSpecial Accredited Institutions for Education of the Divyangjans </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n11.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3508_2q5nrh.pdf?source=pqals\" target=\"_blank\">\nStatus of Project Elephant </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEnvironment, Forest and Climate Change </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n11.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3537_YzVy0I.pdf?source=pqals\" target=\"_blank\">\nGreen Job Creation </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEnvironment, Forest and Climate Change </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n08.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3232_Bu9uyW.pdf?source=pqals\" target=\"_blank\">\nIntegration of AYUSH with NPHS </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAYUSH </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n08.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3263_lvm8Nv.pdf?source=pqals\" target=\"_blank\">\nAAMs in Rural and Urban Areas </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3007_TxQSeV.pdf?source=pqals\" target=\"_blank\">\nData on Groundwater Depth-to-Water-Level </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3024_lP4PXl.pdf?source=pqals\" target=\"_blank\">\nReservation for Persons with Disabilities in Housing </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3065_6gGViE.pdf?source=pqals\" target=\"_blank\">\nIndian Energy Week 2025 </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU3084_oa838t.pdf?source=pqals\" target=\"_blank\">\nStatus of Road Projects in Delhi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRoad Transport and Highways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2765_wHXawx.pdf?source=pqals\" target=\"_blank\">\nSolar Pumps Installed under PM-KUSUM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nNew and Renewable Energy </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2860_AV10k7.pdf?source=pqals\" target=\"_blank\">\nUse of Aadhaar-based Face Authentication in National Examinations </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nElectronics and Information Technology </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2946_oicvwe.pdf?source=pqals\" target=\"_blank\">\nEstablishment for IICT for AVGC-XR Sector </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nInformation and Broadcasting </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AS223_ekyheO.pdf?source=pqals\" target=\"_blank\">\nDigital Infrastructure and Internet Connectivity in Panchayats </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPanchayati Raj </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2558_bKddi7.pdf?source=pqals\" target=\"_blank\">\nPMFBY as the largest Crop Insurance Scheme in the World </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAgriculture and Farmers Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2320_BDAsjr.pdf?source=pqals\" target=\"_blank\">\nImpact of National Clean Air Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEnvironment, Forest and Climate Change </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.08.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU2101_HKrczb.pdf?source=pqals\" target=\"_blank\">\nStrategic Role of CIPET in Petrochemical Industries </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nChemicals and Fertilizers </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n31.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1842_qCY4Kz.pdf?source=pqals\" target=\"_blank\">\nSwachhata Pakhwada 2025 </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n31.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1851_a4zn2C.pdf?source=pqals\" target=\"_blank\">\nModernisation of Command Area Development and Water Management </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n31.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1865_Rb7VwW.pdf?source=pqals\" target=\"_blank\">\nSatellite-based </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRoad Transport and Highways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n30.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1662_RPeE0r.pdf?source=pqals\" target=\"_blank\">\nCancer Research and Innovation </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPrime Minister </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n29.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1454_FSeVNj.pdf?source=pqals\" target=\"_blank\">\nRemission of Duties and Taxes on Exported Products </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCommerce and Industry </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1178_stPE8S.pdf?source=pqals\" target=\"_blank\">\nNational Centre for Sports Science and Research (NCSSR) </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1179_HJU1J0.pdf?source=pqals\" target=\"_blank\">\nSwavalambini Women Entrepreneurship Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSkill Development and Entrepreneurship </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1188_Cayjom.pdf?source=pqals\" target=\"_blank\">\nQuality Education Infrastructure in Delhi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEducation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU940_g5Z4Xp.pdf?source=pqals\" target=\"_blank\">\nCruise Bharat Mission </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPorts, Shipping and Waterways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1145_wxOghB.pdf?source=pqals\" target=\"_blank\">\nMaternal and Newborn Health Coverage under NHM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU1146_yS4ikp.pdf?source=pqals\" target=\"_blank\">\nReform in Pharmaceutical Sector </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nChemicals and Fertilizers </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU703_OGiNdu.pdf?source=pqals\" target=\"_blank\">\nProjects Sanctioned under PLI Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFood Processing Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU711_JXc5HE.pdf?source=pqals\" target=\"_blank\">\nRegional Rapid Transit System </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n22.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU271_UZhNkJ.pdf?source=pqals\" target=\"_blank\">\nAgricultural Research and Technology Collaboration within BRICS Framework </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAgriculture and Farmers Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n22.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU329_xNYbE1.pdf?source=pqals\" target=\"_blank\">\nPLI Schemes </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCommerce and Industry </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU24_EYLrSM.pdf?source=pqals\" target=\"_blank\">\nSAMADHAN Portal </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLabour and Employment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU25_z28Z5Q.pdf?source=pqals\" target=\"_blank\">\nConservation and Development of Heritage Sites </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCulture </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU42_nsT0e6.pdf?source=pqals\" target=\"_blank\">\nPromotion of Sports and Youth Development in Urban Areas </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU204_xClG8c.pdf?source=pqals\" target=\"_blank\">\nSchemes for Increasing Job Opportunities </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLabour and Employment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.07.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/185/AU219_QAurHD.pdf?source=pqals\" target=\"_blank\">\nPromotion of Cruise Tourism </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nTourism </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AS492_kdmKUk.pdf?source=pqals\" target=\"_blank\">\nPradhan Mantri Ayushman Bharat Health Infrastructure Mission </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU5730_kOt7ko.pdf?source=pqals\" target=\"_blank\">\nAYUSH Wellness Centre and Hospital </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAYUSH </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU5746_Ne8Fko.pdf?source=pqals\" target=\"_blank\">\nMedical College in Delhi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU5324_TJHyQG.pdf?source=pqals\" target=\"_blank\">\nMSME Champions Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMicro, Small and Medium Enterprises </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4904_PoKf4t.pdf?source=pqals\" target=\"_blank\">\nPre-Matric and Post-Matric Scholarship </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4970_VwzGHd.pdf?source=pqals\" target=\"_blank\">\nProduction of Speciality Steel Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSteel </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.04.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4981_4fUA3x.pdf?source=pqals\" target=\"_blank\">\nPradhan Mantri Kisan Samman Nidhi Yojana </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAgriculture and Farmers Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4618_moOyym.pdf?source=pqals\" target=\"_blank\">\nNew Notary portal </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4623_fRvjfn.pdf?source=pqals\" target=\"_blank\">\nSambal Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nWomen and Child Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AS391_tYtJEV.pdf?source=pqals\" target=\"_blank\">\nEthanol Blended Petrol Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4409_TsTejm.pdf?source=pqals\" target=\"_blank\">\nCredit Guarantee Scheme for MSMEs </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMicro, Small and Medium Enterprises </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n26.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU4181_y3sSLg.pdf?source=pqals\" target=\"_blank\">\nNeVA Digital Library </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nParliamentary Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3701_HIow4C.pdf?source=pqals\" target=\"_blank\">\nCriteria to Evaluate Success of PMIS and PMIS Cells </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCorporate Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3467_npTQTH.pdf?source=pqals\" target=\"_blank\">\nNITI Aayog�s Panel on Transforming AIIMS </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3476_y2TeLF.pdf?source=pqals\" target=\"_blank\">\nUse of Artificial Intelligence in Judiciary </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3477_TA4gQt.pdf?source=pqals\" target=\"_blank\">\nIndia's Green Martime Transition </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPorts, Shipping and Waterways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3484_a3jTIZ.pdf?source=pqals\" target=\"_blank\">\nAdolescent Girls Club </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nWomen and Child Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n21.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3628_zgI0ou.pdf?source=pqals\" target=\"_blank\">\nMulti-Drug Resistant Tuberculosis </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3226_Gk7HeW.pdf?source=pqals\" target=\"_blank\">\nIncreasing of Ethanol Blending beyond 20% </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3227_1P2oN2.pdf?source=pqals\" target=\"_blank\">\nCredit Support to MSMEs </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMicro, Small and Medium Enterprises </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3288_yQMEGA.pdf?source=pqals\" target=\"_blank\">\nRegulations for Plant-based Food Innovation </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFood Processing Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3350_c7rWby.pdf?source=pqals\" target=\"_blank\">\nFlight Facility from Hindon Airport </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCivil Aviation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n19.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3007_J8aDpz.pdf?source=pqals\" target=\"_blank\">\nCoal Production from Auctioned Coal Mines </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCoal </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n19.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU3142_bC8r6W.pdf?source=pqals\" target=\"_blank\">\nBuddhist Development Plan for Ladakh </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMinority Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n17.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU2545_MdHpwx.pdf?source=pqals\" target=\"_blank\">\nEkal Anubandh </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFinance </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n13.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU2326_vlNF1Y.pdf?source=pqals\" target=\"_blank\">\nGreen Metro System </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n13.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU2328_VqrSIH.pdf?source=pqals\" target=\"_blank\">\nIntegrated Water Resources Management </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU2074_gZCA0S.pdf?source=pqals\" target=\"_blank\">\nNational Bio-energy Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nNew and Renewable Energy </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n11.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1879_3ktgob.pdf?source=pqals\" target=\"_blank\">\nDrug Abuse </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n11.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1985_kWsoSz.pdf?source=pqals\" target=\"_blank\">\nCelebration of Animal Husbandry and Animal Welfare </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFisheries, Animal Husbandry and Dairying </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1616_nac5Bt.pdf?source=pqals\" target=\"_blank\">\nRestructuring Skill India Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSkill Development and Entrepreneurship </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1632_ZbkXS2.pdf?source=pqals\" target=\"_blank\">\nYuva Connect Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.03.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1692_yKbPxH.pdf?source=pqals\" target=\"_blank\">\nBIMSTEC Nations </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n13.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1405_cuBhgw.pdf?source=pqals\" target=\"_blank\">\nAchievements of SCM 10 </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n13.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU1610_AuSoqh.pdf?source=pqals\" target=\"_blank\">\nSet up compressed Bio-Gas Plants under SATAT </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU755_05mHGx.pdf?source=pqals\" target=\"_blank\">\nUS-India Partnership in Technology and Defense </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nExternal Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n07.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU911_FAHz4U.pdf?source=pqals\" target=\"_blank\">\ne-Courts </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU485_oBs3Fm.pdf?source=pqals\" target=\"_blank\">\nGender Equality and Empowerment of Women for Urban Planning </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU666_SzC2tw.pdf?source=pqals\" target=\"_blank\">\nImpact of Conference to Regional Air Connectivity </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCivil Aviation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU279_nSPEWX.pdf?source=pqals\" target=\"_blank\">\nStrengthening of Cooperative Societies </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCooperation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU409_IyxI2L.pdf?source=pqals\" target=\"_blank\">\nObjective of Entrepreneurship Development Conference </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPanchayati Raj </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU426_qnbDda.pdf?source=pqals\" target=\"_blank\">\nInitiatives for the Empowerment of Divyangjans </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.02.2025 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/184/AU115_RhB5UM.pdf?source=pqals\" target=\"_blank\">\nDevelopment of Tourism Infrastructure and Yamuna Riverfront in Delhi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nTourism </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU4153_2a6RYs.pdf?source=pqals\" target=\"_blank\">\nTraining of Maldivian Civil Servants </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nExternal Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU4200_Gd2CpX.pdf?source=pqals\" target=\"_blank\">\nPromotion of Ayurveda and Traditional Medicines </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAYUSH </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU4330_W2w8Wa.pdf?source=pqals\" target=\"_blank\">\nPublic Health Emergency Management Act </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU4331_hPD8JJ.pdf?source=pqals\" target=\"_blank\">\nAssessment of Ayushman Arogya Mandir-Sub Centre </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n20.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU4335_mIFSf8.pdf?source=pqals\" target=\"_blank\">\nArtificial Intelligence in Judiciary </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n19.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AS356_pdzfGN.pdf?source=pqals\" target=\"_blank\">\nBhu-Neer\" Portal </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n19.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU3965_7llK4C.pdf?source=pqals\" target=\"_blank\">\nImpact of UDAN Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCivil Aviation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n19.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU3977_zFvCW9.pdf?source=pqals\" target=\"_blank\">\nGrowth of Bio-Energy Sector </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPetroleum and Natural Gas </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n18.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU3777_RIOA2n.pdf?source=pqals\" target=\"_blank\">\nHousehold and Enterprise Survey Verticals </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nStatistics and Programme Implementation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n17.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AS319_Hnfc0e.pdf?source=pqals\" target=\"_blank\">\nAchievements under DILRMP </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRural Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n16.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU3283_bLsrFH.pdf?source=pqals\" target=\"_blank\">\nSocial Security benefits by ESIC </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLabour and Employment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AS258_nYnAq6.pdf?source=pqals\" target=\"_blank\">\nDevelopment of Works under Various Schemes </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2767_U9KpH7.pdf?source=pqals\" target=\"_blank\">\nVillages Certified as 'Har Ghar Jal' under JJM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n12.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2855_8UA0Js.pdf?source=pqals\" target=\"_blank\">\nGrowth and Innovation in MSME </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nMicro, Small and Medium Enterprises </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n11.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2621_wqd5Yl.pdf?source=pqals\" target=\"_blank\">\nExpansion of Solar Energy Capacity </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nNew and Renewable Energy </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2305_TNjVQq.pdf?source=pqals\" target=\"_blank\">\nAwareness Campaign on Cyber Crimes </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHome Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n10.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2529_6p7ho8.pdf?source=pqals\" target=\"_blank\">\nSahakar Pragya Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCooperation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n09.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2162_CD0i6F.pdf?source=pqals\" target=\"_blank\">\nNew Central Government Schools in Delhi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEducation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AS162_C6qXjN.pdf?source=pqals\" target=\"_blank\">\nBharat Health Initiative for Sahyog Hita &amp; Maitri Cubes </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1846_33Od1Q.pdf?source=pqals\" target=\"_blank\">\nSHe-Box </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nWomen and Child Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1879_NuVHkl.pdf?source=pqals\" target=\"_blank\">\nGreen Tug Transition Program </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPorts, Shipping and Waterways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU2048_jIDRx7.pdf?source=pqals\" target=\"_blank\">\nPM-PRANAM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nChemicals and Fertilizers </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1611_v5oMD3.pdf?source=pqals\" target=\"_blank\">\nJal Hi AMRIT Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1619_PSMFvJ.pdf?source=pqals\" target=\"_blank\">\nFood Parks under PMKSY </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFood Processing Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n04.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1481_jAK9dy.pdf?source=pqals\" target=\"_blank\">\nTarang Facility at the Indian National Centre for Ocean Information Services </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEarth Sciences </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1372_GzXijj.pdf?source=pqals\" target=\"_blank\">\ne-Platform </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCommerce and Industry </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1224_FSSeSQ.pdf?source=pqals\" target=\"_blank\">\nSupportive Devices to Specially Abled Persons </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n03.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1367_fGDXOJ.pdf?source=pqals\" target=\"_blank\">\nAdvancing India's Electric Vehicle Ecosystem </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHeavy Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n02.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU955_xZsHXF.pdf?source=pqals\" target=\"_blank\">\nViksit Bharat Ambassador - Yuva Connect Initiative </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n02.12.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU1079_t40AG0.pdf?source=pqals\" target=\"_blank\">\nParyatan Mitra and Paryatan Didi </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nTourism </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n29.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU697_t2xHCQ.pdf?source=pqals\" target=\"_blank\">\nIncrease of MBBS Seats in Medical College </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHealth and Family Welfare </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n29.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU741_MTjtsV.pdf?source=pqals\" target=\"_blank\">\nHamara Samvidhan, Hamara Samman' Portal </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n29.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU806_J9rPpu.pdf?source=pqals\" target=\"_blank\">\nValorisation of Dredged Sediments </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPorts, Shipping and Waterways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU477_pfWorl.pdf?source=pqals\" target=\"_blank\">\nRegional Connectivity Scheme (RCS) - UDAN </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCivil Aviation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n28.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU574_y9y6eZ.pdf?source=pqals\" target=\"_blank\">\nNational Mission to Clean Ganga </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU255_4nrQIN.pdf?source=pqals\" target=\"_blank\">\nOne DAE One Subscription Agreements </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPrime Minister </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU288_GvYpNg.pdf?source=pqals\" target=\"_blank\">\nWorld Audio Visual and Entertainment Summit </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nInformation and Broadcasting </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n27.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU452_vKpZvL.pdf?source=pqals\" target=\"_blank\">\nWeather Radars under Mission Mausam </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEarth Sciences </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU12_9l4pYF.pdf?source=pqals\" target=\"_blank\">\nAdditional Employment Opportunities </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLabour and Employment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.11.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/183/AU151_4g3GJB.pdf?source=pqals\" target=\"_blank\">\nRecommendations of Textbook Review Committee </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEducation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n09.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU3057_muTcrJ.pdf?source=pqals\" target=\"_blank\">\nBulk Drug Parks </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nChemicals and Fertilizers </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n09.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU3202_QdNBqF.pdf?source=pqals\" target=\"_blank\">\nAYUSH in NCT of DELHI </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nAYUSH </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n08.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2855_Mf0ftC.pdf?source=pqals\" target=\"_blank\">\nEconomic Landscape for Tribal Communities </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nTribal Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2303_lPadDs.pdf?source=pqals\" target=\"_blank\">\nAFSPA Act </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHome Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n06.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2335_j1cpnL.pdf?source=pqals\" target=\"_blank\">\ne-Panchayats </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPanchayati Raj </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2084_DKs8fo.pdf?source=pqals\" target=\"_blank\">\nVisa on Arrival </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nTourism </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2263_rZRaYD.pdf?source=pqals\" target=\"_blank\">\nDigitally Empowered Girl Students at Kasturba Gandhi Balika Vidyalayas </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEducation </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2265_4Jtoad.pdf?source=pqals\" target=\"_blank\">\nNGOs involved in CSR Projects </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCorporate Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n05.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU2266_MUFDC8.pdf?source=pqals\" target=\"_blank\">\nTo Encourage Sports and Fitness among Women and Funds for Emerging Sportspersons </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nYouth Affairs and Sports </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU1650_w8xvrI.pdf?source=pqals\" target=\"_blank\">\nPost Crop Harvest Infrastructure </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nFood Processing Industries </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n01.08.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU1671_iLIJXv.pdf?source=pqals\" target=\"_blank\">\nSmart Classes and Digital Libraries under Smart Cities Mission </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nHousing and Urban Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n31.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AS121_bGmTb0.pdf?source=pqals\" target=\"_blank\">\nBullet and Vande Bharat Trains </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nStarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRailways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n31.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU1583_BqoD7y.pdf?source=pqals\" target=\"_blank\">\nDigital Advertisement Policy, 2023 </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nInformation and Broadcasting </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n30.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU1183_RSMV9O.pdf?source=pqals\" target=\"_blank\">\nGram Manchitra Application </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nPanchayati Raj </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n30.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU1187_IWOiDS.pdf?source=pqals\" target=\"_blank\">\nPM-DAKSH Yojana </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSocial Justice and Empowerment </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n29.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU945_wkyilE.pdf?source=pqals\" target=\"_blank\">\nMeasures to Enhance CSR Activities </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nCorporate Affairs </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n26.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU722_6C88OY.pdf?source=pqals\" target=\"_blank\">\nOne Stop Centres </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nWomen and Child Development </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n26.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU852_9c7k5s.pdf?source=pqals\" target=\"_blank\">\nPM-PRANAM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nChemicals and Fertilizers </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n26.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU853_ZM7whZ.pdf?source=pqals\" target=\"_blank\">\ne-Courts Projects </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nLaw and Justice </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU464_hOzwOp.pdf?source=pqals\" target=\"_blank\">\nImplementation of JJM </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n25.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU671_Hk6f5d.pdf?source=pqals\" target=\"_blank\">\nRainwater Harvesting </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nJal Shakti </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU237_FkOypR.pdf?source=pqals\" target=\"_blank\">\nIndian Railway Organisation for Alternate Fuel (IROAF) </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nRailways </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU328_0Zsij1.pdf?source=pqals\" target=\"_blank\">\nRole of Supercomputers in Climate Research </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEarth Sciences </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n24.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU350_ZcSMzr.pdf?source=pqals\" target=\"_blank\">\nPM-DevINE Scheme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nDevelopment of North Eastern Region </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n22.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU14_7QNoUJ.pdf?source=pqals\" target=\"_blank\">\nGreen Credit Programme </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEnvironment, Forest and Climate Change </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n22.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU115_v8AN17.pdf?source=pqals\" target=\"_blank\">\nSkill India Digital and to Improve Employability of Youth </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nSkill Development and Entrepreneurship </td>\n</tr>\n<tr class=\"odd views-row-first\">\n<td data-title=\"Date\" class=\"views-field views-field-field-intro-et\">\n22.07.2024 </td>\n<td data-title=\"Title\" class=\"views-field views-field-field-attendance\">\n<a href=\"https://sansad.in/getFile/loksabhaquestions/annex/182/AU190_fhpqDK.pdf?source=pqals\" target=\"_blank\">\nPromotion and Preservation of Linguistic Heritage </a>\n</td>\n<td data-title=\"Type\" class=\"views-field views-field-abc\">\nUnstarred </td>\n<td data-title=\"Ministry or Category\" class=\"views-field views-field-abc\">\nEducation </td>\n</tr>\n</tbody>\n</table>",
+          "_meta": {
+            "searchedAs": "MP",
+            "foundAs": "MP",
+            "source": "PRS India",
+            "scrapedAt": "2025-10-29T20:56:28.683Z"
+          },
+          "_timing": {
+            "duration": "690ms",
+            "timestamp": "2025-10-29T20:56:28.683Z"
+          }
+        },
+        "version": "1.0"
+      },
+      {
+        "name": "SACHIN+PILOT",
+        "type": "MP",
+        "timestamp": "2025-10-29T20:55:11.060Z",
+        "metadata": {
+          "constituency": "Ajmer",
+          "party": "INC",
+          "source": "local-prs"
+        },
+        "data": {
+          "found": true,
+          "html": "<!DOCTYPE html>\n<html lang=\"en-US\" style=\"overflow-y: scroll;\">\n<head>\n<meta charset=\"UTF-8\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Sachin Pilot</title>\n<meta name=\"article:tag\" content=\"Attendance Selected MLA Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Attendance State Average Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Debate Selected MLA Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Debate State Average Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Legislative Assembly Performance Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Questions Selected MLA Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Questions State Average Sachin Pilot\">\n<meta name=\"article:tag\" content=\"Rajasthan\">\n<meta name=\"article:tag\" content=\"Sachin Pilot Constituency\">\n<meta name=\"article:tag\" content=\"Sachin Pilot End Of Term\">\n<meta name=\"article:tag\" content=\"Sachin Pilot Gender\">\n<meta name=\"article:tag\" content=\"Sachin Pilot Membership\">\n<meta name=\"article:tag\" content=\"Sachin Pilot Party\">\n<meta name=\"article:tag\" content=\"Sachin Pilot Start Of Term\">\n<meta name=\"article:tag\" content=\"Sachin Pilot age\">\n<meta name=\"article:tag\" content=\"Sachin Pilot education\">\n<meta name=\"article:tag\" content=\"Sachin Pilot state\">\n<meta name=\"article:tag\" content=\"Sachin Pilot\">\n<meta name=\"description\" content=\"This MLA is a Deputy Chief minister. Ministers represent the government in debates, so we do not report their participation. They do not sign the attendance register, ask questions, or introduce private member bills. Data corresponds to the period from 17-12-2018 to 02-08-2023. (Attendance not available for 22 Sep and 23 Sep 2022.)\">\n<meta name=\"generator\" content=\"PRS Legislative Research (www.prsindia.org)\">\n<meta name=\"keywords\" content=\"Rajasthan, Sachin Pilot, Sachin Pilot age, Sachin Pilot Constituency, Sachin Pilot Gender, Sachin Pilot state, Sachin Pilot education, Sachin Pilot Party, Sachin Pilot Start Of Term, Sachin Pilot End Of Term, Sachin Pilot Membership, Legislative Assembly Performance Sachin Pilot, Attendance Selected MLA Sachin Pilot, Attendance State Average Sachin Pilot, Questions Selected MLA Sachin Pilot, Questions State Average Sachin Pilot, Debate Selected MLA Sachin Pilot, Debate State Average Sachin Pilot\">\n<meta name=\"twitter:description\" content=\"This MLA is a Deputy Chief minister. Ministers represent the government in debates, so we do not report their participation. They do not sign the attendance register, ask questions, or introduce private member bills. Data corresponds to the period from 17-12-2018 to 02-08-2023. (Attendance not available for 22 Sep and 23 Sep 2022.)\">\n<meta name=\"twitter:site\" content=\"PRS Legislative Research\">\n<meta name=\"twitter:title\" content=\"Sachin Pilot\">\n<meta name=\"twitter:url\" content=\"https://prsindia.org/mlatrack/sachin-pilot\">\n<meta property=\"og:description\" content=\"This MLA is a Deputy Chief minister. Ministers represent the government in debates, so we do not report their participation. They do not sign the attendance register, ask questions, or introduce private member bills. Data corresponds to the period from 17-12-2018 to 02-08-2023. (Attendance not available for 22 Sep and 23 Sep 2022.)\">\n<meta property=\"og:locale\" content=\"en_US\">\n<meta property=\"og:site_name\" content=\"PRS Legislative Research\">\n<meta property=\"og:title\" content=\"Sachin Pilot\">\n<meta property=\"og:updated_time\" content=\"Oct 29, 2025, 8:50:29 PM\">\n<meta property=\"og:url\" content=\"https://prsindia.org/mlatrack/sachin-pilot\">\n<link href=\"https://prsindia.org/mlatrack/sachin-pilot\" rel=\"canonical\">\n<link href=\"/assets/css-compress/ad170292a22a8863115f7f34aa564347.css?v=1755596740\" rel=\"stylesheet\">\n<script src=\"https://www.google.com/jsapi\"></script>\n<script>google.load(\"visualization\",\"1\",{packages:[\"corechart\"]});\ngoogle.setOnLoadCallback(drawChartw0);var w0=null;function drawChartw0(){var data=google.visualization.arrayToDataTable([[\"\",\"\",{\"role\":\"style\"}],[\"\",17.2,\"#8562a4\"],[\"\",83.2,\"#F58D36\"]]);var options={\"title\":\"\",\"legend\":{\"position\":\"none\"},\"vAxis\":{\"minValue\":0}};w0=new google.visualization.ColumnChart(document.getElementById(\"div-chartw0\"));w0.draw(data,options);}</script> \n<script async src=\"https://www.googletagmanager.com/gtag/js?id=UA-10553922-1\"></script>\n<script>\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag() {\ndataLayer.push(arguments);\n}\ngtag('js', new Date());\ngtag('config', 'UA-10553922-1');\n</script>\n</head>\n<body class=\"scroll-pos html not-front not-logged-in one-sidebar sidebar-first \">\n\n\n<div class=\"navigation-wrap start-header start-style top-header newMainTopBar\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col pl-0\">\n<div class=\"top-hdr-left-con\">\n<img src=\"/images/india-map.png\" alt=\"india-map\" class=\"d-none d-md-block\">\n<div class=\"top-hdr-search-box\">\n<p class=\"col pl-0\">FIND YOUR MP</p>\n<div class=\"\">\n<form class=\"searchform\" role=\"search\" method=\"get\" id=\"searchform\">\n<div class=\"input-group\">\n<input id=\"mp_search_by_name_pin_code\" type=\"text\" class=\"form-control searchbox\" name=\"search-box\" placeholder=\"Name or Pincode\">\n<div class=\"input-group-btn inp-pos\">\n<button class=\"btn btn-default\" type=\"submit\">\n<i class=\"fas fa-search fs-15\"></i>\n</button>\n</div>\n</div>\n</form>\n</div>\n</div>\n</div>\n</div>\n<div class=\"col switchTranslate\">\n<span><a href=\"https://hi.prsindia.org\">Switch to Hindi (हिंदी)</a></span>\n</div>\n<div class=\"col pr-0\">\n<div class=\"main-image-pos\">\n<a class=\"navbar-brand\" href=\"/\" target=\"_self\"><img src=\"/images/main_logo.png\" alt=\"\"></a>\n</div>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-12 pr-0 pl-0\">\n<nav style=\"margin-bottom: 0px;\" class=\"navbar navbar-expand-md navbar-light navbar-color drop-item-pad search-box-wrap mainTopNavbar\">\n<button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n<span class=\"navbar-toggler-icon\"></span>\n</button>\n<div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n<ul class=\"navbar-nav py-4 py-md-0 main-hdr\">\n<li class=\"nav-item pl-4 pl-md-0 ml-0\">\n<a class=\"nav-link home-pad\" href=\"/\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\"><img src=\"/images/home.png\" class=\"img-responsive\" /></a>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0 \">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">MPs & MLAs</a>\n<div class=\"dropdown-menu\">\n<a class=\"dropdown-item\" href=\"/mptrack\">Parliament </a>\n<a class=\"dropdown-item\" href=\"/mlatrack\">States </a>\n<a class=\"dropdown-item\" href=\"/general-election-2024\">2024 Elections</a>\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0 \">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Legislatures</a>\n<div class=\"dropdown-menu\">\n<div class=\"dropdown sub-menu\">\n<a class=\"dropdown-toggle dropdown-item\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Parliament</a>\n<div class=\"sub-menu-item\">\n<a class=\"dropdown-item\" href=\"/sessiontrack\">Session\nTrack</a>\n\n<a class=\"dropdown-item\" href=\"/media/media-updates/2025\">Parliament Diary</a>\n<a class=\"dropdown-item\" href=\"/parliamentary-committees/agriculture\">Parliament\nCommittees</a>\n<a class=\"dropdown-item\" href=\"/parliamenttrack/primers\">Primer</a>\n<a class=\"dropdown-item\" href=\"/parliamenttrack/vital-stats\">Vital Stats</a>\n</div>\n</div>\n\n<div class=\"dropdown sub-menu\">\n<a class=\"dropdown-toggle dropdown-item\" data-toggle=\"dropdown\" href=\"/legislatures/states\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">States</a>\n<div class=\"sub-menu-item\">\n<a class=\"dropdown-item\" href=\"/legislatures/states\">Legislature Track</a>\n\n<a class=\"dropdown-item\" href=\"/legislatures/state/vital-stats\">Vital Stats</a>\n</div>\n</div>\n<a class=\"dropdown-item\" href=\"/legislatures/discussion-papers\">Discussion Papers</a>\n\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0 \">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Bills & Acts</a>\n<div class=\"dropdown-menu\">\n<a class=\"dropdown-item\" href=\"/billtrack\">Bills\nParliament</a>\n<a class=\"dropdown-item\" href=\"/acts/parliament\">Acts Parliament</a>\n<a class=\"dropdown-item\" href=\"/bills/states\">Bills States</a>\n<a class=\"dropdown-item\" href=\"/bills/state-legislative-briefs\">State Legislative Briefs</a>\n<a class=\"dropdown-item\" href=\"/acts/states\">Acts States</a>\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0 \">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Budgets</a>\n<div class=\"dropdown-menu\">\n<a class=\"dropdown-item\" href=\"/budgets/parliament\">Parliament</a>\n<a class=\"dropdown-item\" href=\"/budgets/states\">States</a>\n<a class=\"dropdown-item\" href=\"/budgets/discussionpapers\">Discussion Papers</a>\n\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0 \">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Policy</a>\n<div class=\"dropdown-menu\">\n<a class=\"dropdown-item\" href=\"/policy/discussion-papers\">Discussion Papers</a>\n<a class=\"dropdown-item\" href=\"/policy/science-technology-brief\">Science & Technology Policy</a>\n<a class=\"dropdown-item\" href=\"/policy/monthly-policy-review\">Monthly Policy\nReviews</a>\n<a class=\"dropdown-item\" href=\"/policy/annual-policy-review\">Annual Policy\nReviews</a>\n<a class=\"dropdown-item\" href=\"/policy/report-summaries\">Committee Reports</a>\n<a class=\"dropdown-item\" href=\"/policy/president-address\">President Address</a>\n<a class=\"dropdown-item\" href=\"/policy/vital-stats\">Vital Stats</a>\n<a href=\"/covid-19/overview\" class=\"dropdown-item\">COVID-19</a>\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0\">\n<a class=\"nav-link\" href=\"/lamp\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">LAMP</a>\n<div class=\"dropdown-menu\">\n<a class=\"dropdown-item\" href=\"/lamp\">About the LAMP Fellowship</a>\n<a class=\"dropdown-item\" href=\"/lamp/how-to-apply\">How to Apply</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-views-prs-lamp-gallery-block\" id=\"mylink\">Life at LAMP</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-views-prs-lamp-video-gallery-block\">Videos</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-quicktabs-prs-lamp-fellows\">Meet our\nFellows</a>\n<a class=\"dropdown-item\" href=\"/lamp/contact-us\">Get in touch</a>\n</div>\n</li>\n<li class=\"nav-item pl-4 pl-md-0 ml-0\">\n<a class=\"nav-link\" href=\"/careers/opportunities-at-prs\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Careers</a>\n</li>\n\n</ul>\n</div>\n<div class=\"mega-menu-link\" id=\"searchLink\">\n<a class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\" href=\"#\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\"><i class=\"fas fa-search fs-20\"></i></a>\n<div class=\"dropdown-menu mega-menu search-form search-box\">\n<div class=\"row\">\n<div class=\"col-12\">\n<form role=\"search\" class=\"searchformg\" onsubmit=\"if (this.search_block_form.value == '') {\nalert('Please enter search keyword.');\nreturn false;\n}\">\n<div class=\"input-group mm-sbox\">\n<input type=\"text\" title=\"Enter the terms you wish to search for.\" class=\"form-control search-g-text\" name=\"search_block_form\" placeholder=\"\" style=\"background: rgb(255, 255, 255) url(&quot;https://www.google.com/cse/intl/undefined/images/google_custom_search_watermark.gif&quot;) no-repeat scroll left center;\">\n<div class=\"input-group-btn search-btn-pos\">\n<button class=\"btn btn-default\" id=\"searchsubmit\" type=\"submit\">\n<i class=\"fas fa-search\"></i>\n</button>\n</div>\n</div>\n</form>\n</div>\n</div>\n</div>\n</div>\n</nav>\n</div>\n</div>\n</div>\n</div>\n\n\n<div class=\"top-header hdr-resp-show\">\n<div class=\"container-fluid\">\n<div class=\"row\">\n<div class=\"col-12 p-0\">\n<nav class=\"navbar navbar-dark navbar-color\">\n<div class=\"resp-form-content\">\n<p class=\"mr-2 t-white pri-ff-1\">FIND YOUR MP</p>\n<form role=\"search\" method=\"get\">\n<div class=\"input-group\">\n<input id=\"mp_search_by_name_pin_code_mob\" type=\"text\" class=\"form-control searchboxMob\" name=\"search-box\" placeholder=\"Name or Pincode\">\n<div class=\"input-group-btn inp-pos\">\n<button class=\"btn btn-default\" id=\"searchsubmit\" type=\"submit\">\n<i class=\"fas fa-search\"></i>\n</button>\n</div>\n</div>\n</form>\n</div>\n</nav>\n</div>\n</div>\n<div class=\"row side-bar-ol\">\n<div id=\"main\">\n<button class=\"openbtn\" onclick=\"openNav()\"><i class=\"fas fa-bars\"></i></button>\n</div>\n<div id=\"cls-btn-nav\">\n<a href=\"javascript:void(0)\" class=\"closebtn overlay_1\" onclick=\"closeNav()\"></a>\n</div>\n<div id=\"mySidebar\" class=\"prs-sidebar\">\n<div id=\"accordion\" class=\"nav-accor-box\">\n<div class=\"card card-cust\">\n<div class=\"card-header home-hov\" id=\"headingOne\">\n<h5>\n<button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#collapseOne\" aria-expanded=\"true\" aria-controls=\"collapseOne\">\n<a class=\"active-bg-color\" href=\"/\" role=\"button\">Home</a>\n</button>\n</h5>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingTwo\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg\" data-toggle=\"collapse\" data-target=\"#collapseTwo\" aria-expanded=\"false\" aria-controls=\"collapseTwo\">\nMPs & MLAs\n<i class=\"fa fa-plus\"></i>\n</button>\n</h5>\n</div>\n<div id=\"collapseTwo\" class=\"collapse\" aria-labelledby=\"headingTwo\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/mptrack\">Parliament </a>\n<a class=\"dropdown-item\" href=\"/mlatrack\">States </a>\n<a class=\"dropdown-item\" href=\"/general-election-2024\">2024 Elections</a>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingThree\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg btn-plus-minus\" data-toggle=\"collapse\" data-target=\"#collapseThree\" aria-expanded=\"false\" aria-controls=\"collapseThree\">\nLegislatures\n</button>\n</h5>\n</div>\n<div id=\"collapseThree\" class=\"collapse\" aria-labelledby=\"headingThree\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n\n<div id=\"submenu-accordion\">\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"sub-menu\">\n<h5>\n<button class=\"btn btn-link collapsed btn-plus-minus\" data-toggle=\"collapse\" data-target=\"#sub-menu-list\" aria-expanded=\"false\" aria-controls=\"sub-menu-list\">\nParliament\n</button>\n</h5>\n</div>\n<div id=\"sub-menu-list\" class=\"collapse\" aria-labelledby=\"sub-menu\" data-parent=\"#submenu-accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/sessiontrack\">Session\nTrack</a>\n\n<a class=\"dropdown-item\" href=\"/media/media-updates/2025\">Parliament\nDiary</a>\n<a class=\"dropdown-item\" href=\"/parliamentary-committees/agriculture\">Parliament Committees</a>\n<a class=\"dropdown-item\" href=\"/parliamenttrack/primers\">Primer</a>\n<a class=\"dropdown-item\" href=\"/parliamenttrack/vital-stats\">Vital\nStats</a>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"sub-menu-2\">\n<h5>\n<button class=\"btn btn-link collapsed btn-plus-minus\" data-toggle=\"collapse\" data-target=\"#sub-menu-list-2\" aria-expanded=\"false\" aria-controls=\"sub-menu-list-2\">\nState\n</button>\n</h5>\n</div>\n<div id=\"sub-menu-list-2\" class=\"collapse\" aria-labelledby=\"sub-menu-2\" data-parent=\"#submenu-accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/legislatures/states\">Legislature Track</a>\n\n<a class=\"dropdown-item\" href=\"/legislatures/state/vital-stats\">Vital Stats</a>\n\n</div>\n</div>\n</div>\n<a class=\"dropdown-item\" href=\"/legislatures/discussion-papers\">Discussion Papers</a>\n</div>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingFour\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg\" data-toggle=\"collapse\" data-target=\"#collapseFour\" aria-expanded=\"false\" aria-controls=\"collapseFour\">\nBills & Acts\n<i class=\"fa fa-plus\"></i>\n</button>\n</h5>\n</div>\n<div id=\"collapseFour\" class=\"collapse\" aria-labelledby=\"headingFour\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/billtrack/field_bill_category/all\">Bills Parliament</a>\n<a class=\"dropdown-item\" href=\"/recent-acts\">Acts Parliament</a>\n<a class=\"dropdown-item\" href=\"/bills/states\">Bills States</a>\n<a class=\"dropdown-item\" href=\"/bills/state-legislative-briefs\">State Legislative briefs</a>\n<a class=\"dropdown-item\" href=\"/acts/states\">Acts States</a>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingFive\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg\" data-toggle=\"collapse\" data-target=\"#collapseFive\" aria-expanded=\"false\" aria-controls=\"collapseFive\">\nBudgets\n<i class=\"fa fa-plus\"></i>\n</button>\n</h5>\n</div>\n<div id=\"collapseFive\" class=\"collapse\" aria-labelledby=\"headingFive\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/budgets/parliament\">Parliament</a>\n<a class=\"dropdown-item\" href=\"/budgets/states\">States</a>\n<a class=\"dropdown-item\" href=\"/budgets/discussionpapers\">Discussion Papers</a>\n\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingSix\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg\" data-toggle=\"collapse\" data-target=\"#collapseSix\" aria-expanded=\"false\" aria-controls=\"collapseSix\">\nPolicy\n<i class=\"fa fa-plus\"></i>\n</button>\n</h5>\n</div>\n<div id=\"collapseSix\" class=\"collapse\" aria-labelledby=\"headingSix\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/policy/discussion-papers\">Discussion Papers</a>\n<a class=\"dropdown-item\" href=\"/policy/science-technology-brief\">Science & Technology Policy</a>\n<a class=\"dropdown-item\" href=\"/policy/monthly-policy-review\">Monthly Policy\nReviews</a>\n<a class=\"dropdown-item\" href=\"/policy/annual-policy-review\">Annual Policy\nReviews</a>\n<a class=\"dropdown-item\" href=\"/policy/report-summaries\">Committee Reports</a>\n<a class=\"dropdown-item\" href=\"/policy/president-address\">President Address</a>\n\n<a class=\"dropdown-item\" href=\"/policy/vital-stats\">Vital Stats</a>\n<a href=\"/covid-19/overview\" class=\"dropdown-item\">COVID-19</a>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingSeven\">\n<h5>\n<button class=\"btn btn-link collapsed side-menu-bg\" data-toggle=\"collapse\" data-target=\"#collapseSeven\" aria-expanded=\"false\" aria-controls=\"collapseSeven\">\nLAMP\n</button>\n</h5>\n</div>\n<div id=\"collapseSeven\" class=\"collapse\" aria-labelledby=\"headingSeven\" data-parent=\"#accordion\">\n<div class=\"card-body p-0\">\n<a class=\"dropdown-item\" href=\"/lamp\">About the LAMP Fellowship</a>\n<a class=\"dropdown-item\" href=\"/lamp/how-to-apply\">How to Apply</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-views-prs-lamp-gallery-block\" id=\"mylink\">Life at LAMP</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-views-prs-lamp-video-gallery-block\">Videos</a>\n<a class=\"dropdown-item\" href=\"/lamp#block-quicktabs-prs-lamp-fellows\">Meet our\nFellows</a>\n<a class=\"dropdown-item\" href=\"/lamp/contact-us\">Get in touch</a>\n</div>\n</div>\n</div>\n<div class=\"card card-cust\">\n<div class=\"card-header\" id=\"headingEight\">\n<h5>\n<button class=\"btn btn-link\" data-toggle=\"collapse\" data-target=\"#collapseEight\" aria-expanded=\"true\" aria-controls=\"collapseEight\">\n<a href=\"/careers/opportunities-at-prs\" role=\"button\">Careers</a>\n</button>\n</h5>\n</div>\n</div>\n\n</div>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-12\">\n<div class=\"main-image-pos-1\">\n<a class=\"navbar-brand\" href=\"/\" target=\"_self\"><img src=\"/images/main_logo.png\" alt=\"\"></a>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"main-container container\">\n<div class=\"row\">\n<div class=\"col-lg-12 pl-0\">\n<ul class=\"breadcrumb\"><li><a href=\"/\"><strong style=\"font-size:15px;\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i></strong></a></li>\n<li class=\"active\">MPs &amp; MLAs</li>\n<li class=\"active\">Rajasthan</li>\n<li class=\"active\">15th Assembly (2018 to 2023)</li>\n<li class=\"active\">Sachin Pilot</li>\n</ul> </div>\n</div>\n<div class=\"node-type-up-mla mla-list-private-page\">\n<section class=\"col-sm-12 pr-0 resp-pad-r\">\n<div class=\"paliament_activities_header\">\n<div class=\"field field-name-field-detailed-question field-type-text-long field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\"> This MLA is a Deputy Chief minister. Ministers represent the government in debates, so we do not report their participation. They do not sign the attendance register, ask questions, or introduce private member bills. Data corresponds to the period from 17-12-2018 to 02-08-2023. (Attendance not available for 22 Sep and 23 Sep 2022.)</div>\n</div>\n</div>\n</div>\n<div class=\"region region-content\">\n<section id=\"block-system-main\" class=\"block block-system clearfix\">\n<div class=\"row mp_profile_header_info\">\n\n<div class=\"col-lg-8 col-md-12 personal_profile_parent\">\n<div class=\"col-lg-2 col-md-4 col-sm-12\">\n<div class=\"field field-name-field-mla-profile-image field-type-image field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\"><img typeof=\"foaf:Image\" class=\"img-responsive\" src=\"/files/mlatrack/rajasthan/15/mla_images/Sachin Pilot.jpg\" alt=\"\"></div>\n</div>\n</div>\n</div>\n\n<div class=\"col-lg-10 col-md-8 col-sm-12 mp-basic-info\">\n<div class=\"mla-name\">\n<h3>\n<div class=\"field field-name-title-field field-type-text field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">Sachin Pilot</div>\n</div>\n</div>\n</h3>\n</div>\n<div class=\"mp_state\">\n<div class=\"field-label\">State :</div>\n<a href=\"/mlatrack?state=Rajasthan&assembly_term=15\">Rajasthan</a>\n</div>\n<div class=\"mp_constituency\">\n<div class=\"field-label\">Constituency :</div>\n<div class=\"field field-name-field-mla-constituency field-type-text field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">Tonk</div>\n</div>\n</div>\n</div>\n<div class=\"mp_state\">\n<div class=\"field-label\">Party :</div>\n<a href=\"/mlatrack?state=Rajasthan&assembly_term=15&party=Indian National Congress\">Indian National Congress</a>\n</div>\n<div class=\"term_end\">\n<div class=\"field-label\">Start Of Term :</div>\n<div class=\"field field-name-field-end-of-term field-type-list-text field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">17-Dec-18</div>\n</div>\n</div>\n</div>\n<div class=\"term_end\">\n<div class=\"field-label\">End Of Term :</div>\n<div class=\"field field-name-field-end-of-term field-type-list-text field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">In Office</div>\n</div>\n</div>\n</div>\n<div class=\"membership\">\n<div class=\"field-label\">Membership :</div>\n<div class=\"field field-name-field-membership field-type-text field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">Elected</div>\n</div>\n</div>\n</div>\n\n</div>\n\n</div>\n\n\n<div class=\"col-lg-4 col-md-12 personal_profile_parent\">\n<h4>Personal Profile</h4>\n<div class=\"age\">\n<div class=\"field-label\">Age :</div>\n<div class=\"field field-name-field-mla-age field-type-number-integer field-label-hidden\">\n<div class=\"field-items\">\n<div class=\"field-item even\">46</div>\n</div>\n</div>\n</div>\n<div class=\"gender\">\n<div class=\"field-label\">Gender :</div>\n<a href=\"/mlatrack?state=Rajasthan&assembly_term=15&gender=Male\">Male</a>\n</div>\n<div class=\"education\">\n<div class=\"field-label\">Education :</div>\n<a href=\"/mlatrack?state=Rajasthan&assembly_term=15&education=Post Graduate\">Post Graduate</a>\n</div>\n<div class=\"\">\n&nbsp;\n</div>\n</div>\n\n</div>\n\n<div class=\"mp-parliamentary-performance\">\n<h3>Legislative Assembly Activity :</h3>\n<div class='row parliamentary-performance-color-info'>\n<div class='mp-avg'>\n<span class=\"blue\"></span>\n<span class=\"text\">Selected MLA</span>\n</div>\n<div class='mp-avg'></div>\n<div class='state-avg'>\n<span class=\"orange\"></span>\n<span class=\"text\">State Average</span>\n</div>\n</div>\n<div class='row parliamentary-performance-details'>\n<div class='mp-attendance col-sm-12 col-md-4'>\n<h4>Attendance</h4>\n<div class=\"attendance\">\n<span>Selected MLA</span>\n<div class=\"field\">\n<div class=\"field-items\">\n<div class=\"field-item even\">17.2</div>\n</div>\n</div>\n<span>State Average</span>\n<div class=\"field\">\n<div class=\"field-items\">\n<div class=\"field-item even\">83.2</div>\n</div>\n</div>\n</div>\n<div class=\"clearfix\"></div>\n\n<div id=\"div-chartw0\"></div> \n</div>\n<div class=\"clearfix\"></div>\n</div>\n</div>\n</section>\n</div>\n</section>\n</div>\n</div>\n\n\n<footer class=\"footer\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-12\">\n<div class=\"region\">\n<section id=\"block-prs-resource-prs-prefooter-follow\" class=\"block block-prs-resource pre-footer-social-media clearfix\">\n<div class=\"share-wrapper\">\n<div class=\"footer-head d-inline-block\">\n<h3>Follow Us</h3>\n</div>\n<div class=\"footer-social-icon d-inline-block\">\n<ul class=\"prs-prefooter-share\">\n<li>\n<a href=\"https://www.facebook.com/PRSLegislative/?fref=ts\" target=\"_blank\" class=\"ga-track\">\n<i class=\"icon icon-facebook fab fa-facebook-f\"></i>\n</a>\n</li>\n<li>\n<a href=\"https://twitter.com/PRSLegislative\" target=\"_blank\" class=\"ga-track\">\n<i class=\"icon icon-twitter fab fa-twitter\"></i>\n</a>\n</li>\n<li>\n<a href=\"https://www.youtube.com/user/PRSLegislative\" target=\"_blank\" class=\"ga-track\">\n<i class=\"icon icon-youtube fab fa-youtube\"></i>\n</a>\n</li>\n</ul>\n</div>\n</div>\n<div class=\"region region-pre-footer\">\n<section id=\"block-block-5\" class=\"block block-block clearfix\">\n<div class=\"mp-track-disclaimer-section\">\n<div class=\"disclaimer_license\"><a href=\"https://creativecommons.org/licenses/by/4.0/\" rel=\"license\"><img alt=\"Creative Commons License\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\"></a></div>\n<div class=\"disclaimer_text\">\n<p><a href=\"http://trilineinfotech.com\" rel=\"cc:attributionURL\">PRS Legislative Research</a> is licensed under a <a href=\"http://creativecommons.org/licenses/by/4.0/\" rel=\"license\">Creative Commons Attribution 4.0 International License</a></p>\n<p>Disclaimer: This data is being furnished to you for your information. PRS makes every effort to use reliable and comprehensive information, but PRS does not represent that this information is accurate or complete. PRS is an independent, not-for-profit group. This data has been collated without regard to the objectives or opinions of those who may receive it.</p>\n</div>\n</div>\n</section>\n</div> </section>\n</div>\n</div>\n</div>\n</div>\n</footer>\n\n<footer class=\"footer container bottom-footer\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 col-lg-6 pl-0 pr-0\">\n<div class=\"region region-footer\">\n<section id=\"block-menu-menu-footer-menu\" class=\"block block-menu clearfix\">\n<ul class=\"menu nav\">\n\n<li class=\"leaf\"><a href=\"/aboutus//what-we-do\" class=\"policy-active\">About Us</a></li>\n<li class=\"leaf\"><a href=\"/careers/opportunities-at-prs\" class=\"policy-active\">Careers</a></li>\n\n</ul>\n</section>\n</div>\n</div>\n<div class=\"col-md-12 col-lg-6 pl-0 pr-0\">\n<div class=\"region region-footer t-right\">\n<section id=\"block-prs-resource-prs-footer-copyright\" class=\"block block-prs-resource clearfix d-inline-block\">\nCopyright © 2025 &nbsp;&nbsp; <a class=\"text-white\" href=\"http://prsindia.org/\">prsindia.org</a> &nbsp;&nbsp; All Rights Reserved.\n</section>\n</div>\n</div>\n</div>\n</div>\n</footer> \n<script src=\"/assets/js-compress/05c0b3075f7f9bd66c32312fd2f2d228.js?v=1755596740\"></script> </body>\n</html>",
+          "url": "https://prsindia.org/mlatrack/sachin-pilot",
+          "memberType": "MLA",
+          "urlIndex": 0,
+          "imageUrl": "https://prsindia.org/files/mlatrack/rajasthan/15/mla_images/Sachin Pilot.jpg",
+          "state": "Rajasthan",
+          "constituency": "Tonk",
+          "party": "Indian National Congress",
+          "performance": {},
+          "personal": {},
+          "searchedAs": "MP",
+          "foundAs": "MLA"
+        },
+        "version": "1.0"
+      }
+    ],
+    "analytics": [
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:10.962Z",
+        "data": {
+          "sessionId": "sess_1761771310951_acdd16e83b08df40",
+          "method": "GET",
+          "path": "/",
+          "query": {
+            "name": "SACHIN PILOT",
+            "type": "MP",
+            "constituency": "Ajmer",
+            "party": "INC",
+            "meow": "5847",
+            "bhaw": "ls2009"
+          },
+          "statusCode": 304,
+          "duration": 8,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:10.962Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:10.995Z",
+        "data": {
+          "sessionId": "sess_1761771310990_8a7a09228ed62056",
+          "method": "GET",
+          "path": "/member_detail.css",
+          "query": {},
+          "statusCode": 304,
+          "duration": 3,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:10.995Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:11.004Z",
+        "data": {
+          "sessionId": "sess_1761771310992_70f7ba91fb7f83c4",
+          "method": "GET",
+          "path": "/pdf-generator.js",
+          "query": {},
+          "statusCode": 304,
+          "duration": 11,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:11.004Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:11.019Z",
+        "data": {
+          "sessionId": "sess_1761771311008_8b269a97512f0bed",
+          "method": "GET",
+          "path": "/member_detail.js",
+          "query": {},
+          "statusCode": 304,
+          "duration": 9,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:11.019Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:39.315Z",
+        "data": {
+          "sessionId": "sess_1761771339311_cb561663af2b6959",
+          "method": "GET",
+          "path": "/member_detail.css",
+          "query": {},
+          "statusCode": 304,
+          "duration": 3,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:39.315Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:39.338Z",
+        "data": {
+          "sessionId": "sess_1761771339333_5521257d2012ad5f",
+          "method": "GET",
+          "path": "/.well-known/appspecific/com.chrome.devtools.json",
+          "query": {},
+          "statusCode": 404,
+          "duration": 4,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:39.338Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:55:42.373Z",
+        "data": {
+          "sessionId": "sess_1761771311040_7bb088b560fec2ed",
+          "method": "GET",
+          "path": "/prs",
+          "query": {
+            "name": "SACHIN+PILOT",
+            "type": "MP",
+            "meow": "5847",
+            "bhaw": "ls2009",
+            "constituency": "Ajmer",
+            "party": "INC"
+          },
+          "statusCode": 200,
+          "duration": 31331,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:55:42.373Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:17.339Z",
+        "data": {
+          "sessionId": "sess_1761771377334_3436ad4f20ba34fe",
+          "method": "GET",
+          "path": "/.well-known/appspecific/com.chrome.devtools.json",
+          "query": {},
+          "statusCode": 404,
+          "duration": 4,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:17.339Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:17.349Z",
+        "data": {
+          "sessionId": "sess_1761771377342_58bb9a1dd543f494",
+          "method": "GET",
+          "path": "/.well-known/appspecific/com.chrome.devtools.json",
+          "query": {},
+          "statusCode": 404,
+          "duration": 6,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:17.349Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:25.228Z",
+        "data": {
+          "sessionId": "sess_1761771381409_d576690c5cbdae08",
+          "method": "GET",
+          "path": "/api/search-proxy",
+          "query": {
+            "q": "Manoj"
+          },
+          "statusCode": 200,
+          "duration": 3818,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:25.228Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:26.328Z",
+        "data": {
+          "sessionId": "sess_1761771385246_3ff5fcaeeba33c4c",
+          "method": "GET",
+          "path": "/api/search-proxy",
+          "query": {
+            "q": "Manoj Tiwari"
+          },
+          "statusCode": 200,
+          "duration": 1081,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:26.328Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:27.327Z",
+        "data": {
+          "sessionId": "sess_1761771387306_da4c54f83fc9e29e",
+          "method": "GET",
+          "path": "/",
+          "query": {
+            "name": "Manoj Tiwari",
+            "type": "MP",
+            "constituency": "North East Delhi",
+            "party": "Bharatiya Janata Party"
+          },
+          "statusCode": 304,
+          "duration": 17,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:27.327Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:27.416Z",
+        "data": {
+          "sessionId": "sess_1761771387411_2d1efc824b1e3f2e",
+          "method": "GET",
+          "path": "/.well-known/appspecific/com.chrome.devtools.json",
+          "query": {},
+          "statusCode": 404,
+          "duration": 4,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:27.416Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:27.440Z",
+        "data": {
+          "sessionId": "sess_1761771387428_f6e6b298bff45bdd",
+          "method": "GET",
+          "path": "/pdf-generator.js",
+          "query": {},
+          "statusCode": 304,
+          "duration": 10,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:27.440Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:27.447Z",
+        "data": {
+          "sessionId": "sess_1761771387436_0cbf876aafae5d1d",
+          "method": "GET",
+          "path": "/member_detail.css",
+          "query": {},
+          "statusCode": 304,
+          "duration": 7,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:27.446Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:27.455Z",
+        "data": {
+          "sessionId": "sess_1761771387451_fa53be1d6df7b0ca",
+          "method": "GET",
+          "path": "/member_detail.js",
+          "query": {},
+          "statusCode": 304,
+          "duration": 2,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:27.455Z"
+        }
+      },
+      {
+        "eventType": "http_request",
+        "timestamp": "2025-10-29T20:56:31.890Z",
+        "data": {
+          "sessionId": "sess_1761771387506_cc1b55c11f474c1e",
+          "method": "GET",
+          "path": "/prs",
+          "query": {
+            "name": "Manoj+Tiwari",
+            "type": "MP",
+            "constituency": "North+East+Delhi",
+            "party": "Bharatiya+Janata+Party"
+          },
+          "statusCode": 200,
+          "duration": 4376,
+          "ip": "127.0.0.1",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+          "timestamp": "2025-10-29T20:56:31.890Z"
+        }
+      },
+      {
+        "eventType": "memory_snapshot",
+        "timestamp": "2025-10-29T21:00:22.767Z",
+        "data": {
+          "records": [
+            {
+              "timestamp": "2025-10-29T20:54:25.796Z",
+              "uptime": 302,
+              "memory": {
+                "rss": 231,
+                "heapTotal": 40,
+                "heapUsed": 37,
+                "external": 144,
+                "arrayBuffers": 140
+              },
+              "cpu": {
+                "user": 3718,
+                "system": 1375
+              },
+              "connections": {
+                "websocket": 0,
+                "http": 0
+              }
+            },
+            {
+              "timestamp": "2025-10-29T20:59:25.808Z",
+              "uptime": 602,
+              "memory": {
+                "rss": 232,
+                "heapTotal": 47,
+                "heapUsed": 35,
+                "external": 144,
+                "arrayBuffers": 140
+              },
+              "cpu": {
+                "user": 4812,
+                "system": 1625
+              },
+              "connections": {
+                "websocket": 0,
+                "http": 0
+              }
+            }
+          ],
+          "metadata": {
+            "createdAt": "2025-10-29T20:49:25.775Z",
+            "platform": "Local",
+            "nodeVersion": "v22.9.0",
+            "environment": "production"
+          },
+          "stats": {
+            "current": {
+              "timestamp": "2025-10-29T20:59:25.808Z",
+              "uptime": 602,
+              "memory": {
+                "rss": 232,
+                "heapTotal": 47,
+                "heapUsed": 35,
+                "external": 144,
+                "arrayBuffers": 140
+              },
+              "cpu": {
+                "user": 4812,
+                "system": 1625
+              },
+              "connections": {
+                "websocket": 0,
+                "http": 0
+              }
+            },
+            "average": {
+              "rss": 232,
+              "heapUsed": 36
+            },
+            "peak": {
+              "rss": 232,
+              "heapUsed": 37,
+              "timestamp": "2025-10-29T20:54:25.796Z"
+            },
+            "total": 2,
+            "retention": "0 hours"
+          }
+        }
+      },
+      {
+        "eventType": "prs_request",
+        "timestamp": "2025-10-29T20:55:42.363Z",
+        "data": {
+          "name": "SACHIN+PILOT",
+          "type": "MP",
+          "sources": {
+            "appwritePrimary": false,
+            "localPrs": true,
+            "candidate": true
+          },
+          "fromStorage": {
+            "prs": false,
+            "candidate": false
+          },
+          "secondaryCallMade": false,
+          "secondaryFieldsUpdated": 0,
+          "duration": 31318,
+          "success": true
+        }
+      },
+      {
+        "eventType": "prs_request",
+        "timestamp": "2025-10-29T20:56:31.836Z",
+        "data": {
+          "name": "Manoj+Tiwari",
+          "type": "MP",
+          "sources": {
+            "appwritePrimary": true,
+            "localPrs": true,
+            "candidate": true
+          },
+          "fromStorage": {
+            "prs": false,
+            "candidate": false
+          },
+          "secondaryCallMade": true,
+          "secondaryFieldsUpdated": 0,
+          "duration": 4326,
+          "success": true
+        }
+      },
+      {
+        "eventType": "search_query",
+        "timestamp": "2025-10-29T20:56:25.219Z",
+        "data": {
+          "query": "Manoj",
+          "results": 6,
+          "duration": 3803,
+          "ip": "127.0.0.1",
+          "timestamp": "2025-10-29T20:56:25.219Z"
+        }
+      },
+      {
+        "eventType": "search_query",
+        "timestamp": "2025-10-29T20:56:26.318Z",
+        "data": {
+          "query": "Manoj Tiwari",
+          "results": 6,
+          "duration": 1067,
+          "ip": "127.0.0.1",
+          "timestamp": "2025-10-29T20:56:26.318Z"
+        }
+      }
+    ],
+    "cache": []
+  }
+}

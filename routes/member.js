@@ -1,4 +1,3 @@
-// member.js
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,9 +8,10 @@ const __dirname = path.dirname(__filename);
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  const { name, type, constituency, party } = req.query;
+   console.log("Member req is",req.url)
+  const { name, type, constituency, party, meow, bhaw } = req.query;
   
-  console.log(`📍 [MEMBER] Page requested: ${name} (${type}), Constituency: ${constituency || 'N/A'}, Party: ${party || 'N/A'}`);
+  console.log(`📍 [MEMBER] Page requested: ${name} (${type}), Constituency: ${constituency || 'N/A'}, Party: ${party || 'N/A'}, meow: ${meow || 'N/A'}, bhaw: ${bhaw || 'N/A'}`); // ✅ Log them
   
   if (!name || !type) {
     return res.status(400).send(`

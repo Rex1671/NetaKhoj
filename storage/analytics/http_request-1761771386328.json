@@ -1,0 +1,17 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:56:26.328Z",
+  "data": {
+    "sessionId": "sess_1761771385246_3ff5fcaeeba33c4c",
+    "method": "GET",
+    "path": "/api/search-proxy",
+    "query": {
+      "q": "Manoj Tiwari"
+    },
+    "statusCode": 200,
+    "duration": 1081,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:56:26.328Z"
+  }
+}

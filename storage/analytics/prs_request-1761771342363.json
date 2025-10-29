@@ -1,0 +1,21 @@
+{
+  "eventType": "prs_request",
+  "timestamp": "2025-10-29T20:55:42.363Z",
+  "data": {
+    "name": "SACHIN+PILOT",
+    "type": "MP",
+    "sources": {
+      "appwritePrimary": false,
+      "localPrs": true,
+      "candidate": true
+    },
+    "fromStorage": {
+      "prs": false,
+      "candidate": false
+    },
+    "secondaryCallMade": false,
+    "secondaryFieldsUpdated": 0,
+    "duration": 31318,
+    "success": true
+  }
+}

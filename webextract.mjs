@@ -1,12 +1,10 @@
 import fetch from 'node-fetch';
 
-export async function fetchHTML(url, retries = 3, timeout = 15000) {
+export async function fetchHTML(url, retries = 2, timeout = 15000) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      console.log(`Fetching URL (Attempt ${attempt}/${retries}): ${url}`);
-
       const controller = new AbortController();
-      const id = setTimeout(() => controller.abort(), timeout);
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
 
       const response = await fetch(url, {
         headers: {
@@ -17,49 +15,27 @@ export async function fetchHTML(url, retries = 3, timeout = 15000) {
           "Connection": "keep-alive",
           "Upgrade-Insecure-Requests": "1",
           "Cache-Control": "max-age=0",
-          "Referer": "https://www.myneta.info/"
+          "Referer": url.includes('prsindia.org') ? "https://prsindia.org/" : "https://www.myneta.info/"
         },
         signal: controller.signal,
         redirect: 'follow',
         compress: true
       });
 
-      clearTimeout(id);
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP ${response.status}`);
       }
 
       const html = await response.text();
-      console.log(`✅ Successfully fetched ${(html.length / 1024).toFixed(2)} KB`);
       return html;
 
     } catch (error) {
-      console.error(`❌ Attempt ${attempt} failed: ${error.message}`);
-
       if (attempt === retries) {
-        console.error(`🚨 All ${retries} attempts failed for ${url}`);
         throw error;
       }
-
-      const waitTime = 1000 * attempt;
-      console.log(`⏳ Retrying in ${waitTime / 1000}s...`);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+      await new Promise(resolve => setTimeout(resolve, 500 * attempt));
     }
-  }
-}
-
-export async function fetchPrintPage(url, retries = 3) {
-  console.log(`📄 Fetching print page: ${url}`);
-  
-  try {
-    const html = await fetchHTML(url, retries, 20000); 
-    
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    return html;
-  } catch (error) {
-    console.error('❌ Failed to fetch print page:', error.message);
-    throw error;
   }
 }

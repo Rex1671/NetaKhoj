@@ -1,523 +1,274 @@
 import * as cheerio from 'cheerio';
 import NodeCache from 'node-cache';
-import pRetry from 'p-retry';
 import { fetchHTML } from '../webextract.mjs';
 
 const cache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
+const inFlightRequests = new Map();
 
 class PRSService {
+  constructor() {
+    this.FETCH_TIMEOUT = 15000;
+    this.MAX_SEARCH_TIME = 20000;
+    this.stats = {
+      cacheHits: 0,
+      cacheMisses: 0,
+      totalRequests: 0,
+      avgResponseTime: 0,
+      urlsChecked: 0,
+      firstUrlSuccess: 0
+    };
+  }
 
   async getMemberData(name, type, constituency = null, state = null) {
     const cacheKey = `prs:${type}:${name.toLowerCase()}`;
-    const cached = cache.get(cacheKey);
+    this.stats.totalRequests++;
     
+    const cached = cache.get(cacheKey);
     if (cached) {
-      console.log(`✅ [CACHE] PRS data hit: ${name}`);
+      this.stats.cacheHits++;
+      console.log(`✅ [CACHE HIT] ${name} (${this.stats.cacheHits}/${this.stats.totalRequests})`);
       return cached;
     }
+    this.stats.cacheMisses++;
+
+    if (inFlightRequests.has(cacheKey)) {
+      console.log(`⏳ [DEDUP] Waiting for in-flight request: ${name}`);
+      return await inFlightRequests.get(cacheKey);
+    }
+
+    const requestPromise = this._executeSearch(name, type, cacheKey);
+    inFlightRequests.set(cacheKey, requestPromise);
 
     try {
-      console.log(`🔍 [PRS] Fetching ${name} (${type})...`);
-      
-      const urls = this.constructPossibleURLs(name, type);
-      
-      let successfulUrl = null;
-      let html = null;
+      return await requestPromise;
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+  }
 
-      for (const url of urls) {
+  async _executeSearch(name, type, cacheKey) {
+    const startTime = Date.now();
+    
+    try {
+      console.log(`🔍 [PRS] Searching ${name} (${type})...`);
+      
+      const searchPromise = this._sequentialSearch(name, type);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Search timeout')), this.MAX_SEARCH_TIME)
+      );
+      
+      const result = await Promise.race([searchPromise, timeoutPromise]);
+      
+      if (!result.found) {
+        const alternateType = type === 'MLA' ? 'MP' : 'MLA';
+        console.log(`⚡ [FALLBACK] Quick ${alternateType} check...`);
+        
+        const quickSearchPromise = this._sequentialSearch(name, alternateType, true);
+        const quickTimeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Quick search timeout')), 8000)
+        );
+        
         try {
-          console.log(`🔗 [PRS] Trying: ${url}`);
+          const altResult = await Promise.race([quickSearchPromise, quickTimeoutPromise]);
           
-          html = await pRetry(
-            () => fetchHTML(url),
-            { 
-              retries: 2,
-              minTimeout: 1000
-            }
-          );
-
-          if (html && this.verifyPage(html, name)) {
-            successfulUrl = url;
-            console.log(`✅ [PRS] Success: ${url}`);
-            break;
-          } else {
-            console.log(`⚠️ [PRS] Page doesn't match, trying next...`);
+          if (altResult.found) {
+            altResult.searchedAs = type;
+            altResult.foundAs = alternateType;
+            cache.set(cacheKey, altResult);
+            this._updateStats(Date.now() - startTime);
+            return altResult;
           }
-        } catch (err) {
-          console.log(`❌ [PRS] Failed: ${url}`);
-          continue;
+        } catch (fallbackError) {
+          console.log(`⚠️ [FALLBACK] Timeout: ${fallbackError.message}`);
         }
+      } else {
+        result.searchedAs = type;
+        result.foundAs = type;
+        cache.set(cacheKey, result);
+        this._updateStats(Date.now() - startTime);
+        return result;
       }
 
-      if (!successfulUrl || !html) {
-        console.log(`❌ [PRS] No valid URL found for ${name}`);
-        return this.getEmptyResponse();
-      }
-
-      const parsedData = this.parseHTML(html, type);
-
-      const result = {
-        found: true,
-        html,
-        url: successfulUrl,
-        ...parsedData
-      };
-
-      cache.set(cacheKey, result);
-      console.log(`✅ [PRS] Data cached for ${name}`);
-      
-      return result;
+      return this.getEmptyResponse();
 
     } catch (error) {
-      console.error(`❌ [PRS] Error fetching ${name}:`, error.message);
+      console.error(`❌ [PRS] Error: ${error.message}`);
       return this.getEmptyResponse();
     }
   }
 
-  constructPossibleURLs(name, type) {
-    const slugs = this.generateNameSlugs(name);
+  async _sequentialSearch(name, type, quickMode = false) {
+    const slug = this._generateSlug(name);
+    
+    const urls = this._generateURLs(slug, type, quickMode);
+    
+    console.log(`📋 [SEARCH] ${name} → "${slug}" → ${urls.length} URLs`);
+
+    for (let i = 0; i < urls.length; i++) {
+      const url = urls[i];
+      const shortUrl = url.split('/').slice(-2).join('/');
+      
+      console.log(`🔄 [${i+1}/${urls.length}] ${shortUrl}`);
+      
+      try {
+        const startTime = Date.now();
+        const html = await this._fetchWithTimeout(url, this.FETCH_TIMEOUT);
+        const duration = Date.now() - startTime;
+        
+        this.stats.urlsChecked++;
+        
+        if (!html || html.length < 1000) {
+          console.log(`   ⏭️ Too short (${duration}ms)`);
+          continue;
+        }
+
+        if (!this._quickValidate(html)) {
+          console.log(`   ⏭️ Invalid page (${duration}ms)`);
+          continue;
+        }
+
+        const parsedData = this._parseHTML(html, type);
+        
+        if (!this._validateParsedData(parsedData)) {
+          console.log(`   ⏭️ Insufficient data (${duration}ms)`);
+          continue;
+        }
+
+        console.log(`   ✅ FOUND in ${duration}ms`);
+        
+        if (i === 0) this.stats.firstUrlSuccess++;
+        
+        return {
+          found: true,
+          html,
+          url,
+          memberType: type,
+          urlIndex: i,
+          ...parsedData
+        };
+
+      } catch (err) {
+        console.log(`   ❌ ${err.message}`);
+        continue;
+      }
+    }
+
+    console.log(`❌ [NOT FOUND] After ${urls.length} attempts`);
+    return { found: false };
+  }
+
+  _generateSlug(name) {
+    const slug = name
+      .trim()
+      .toLowerCase()
+      .replace(/^(dr\.?|shri|smt\.?|prof\.?|mr\.?|mrs\.?|ms\.?)\s+/gi, '') 
+      .replace(/[^a-z0-9\s]/g, ' ') 
+      .replace(/\s+/g, '-') 
+      .replace(/-+/g, '-') 
+      .replace(/^-|-$/g, ''); 
+    
+    console.log(`   🔤 "${name}" → "${slug}"`);
+    return slug;
+  }
+
+  _generateURLs(slug, type, quickMode = false) {
     const urls = [];
 
     if (type === 'MP') {
-      const lokSabhas = ['18th-lok-sabha', '17th-lok-sabha', '16th-lok-sabha'];
+      urls.push(`https://prsindia.org/mptrack/18th-lok-sabha/${slug}`);
       
-      for (const ls of lokSabhas) {
-        for (const slug of slugs) {
-          urls.push(`https://prsindia.org/mptrack/${ls}/${slug}`);
-        }
+      if (!quickMode) {
+        urls.push(`https://prsindia.org/mptrack/17th-lok-sabha/${slug}`);
+        
+        urls.push(`https://prsindia.org/mptrack/16th-lok-sabha/${slug}`);
+        
+        urls.push(`https://prsindia.org/mptrack/18th-lok-sabha/${slug}-1`);
+        urls.push(`https://prsindia.org/mptrack/18th-lok-sabha/${slug}-2`);
+        
+        urls.push(`https://prsindia.org/mptrack/17th-lok-sabha/${slug}-1`);
       }
+      
     } else if (type === 'MLA') {
-      for (const slug of slugs) {
-        urls.push(`https://prsindia.org/mlatrack/${slug}`);
+      urls.push(`https://prsindia.org/mlatrack/${slug}`);
+      
+      if (!quickMode) {
+        urls.push(`https://prsindia.org/mlatrack/${slug}-1`);
+        urls.push(`https://prsindia.org/mlatrack/${slug}-2`);
+        urls.push(`https://prsindia.org/mlatrack/${slug}-3`);
       }
     }
 
     return urls;
   }
 
-
-  generateNameSlugs(name) {
-    const slugs = [];
-    
-
-    const basicSlug = name
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-    
-    slugs.push(basicSlug);
-
-   
-    const parts = name.split(/\s+/);
-    if (parts.length > 2) {
-   
-      const firstLast = `${parts[0]} ${parts[parts.length - 1]}`
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '');
-      slugs.push(firstLast);
-    }
-
-  
-    const cleanedName = name
-      .replace(/^(Dr\.?|Shri|Smt\.?|Prof\.?|Mr\.?|Mrs\.?|Ms\.?)\s+/gi, '')
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '');
-    
-    if (cleanedName !== basicSlug) {
-      slugs.push(cleanedName);
-    }
-
-  
-    return [...new Set(slugs)];
-  }
-
-  
-  verifyPage(html, name) {
-    
-    const nameParts = name.toLowerCase().split(/\s+/);
-    const htmlLower = html.toLowerCase();
-
-
-    const firstName = nameParts[0];
-    const lastName = nameParts[nameParts.length - 1];
-
-    return htmlLower.includes(firstName) && htmlLower.includes(lastName);
-  }
-
-
-  parseHTML(html, type) {
-    const $ = cheerio.load(html);
-    
-
-    const imageSelectors = [
-      '.field-name-field-image img',
-      '.field-name-field-mla-profile-image img',
-      'img[src*="profile"]',
-      'img[src*="mla"]',
-      'img[src*="mp"]'
-    ];
-    
-    let imageUrl = '';
-    for (const selector of imageSelectors) {
-      const img = $(selector).attr('src');
-      if (img) {
-        imageUrl = img;
-        break;
-      }
-    }
-    
-    const fullImageUrl = imageUrl.startsWith('http') 
-      ? imageUrl 
-      : imageUrl.startsWith('/') 
-        ? `https://prsindia.org${imageUrl}` 
-        : imageUrl 
-          ? `https://prsindia.org/${imageUrl}`
-          : '';
-
-    let state = 'Unknown';
-    $('.mp_state, .mla_state').each((i, elem) => {
-      const text = $(elem).text();
-      if (text.includes('State') || i === 0) {
-        state = $(elem).find('a').text() || $(elem).text();
-        state = state.replace('State :', '').replace(/\(\s*\d+\s*more\s*(MPs?|MLAs?)\s*\)/gi, '').trim();
-        if (state && state !== 'Unknown') return false;
-      }
-    });
-
-
-    let constituency = 'Unknown';
-    const constituencySelectors = [
-      '.mp_constituency',
-      '.mla_constituency',
-      'div:contains("Constituency")'
-    ];
-    
-    for (const selector of constituencySelectors) {
-      const elem = $(selector).first();
-      if (elem.length) {
-        constituency = elem.text().replace('Constituency :', '').trim();
-        if (constituency && constituency !== 'Unknown') break;
-      }
-    }
-
- 
-    let party = 'Unknown';
-    $('.mp_state, .mla_state').each((i, elem) => {
-      const text = $(elem).text();
-      if (text.includes('Party')) {
-        const partyLink = $(elem).find('a');
-        party = partyLink.length 
-          ? partyLink.text() 
-          : text.replace('Party :', '').trim();
-        party = party.replace(/\(\s*\d+\s*more\s*(MPs?|MLAs?)\s*\)/gi, '').trim();
-        return false;
-      }
-    });
-
-
-    const performance = this.extractPerformanceData($);
-
-
-    const personal = this.extractPersonalInfo($);
-
-    console.log(`📊 [PRS] Parsed data:`, {
-      state,
-      constituency,
-      party,
-      hasPerformance: !!performance.attendance,
-      hasPersonal: !!personal.age
-    });
-
-    return {
-      imageUrl: fullImageUrl,
-      state,
-      constituency,
-      party,
-      performance,
-      personal
-    };
-  }
-
-  
-extractPerformanceData($) {
-  console.log(`🔍 [PRS] Extracting performance data...`);
-  
-
-  const perfSection = $('.mp-parliamentary-performance');
-  const perfSectionHTML = perfSection.html();
-  console.log(`📄 [PRS] Performance section HTML length: ${perfSectionHTML?.length || 0}`);
-  
-  if (!perfSection.length) {
-    console.log(`⚠️ [PRS] No .mp-parliamentary-performance section found`);
-  } else {
-    console.log(`✅ [PRS] Found performance section`);
-  }
-
-
-  const getFieldValue = (label, selectors) => {
-    if (typeof selectors === 'string') selectors = [selectors];
-    
-    for (let i = 0; i < selectors.length; i++) {
-      const selector = selectors[i];
-      const el = $(selector);
-      
-      if (el.length) {
-        const text = el.text().trim();
-        
-  
-        if (text) {
-          console.log(`   ✅ ${label} [${i}] (${selector}): "${text}"`);
-          
-          if (text !== 'N/A') {
-            return text;
-          }
-        } else {
-          console.log(`   ⚠️ ${label} [${i}] (${selector}): Found element but empty text`);
-        }
-      }
-    }
-    
-    console.log(`   ❌ ${label}: Not found in any selector`);
-    return null;
-  };
-
-  const performance = {
-
-    attendance: getFieldValue('Attendance', [
-      '.mp-attendance .field-name-field-attendance .field-item.even',
-      '.mp-attendance .field-name-field-attendance .field-item',
-      '.field-name-field-attendance .field-item.even',
-      '.field-name-field-attendance .field-item',
-      '.mp-attendance .attendance .field-item',
-    
-      '.mp-parliamentary-performance .mp-attendance .field-item',
-      'div.mp-attendance div.field-item.even'
-    ]),
-    natAttendance: getFieldValue('Nat Attendance', [
-      '.mp-attendance .field-name-field-national-attendance .field-item.even',
-      '.mp-attendance .field-name-field-national-attendance .field-item',
-      '.field-name-field-national-attendance .field-item',
-      'div.mp-attendance div.field-name-field-national-attendance div.field-item'
-    ]),
-    stateAttendance: getFieldValue('State Attendance', [
-      '.mp-attendance .field-name-field-state-attendance .field-item.even',
-      '.mp-attendance .field-name-field-state-attendance .field-item',
-      '.field-name-field-state-attendance .field-item',
-      'div.mp-attendance div.field-name-field-state-attendance div.field-item'
-    ]),
-
-   
-    debates: getFieldValue('Debates', [
-      '.mp-debate .field-name-field-author .field-item.even',
-      '.mp-debate .field-name-field-author .field-item',
-      '.field-name-field-author .field-item.even',
-      '.field-name-field-author .field-item',
-      '.mp-debate .debate .field-item',
- 
-      'div.mp-debate div.field-item.even',
-      '.mp-parliamentary-performance .mp-debate .field-item'
-    ]),
-    natDebates: getFieldValue('Nat Debates', [
-      '.mp-debate .field-name-field-national-debate .field-item.even',
-      '.mp-debate .field-name-field-national-debate .field-item',
-      '.field-name-field-national-debate .field-item',
-      'div.mp-debate div.field-name-field-national-debate div.field-item'
-    ]),
-    stateDebates: getFieldValue('State Debates', [
-      '.mp-debate .field-name-field-state-debate .field-item.even',
-      '.mp-debate .field-name-field-state-debate .field-item',
-      '.field-name-field-state-debate .field-item',
-      'div.mp-debate div.field-name-field-state-debate div.field-item'
-    ]),
-
- 
-    questions: getFieldValue('Questions', [
-      '.mp-questions .field-name-field-total-expenses-railway .field-item.even',
-      '.mp-questions .field-name-field-total-expenses-railway .field-item',
-      '.field-name-field-total-expenses-railway .field-item.even',
-      '.field-name-field-total-expenses-railway .field-item',
-      '.mp-questions .questions .field-item',
-    
-      'div.mp-questions div.field-item.even',
-      '.mp-parliamentary-performance .mp-questions .field-item'
-    ]),
-    natQuestions: getFieldValue('Nat Questions', [
-      '.mp-questions .field-name-field-national-questions .field-item.even',
-      '.mp-questions .field-name-field-national-questions .field-item',
-      '.field-name-field-national-questions .field-item',
-      'div.mp-questions div.field-name-field-national-questions div.field-item'
-    ]),
-    stateQuestions: getFieldValue('State Questions', [
-      '.mp-questions .field-name-field-state-questions .field-item.even',
-      '.mp-questions .field-name-field-state-questions .field-item',
-      '.field-name-field-state-questions .field-item',
-      'div.mp-questions div.field-name-field-state-questions div.field-item'
-    ]),
-
-
-    pmb: getFieldValue('PMB', [
-      '.mp-pmb .field-name-field-source .field-item.even',
-      '.mp-pmb .field-name-field-source .field-item',
-      '.field-name-field-source .field-item.even',
-      '.field-name-field-source .field-item',
-      '.mp-pmb .pmb .field-item',
-  
-      'div.mp-pmb div.field-item.even',
-      '.mp-parliamentary-performance .mp-pmb .field-item'
-    ]),
-    natPMB: getFieldValue('Nat PMB', [
-      '.mp-pmb .field-name-field-national-pmb .field-item.even',
-      '.mp-pmb .field-name-field-national-pmb .field-item',
-      '.field-name-field-national-pmb .field-item',
-      'div.mp-pmb div.field-name-field-national-pmb div.field-item'
-    ])
-  };
-
-  const foundCount = Object.values(performance).filter(v => v !== null).length;
-  const totalFields = Object.keys(performance).length;
-  
-  console.log(`📊 [PRS] Performance Summary (${foundCount}/${totalFields} fields found):`, {
-    attendance: performance.attendance || '❌ Not found',
-    debates: performance.debates || '❌ Not found',
-    questions: performance.questions || '❌ Not found',
-    pmb: performance.pmb || '❌ Not found',
-    natAttendance: performance.natAttendance || '❌ Not found',
-    natDebates: performance.natDebates || '❌ Not found',
-    natQuestions: performance.natQuestions || '❌ Not found',
-    natPMB: performance.natPMB || '❌ Not found'
-  });
-
-
-  if (foundCount === 0 && perfSection.length) {
-    console.log(`⚠️ [PRS] No performance data found. Dumping all .field-item elements:`);
-    perfSection.find('.field-item').each((i, el) => {
-      const $el = $(el);
-      const text = $el.text().trim();
-      const classes = $el.attr('class');
-      const parent = $el.parent().attr('class');
-      console.log(`   [${i}] Classes: "${classes}", Parent: "${parent}", Text: "${text.substring(0, 50)}"`);
-    });
-  }
-
-  return performance;
-}
-
-extractPersonalInfo($) {
-  const getText = (selectors) => {
-    if (typeof selectors === 'string') selectors = [selectors];
-    for (const selector of selectors) {
-      const el = $(selector);
-      if (el.length) {
-        let text = el.text().trim();
-      
-        text = text.replace(/^(Age|Gender|Education)\s*:\s*/i, '');
-        if (text && text !== 'N/A' && text !== '') return text;
-      }
-    }
-    return null;
-  };
-
-
-  let age = null;
-  $('.gender, .age').each((i, elem) => {
-    const text = $(elem).text();
-    if (text.includes('Age')) {
-      age = text.replace(/Age\s*:\s*/i, '').trim();
-      return false;
-    }
-  });
-  if (!age) {
-    age = getText([
-      '.field-name-field-mla-age .field-item',
-      '.field-name-field-age .field-item'
+  async _fetchWithTimeout(url, timeout) {
+    return Promise.race([
+      fetchHTML(url, 1, timeout - 1000),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout')), timeout)
+      )
     ]);
   }
 
-
-  let gender = null;
-  $('.gender').each((i, elem) => {
-    const text = $(elem).text();
-    if (!text.includes('Age') && (text.includes('Male') || text.includes('Female'))) {
-      gender = $(elem).find('a').text() || text.replace('Gender :', '').trim();
-      return false;
-    }
-  });
-
-
-  const education = getText([
-    '.education a',
-    '.education .field-item',
-    '.field-name-field-education a'
-  ]);
-
-  const termStart = getText([
-    '.term_start .date-display-single',
-    '.field-name-field-date-of-introduction .date-display-single'
-  ]);
-
-  const termEnd = getText([
-    '.term_end .field-item',
-    '.field-name-field-end-of-term .field-item'
-  ]);
-
-
-  let noOfTerm = null;
-  
-
-  const profileSection = $('.mp_profile_header_info, .mla_profile_header_info');
-  
-  profileSection.find('.age').each((i, elem) => {
-    const text = $(elem).text();
-    if (text.includes('No. of Term') || text.includes('Term') || text.includes('First Term') || text.includes('Second Term')) {
-
-      noOfTerm = text
-        .replace(/No\.\s*of\s*Term\s*:\s*/i, '')
-        .replace(/Terms?\s*Served\s*:\s*/i, '')
-        .split('\n')[0]  
-        .trim();
-      
- 
-      if (noOfTerm) return false;
-    }
-  });
-
-  
-  if (!noOfTerm) {
-    const termDiv = $('.personal_profile_parent').find('div:contains("Term")').first();
-    if (termDiv.length) {
-      noOfTerm = termDiv.text()
-        .replace(/No\.\s*of\s*Term\s*:\s*/i, '')
-        .replace(/Terms?\s*Served\s*:\s*/i, '')
-        .trim()
-        .split('\n')[0]; 
-    }
+  _quickValidate(html) {
+    return (
+      (html.includes('mp_state') || html.includes('mla_state')) &&
+      (html.includes('Party') || html.includes('Constituency'))
+    );
   }
 
-  console.log(`👤 [PRS] Personal:`, {
-    age: age || 'N/A',
-    gender: gender || 'N/A',
-    education: education || 'N/A',
-    termStart: termStart || 'N/A',
-    termEnd: termEnd || 'N/A',
-    noOfTerm: noOfTerm || 'N/A'
-  });
+  _validateParsedData(data) {
+    return (
+      data &&
+      data.party && 
+      data.party !== 'Unknown' &&
+      data.constituency && 
+      data.constituency !== 'Unknown'
+    );
+  }
 
-  return {
-    age,
-    gender,
-    education,
-    termStart,
-    termEnd,
-    noOfTerm
-  };
-}
+  _parseHTML(html, type) {
+    const $ = cheerio.load(html);
+    
+    const imageUrl = this._extractImage($);
+    const state = this._extractField($, '.mp_state, .mla_state', 'State :');
+    const constituency = this._extractField($, '.mp_constituency, .mla_constituency', 'Constituency :');
+    const party = this._extractField($, '.mp_state, .mla_state', 'Party :');
 
+    return {
+      imageUrl,
+      state: state || 'Unknown',
+      constituency: constituency || 'Unknown',
+      party: party || 'Unknown',
+      performance: {},
+      personal: {}
+    };
+  }
+
+  _extractImage($) {
+    const img = $('.field-name-field-image img, .field-name-field-mla-profile-image img').first().attr('src');
+    if (!img) return '';
+    
+    return img.startsWith('http') ? img : `https://prsindia.org${img.startsWith('/') ? '' : '/'}${img}`;
+  }
+
+  _extractField($, selector, label) {
+    const elem = $(selector).filter((i, el) => $(el).text().includes(label)).first();
+    if (!elem.length) return null;
+    
+    const link = elem.find('a').first();
+    let text = link.length ? link.text() : elem.text();
+    
+    return text
+      .replace(label, '')
+      .replace(/\(\s*\d+\s*more\s*(MPs?|MLAs?)\s*\)/gi, '')
+      .trim();
+  }
+
+  _updateStats(duration) {
+    const { avgResponseTime, totalRequests } = this.stats;
+    this.stats.avgResponseTime = ((avgResponseTime * (totalRequests - 1)) + duration) / totalRequests;
+  }
 
   getEmptyResponse() {
     return {
@@ -529,25 +280,43 @@ extractPersonalInfo($) {
       constituency: 'Unknown',
       party: 'Unknown',
       performance: {},
-      personal: {}
+      personal: {},
+      searchedAs: null,
+      foundAs: null
     };
   }
-
 
   clearCache(pattern) {
     if (pattern) {
       const keys = cache.keys().filter(key => key.includes(pattern));
       cache.del(keys);
-      console.log(`🗑️ [PRS] Cleared ${keys.length} cache entries`);
+      console.log(`🗑️ Cleared ${keys.length} cache entries`);
     } else {
       cache.flushAll();
-      console.log(`🗑️ [PRS] Cache cleared`);
+      inFlightRequests.clear();
+      console.log(`🗑️ Full cache cleared`);
     }
   }
 
-
   getStats() {
-    return cache.getStats();
+    return {
+      ...cache.getStats(),
+      custom: {
+        totalRequests: this.stats.totalRequests,
+        cacheHits: this.stats.cacheHits,
+        cacheMisses: this.stats.cacheMisses,
+        hitRate: this.stats.totalRequests > 0 
+          ? `${((this.stats.cacheHits / this.stats.totalRequests) * 100).toFixed(1)}%` 
+          : '0%',
+        avgResponseTime: `${this.stats.avgResponseTime.toFixed(0)}ms`,
+        urlsChecked: this.stats.urlsChecked,
+        firstUrlSuccess: this.stats.firstUrlSuccess,
+        firstUrlSuccessRate: this.stats.totalRequests > 0
+          ? `${((this.stats.firstUrlSuccess / this.stats.totalRequests) * 100).toFixed(1)}%`
+          : '0%',
+        inFlightRequests: inFlightRequests.size
+      }
+    };
   }
 }
 

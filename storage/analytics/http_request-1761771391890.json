@@ -1,0 +1,20 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:56:31.890Z",
+  "data": {
+    "sessionId": "sess_1761771387506_cc1b55c11f474c1e",
+    "method": "GET",
+    "path": "/prs",
+    "query": {
+      "name": "Manoj+Tiwari",
+      "type": "MP",
+      "constituency": "North+East+Delhi",
+      "party": "Bharatiya+Janata+Party"
+    },
+    "statusCode": 200,
+    "duration": 4376,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:56:31.890Z"
+  }
+}

@@ -56,7 +56,6 @@
 /* ========================================
    COMPREHENSIVE POLITICAL ANALYSIS SECTION
 ======================================== */
-/* Supporter View Card - Green/Positive Theme */
 .analysis-card-supporters {
   border-left: 5px solid #22c55e;
 }
@@ -69,7 +68,6 @@
   filter: drop-shadow(0 0 15px rgba(34, 197, 94, 0.6));
 }
 
-/* Economic Record Card - Teal/Professional Theme */
 .analysis-card-economic {
   border-left: 5px solid #14b8a6;
 }
@@ -82,7 +80,6 @@
   filter: drop-shadow(0 0 15px rgba(20, 184, 166, 0.6));
 }
 
-/* Enhanced icon glow effects for new cards */
 .analysis-card-supporters:hover .analysis-card-icon {
   filter: drop-shadow(0 0 25px rgba(34, 197, 94, 0.9));
   transform: translateY(-5px) scale(1.1);
@@ -93,7 +90,6 @@
   transform: translateY(-5px) scale(1.1);
 }
 
-/* Print styles for new cards */
 @media print {
   .analysis-card-supporters,
   .analysis-card-economic {
@@ -161,7 +157,6 @@
   position: relative;
 }
 
-/* Animated Background Mesh */
 .analysis-summary-container::before {
   content: '';
   position: absolute;
@@ -177,7 +172,6 @@
   pointer-events: none;
 }
 
-/* Analysis Header Banner */
 .analysis-header-banner {
   background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
   padding: 40px;
@@ -328,7 +322,6 @@
   font-size: 1.2em;
 }
 
-/* Analysis Insights Grid */
 .analysis-insights-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -1074,6 +1067,8 @@
       transform: translate(-50%, -50%);
       transition: width 0.6s ease, height 0.6s ease;
     }
+
+    
 
     .role-badge:hover::before,
     .constituency-badge:hover::before,
@@ -2829,3 +2824,89 @@
       color: #64748b;
       line-height: 1.6;
     }
+
+    /* Polling Indicator Animation */
+@keyframes slideInUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast fade animations */
+@keyframes toastFadeIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastFadeOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+.image-source-badge {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
+  z-index: 5;
+  animation: slideInUp 0.5s ease;
+}
+
+.profile-image {
+  transition: opacity 0.3s ease;
+}
+
+.profile-image.loading {
+  opacity: 0.5;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "eventType": "search_query",
+  "timestamp": "2025-10-29T20:56:26.318Z",
+  "data": {
+    "query": "Manoj Tiwari",
+    "results": 6,
+    "duration": 1067,
+    "ip": "127.0.0.1",
+    "timestamp": "2025-10-29T20:56:26.318Z"
+  }
+}

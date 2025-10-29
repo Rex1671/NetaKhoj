@@ -1,0 +1,15 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:56:17.349Z",
+  "data": {
+    "sessionId": "sess_1761771377342_58bb9a1dd543f494",
+    "method": "GET",
+    "path": "/.well-known/appspecific/com.chrome.devtools.json",
+    "query": {},
+    "statusCode": 404,
+    "duration": 6,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:56:17.349Z"
+  }
+}

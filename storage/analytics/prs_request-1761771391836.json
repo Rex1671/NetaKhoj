@@ -1,0 +1,21 @@
+{
+  "eventType": "prs_request",
+  "timestamp": "2025-10-29T20:56:31.836Z",
+  "data": {
+    "name": "Manoj+Tiwari",
+    "type": "MP",
+    "sources": {
+      "appwritePrimary": true,
+      "localPrs": true,
+      "candidate": true
+    },
+    "fromStorage": {
+      "prs": false,
+      "candidate": false
+    },
+    "secondaryCallMade": true,
+    "secondaryFieldsUpdated": 0,
+    "duration": 4326,
+    "success": true
+  }
+}

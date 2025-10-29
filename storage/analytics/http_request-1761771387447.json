@@ -1,0 +1,15 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:56:27.447Z",
+  "data": {
+    "sessionId": "sess_1761771387436_0cbf876aafae5d1d",
+    "method": "GET",
+    "path": "/member_detail.css",
+    "query": {},
+    "statusCode": 304,
+    "duration": 7,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:56:27.446Z"
+  }
+}

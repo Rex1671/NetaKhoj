@@ -1,0 +1,11 @@
+{
+  "eventType": "search_query",
+  "timestamp": "2025-10-29T20:56:25.219Z",
+  "data": {
+    "query": "Manoj",
+    "results": 6,
+    "duration": 3803,
+    "ip": "127.0.0.1",
+    "timestamp": "2025-10-29T20:56:25.219Z"
+  }
+}

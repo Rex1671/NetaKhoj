@@ -236,7 +236,7 @@
     const escapeHtml = (text) => {
       if (!text) return '';
       const div = document.createElement('div');
-      div.textContent = text;
+      div.textContent = text.replace(/\+/g, ' ');
       return div.innerHTML;
     };
     
@@ -458,49 +458,43 @@ function parseBankAccounts(text) {
       console.log(`🚗 Parsed ${vehicles.length} vehicles`);
       return vehicles;
     }
-
-    function parseProperty(text) {
-      if (!text || text === 'Nil') return [];
-      
-      const properties = [];
-      const blocks = text.split(/\n\n+/).filter(b => b.trim().length > 0);
-      
-      for (const block of blocks) {
-        const parts = block.split('|');
-        
-        if (parts.length >= 2) {
-          const address = parts[0].replace(/\n/g, ' ').trim();
-          
-          const valuePart = parts.find(p => /Value:/i.test(p));
-          let value = 'N/A';
-          
-          if (valuePart) {
-            const valueMatch = valuePart.match(/Rs\s+([\d,]+)/);
-            value = valueMatch ? `Rs ${valueMatch[1]}` : 'N/A';
-          }
-          
-          const areaMatch = block.match(/Area:\s*([^|]+)/i);
-          const builtMatch = block.match(/Built:\s*([^|]+)/i);
-          const inheritedMatch = block.match(/Inherited:\s*(\w+)/i);
-          const dateMatch = block.match(/Purchased:\s*([\d-]+)/i);
-          
-          if (address && address.length > 5) {
-            properties.push({
-              address,
-              value,
-              area: areaMatch ? areaMatch[1].trim() : '',
-              built: builtMatch ? builtMatch[1].trim() : '',
-              inherited: inheritedMatch ? inheritedMatch[1] : '',
-              purchaseDate: dateMatch ? dateMatch[1] : ''
-            });
-          }
-        }
-      }
-      
-      console.log(`🏠 Parsed ${properties.length} properties`);
-      return properties;
+function parseProperty(text) {
+  if (!text || text === 'Nil') return [];
+  
+  const properties = [];
+  
+  // Split by double newlines or numbered patterns like (1), (2)
+  const blocks = text.split(/\n\n+|(?=\(\d+\)-)/g).filter(b => b.trim().length > 0);
+  
+  for (const block of blocks) {
+    let address = '';
+    let value = 'N/A';
+    let area = '';
+    
+    // Extract value
+    const valueMatch = block.match(/Value:\s*Rs\s*([\d,]+)/i);
+    if (valueMatch) {
+      value = `Rs ${valueMatch[1]}`;
+      // Get address part (everything before "| Value:")
+      address = block.split('|')[0].trim().replace(/^\(\d+\)-/, '').trim();
+    } else {
+      address = block.trim();
     }
-
+    
+    // Extract area/rakba
+    const areaMatch = block.match(/(?:Area|Rakba)[:\s-]*([\d.]+\s*(?:hec|sq|acres|sq\.?\s*(?:ft|m|meter)?))/i);
+    if (areaMatch) {
+      area = areaMatch[1].trim();
+    }
+    
+    if (address && address.length > 5 && address !== 'Nil') {
+      properties.push({ address, value, area });
+    }
+  }
+  
+  console.log(`🏠 Parsed ${properties.length} properties from text`);
+  return properties;
+}
     function parseLoans(text) {
       if (!text || text === 'Nil') return [];
       
@@ -603,200 +597,932 @@ function parseBankAccounts(text) {
       `;
     }
 
-    async function loadMemberData() {
-      if (window.SERVER_DATA) {
-        console.log('✅ Using server-injected data');
-        const { memberName, memberType, prsData, candidateData } = window.SERVER_DATA;
-        
-        currentMemberName = memberName;
-        currentMemberType = memberType;
-        currentCandidateData = candidateData;
+   // ============================================================================
+// PROGRESSIVE LOADING STATE
+// ============================================================================
+let currentRequestId = null;
+let pollingInterval = null;
+let pollingAttempts = 0;
+const MAX_POLL_ATTEMPTS = 15; // 30 seconds max
+const POLL_INTERVAL = 2000; // 2 seconds
 
-        if (memberType === 'MP') {
-          renderMPDashboardFromServerData(prsData, candidateData);
-        } else {
-          renderMLADashboardFromServerData(prsData, candidateData);
+// ============================================================================
+// MAIN DATA LOADER - WITH PARALLEL FETCHING
+// ============================================================================
+async function loadMemberData() {
+  if (window.SERVER_DATA) {
+    console.log('✅ Using server-injected data');
+    const { memberName, memberType, prsData, candidateData } = window.SERVER_DATA;
+    
+    currentMemberName = memberName;
+    currentMemberType = memberType;
+    currentCandidateData = candidateData;
+
+    if (memberType === 'MP') {
+      renderMPDashboardFromServerData(prsData, candidateData);
+    } else {
+      renderMLADashboardFromServerData(prsData, candidateData);
+    }
+    
+    return;
+  }
+
+  console.log('⚠️ No server data, fetching via API...');
+  const params = getQueryParams();
+  const { name, type, meow, bhaw, constituency, party } = params;
+  
+  if (!name || !type) {
+    throw new Error('Missing name or type parameter');
+  }
+  
+  currentMemberName = name;
+  currentMemberType = type;
+
+  try {
+    let apiUrl = `/api/prs?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`;
+    console.log('📡 Base API URL:', apiUrl);
+
+    if (meow) {
+      apiUrl += `&meow=${encodeURIComponent(meow)}`;
+      console.log('📡 Added meow parameter:', apiUrl);
+    }
+    if (bhaw) {
+      apiUrl += `&bhaw=${encodeURIComponent(bhaw)}`;
+      console.log('📡 Added bhaw parameter:', apiUrl);
+    }
+    if (constituency) {
+      apiUrl += `&constituency=${encodeURIComponent(constituency)}`;
+      console.log('📡 Added constituency parameter:', apiUrl);
+    }
+    if (party) {
+      apiUrl += `&party=${encodeURIComponent(party)}`;
+      console.log('📡 Added party parameter:', apiUrl);
+    }
+
+    console.log('📡 Making parallel API request to:', apiUrl);
+    
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+
+    if (!data.found) {
+      throw new Error('Member not found in any database');
+    }
+
+    currentRequestId = data.requestId;
+    
+    console.log(`✅ First data received from: ${data.firstSource}`);
+    console.log(`📊 Both sources complete: ${data.bothComplete}`);
+    console.log(`⏱️ Response time: ${data.timing?.total}ms`);
+
+    currentCandidateData = data.candidateData || null;
+    console.log("Current dTA",currentCandidateData)
+
+    if (type === 'MP') {
+      renderMPDashboardFromServerData(data, data.candidateData);
+    } else {
+      renderMLADashboardFromServerData(data, data.candidateData);
+    }
+
+    if (!data.bothComplete && currentRequestId) {
+      console.log('⏳ Starting polling for secondary data source...');
+      showPollingIndicator();
+      startPolling(params);
+    } else {
+      console.log('✅ All data loaded immediately!');
+    }
+
+  } catch (err) {
+    console.error('❌ Load error:', err);
+    document.getElementById('content').innerHTML = `
+      <div class="error-card">
+        <div style="font-size: 5em; margin-bottom: 20px;">⚠️</div>
+        <div style="font-size: 1.8em; font-weight: 800; color: #e74c3c; margin-bottom: 15px;">
+          Unable to Load Profile
+        </div>
+        <div style="color: #64748b; font-size: 1.1em; margin-bottom: 30px;">
+          ${escapeHtml(err.message)}
+        </div>
+        <a href="/" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 8px; font-weight: 700;">
+          ← Back to Map
+        </a>
+      </div>
+    `;
+  }
+}
+
+
+// ============================================================================
+// POLLING SYSTEM - FOR PROGRESSIVE DATA LOADING
+// ============================================================================
+
+function startPolling(params) {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+  }
+  
+  pollingAttempts = 0;
+  
+  pollingInterval = setInterval(async () => {
+    pollingAttempts++;
+    
+    console.log(`🔄 Polling attempt ${pollingAttempts}/${MAX_POLL_ATTEMPTS}`);
+    
+    if (pollingAttempts > MAX_POLL_ATTEMPTS) {
+      stopPolling();
+      console.log('⏹️ Polling stopped: max attempts reached');
+      showNotification('⚠️ Some additional data could not be loaded', 'warning');
+      return;
+    }
+
+    try {
+      let pollUrl = `/api/prs/poll/${currentRequestId}`;
+      
+      const response = await fetch(pollUrl);
+      const result = await response.json();
+      
+      if (result.ready && result.data) {
+        console.log('✅ Secondary data received! Updating dashboard...');
+        stopPolling();
+        
+        if (result.data.candidateData) {
+          currentCandidateData = result.data.candidateData;
         }
         
+        updateDashboardWithNewData(result.data);
+        
+        showNotification('✨ Additional data loaded successfully!', 'success');
+      }
+      
+    } catch (err) {
+      console.error('❌ Polling error:', err);
+    }
+    
+  }, POLL_INTERVAL);
+}
+
+function stopPolling() {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+  hidePollingIndicator();
+}
+
+// ============================================================================
+// SMART DATA UPDATE - ONLY FILLS MISSING FIELDS
+// ============================================================================
+
+function updateDashboardWithNewData(newData) {
+  console.log('🔄 Smart updating dashboard with secondary data...');
+  
+  let hasUpdates = false;
+
+  // Helper: Check if field needs update
+  const needsUpdate = (currentValue) => {
+    return !currentValue || 
+           currentValue === 'N/A' || 
+           currentValue === 'Unknown' || 
+           currentValue.trim() === '';
+  };
+
+  // Update personal info fields
+  if (newData.personal) {
+    const ageEl = document.querySelector('[data-field="age"]');
+    if (ageEl && needsUpdate(ageEl.textContent) && newData.personal.age) {
+      ageEl.textContent = newData.personal.age;
+      animateFieldUpdate(ageEl);
+      hasUpdates = true;
+    }
+
+    const eduEl = document.querySelector('[data-field="education"]');
+    if (eduEl && needsUpdate(eduEl.textContent) && newData.personal.education) {
+      eduEl.textContent = cleanEducation(newData.personal.education);
+      animateFieldUpdate(eduEl);
+      hasUpdates = true;
+    }
+
+    const genderEl = document.querySelector('[data-field="gender"]');
+    if (genderEl && needsUpdate(genderEl.textContent) && newData.personal.gender) {
+      genderEl.textContent = newData.personal.gender;
+      animateFieldUpdate(genderEl);
+      hasUpdates = true;
+    }
+  }
+
+  // Update performance metrics if available
+  if (newData.performance) {
+    updatePerformanceMetrics(newData.performance);
+    hasUpdates = true;
+  }
+
+  // Update tables if they're missing
+  if (newData.html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(newData.html, 'text/html');
+    
+    const attendanceTable = doc.querySelector('#block-views-mps-attendance-block table');
+    const debatesTable = doc.querySelector('#block-views-mps-debate-related-views-block table');
+    const questionsTable = doc.querySelector('#block-views-mp-related-views-block-2222 table');
+    
+    if (attendanceTable && !document.querySelector('#attendance-content table')) {
+      const container = document.getElementById('attendance-content');
+      if (container) {
+        container.innerHTML = attendanceTable.outerHTML;
+        animateFieldUpdate(container);
+        hasUpdates = true;
+      }
+    }
+    
+    if (debatesTable && !document.querySelector('#debates-content table')) {
+      const container = document.getElementById('debates-content');
+      if (container) {
+        container.innerHTML = debatesTable.outerHTML;
+        animateFieldUpdate(container);
+        hasUpdates = true;
+      }
+    }
+    
+    if (questionsTable && !document.querySelector('#questions-content table')) {
+      const container = document.getElementById('questions-content');
+      if (container) {
+        container.innerHTML = questionsTable.outerHTML;
+        animateFieldUpdate(container);
+        hasUpdates = true;
+      }
+    }
+  }
+
+  if (newData.candidateData && !document.querySelector('.quick-stats-banner')) {
+    console.log('🔄 Re-rendering dashboard with complete data...');
+    
+    const mergedData = {
+      ...currentMemberData,
+      ...newData,
+      personal: {
+        ...(currentMemberData?.personal || {}),
+        ...(newData.personal || {})
+      }
+    };
+    
+    if (currentMemberType === 'MP') {
+      renderMPDashboardFromServerData(mergedData, newData.candidateData);
+    } else {
+      renderMLADashboardFromServerData(mergedData, newData.candidateData);
+    }
+    
+    hasUpdates = true;
+  }
+
+  if (!hasUpdates) {
+    console.log('ℹ️ No new data to update');
+  }
+}
+
+// ============================================================================
+// UPDATE PERFORMANCE METRICS - FIXED VERSION
+// ============================================================================
+
+function updatePerformanceMetrics(performance) {
+  console.log('📊 Updating performance metrics...', performance);
+  
+  // Helper function to find stat card by title text
+  const findStatCardByTitle = (titleText) => {
+    const statCards = document.querySelectorAll('.stat-card');
+    for (const card of statCards) {
+      const titleElement = card.querySelector('.stat-title');
+      if (titleElement && titleElement.textContent.toLowerCase().includes(titleText.toLowerCase())) {
+        return card;
+      }
+    }
+    return null;
+  };
+
+  // Helper to check if value needs update
+  const needsUpdate = (value) => {
+    return !value || value === 'N/A' || value === 'Unknown' || value.trim() === '';
+  };
+
+  // Update Attendance
+  if (performance.attendance) {
+    const attendanceCard = findStatCardByTitle('Attendance');
+    if (attendanceCard) {
+      const valueEl = attendanceCard.querySelector('.stat-value');
+      if (valueEl && needsUpdate(valueEl.textContent)) {
+        valueEl.textContent = performance.attendance;
+        animateFieldUpdate(valueEl);
+        console.log('✅ Updated attendance:', performance.attendance);
+      }
+    }
+  }
+  
+  // Update Debates
+  if (performance.debates) {
+    const debatesCard = findStatCardByTitle('Debates');
+    if (debatesCard) {
+      const valueEl = debatesCard.querySelector('.stat-value');
+      if (valueEl && needsUpdate(valueEl.textContent)) {
+        valueEl.textContent = performance.debates;
+        animateFieldUpdate(valueEl);
+        console.log('✅ Updated debates:', performance.debates);
+      }
+    }
+  }
+  
+  // Update Questions
+  if (performance.questions) {
+    const questionsCard = findStatCardByTitle('Questions');
+    if (questionsCard) {
+      const valueEl = questionsCard.querySelector('.stat-value');
+      if (valueEl && needsUpdate(valueEl.textContent)) {
+        valueEl.textContent = performance.questions;
+        animateFieldUpdate(valueEl);
+        console.log('✅ Updated questions:', performance.questions);
+      }
+    }
+  }
+
+  // Update Private Member Bills
+  if (performance.pmb) {
+    const pmbCard = findStatCardByTitle('Private Member Bills');
+    if (pmbCard) {
+      const valueEl = pmbCard.querySelector('.stat-value');
+      if (valueEl && needsUpdate(valueEl.textContent)) {
+        valueEl.textContent = performance.pmb;
+        animateFieldUpdate(valueEl);
+        console.log('✅ Updated PMB:', performance.pmb);
+      }
+    }
+  }
+
+  // Update national/state averages if available
+  if (performance.natAttendance || performance.stateAttendance) {
+    updateComparisonBars('Attendance', performance.attendance, performance.natAttendance, performance.stateAttendance);
+  }
+  
+  if (performance.natDebates || performance.stateDebates) {
+    updateComparisonBars('Debates', performance.debates, performance.natDebates, performance.stateDebates);
+  }
+  
+  if (performance.natQuestions || performance.stateQuestions) {
+    updateComparisonBars('Questions', performance.questions, performance.natQuestions, performance.stateQuestions);
+  }
+}
+
+// ============================================================================
+// UPDATE COMPARISON BARS
+// ============================================================================
+
+function updateComparisonBars(metricName, memberValue, nationalAvg, stateAvg) {
+  const card = findStatCardByTitle(metricName);
+  if (!card) return;
+
+  const comparisonBars = card.querySelectorAll('.comparison-bar');
+  
+  const parseValue = (val) => {
+    if (!val || val === 'N/A') return 0;
+    return parseFloat(String(val).replace(/[^\d.-]/g, '')) || 0;
+  };
+
+  const memberNum = parseValue(memberValue);
+  const nationalNum = parseValue(nationalAvg);
+  const stateNum = parseValue(stateAvg);
+
+  const maxVal = Math.max(memberNum, nationalNum, stateNum) || 1;
+
+  comparisonBars.forEach(bar => {
+    const label = bar.querySelector('.bar-label')?.textContent.toLowerCase();
+    const barFill = bar.querySelector('.bar-fill');
+    const barValue = bar.querySelector('.bar-value');
+    
+    if (!barFill || !barValue) return;
+
+    if (label?.includes('selected')) {
+      const percentage = (memberNum / maxVal * 100);
+      barFill.style.width = percentage + '%';
+      barValue.textContent = memberValue || 'N/A';
+      animateFieldUpdate(barFill);
+    } else if (label?.includes('national') && nationalAvg) {
+      const percentage = (nationalNum / maxVal * 100);
+      barFill.style.width = percentage + '%';
+      barValue.textContent = nationalAvg;
+      animateFieldUpdate(barFill);
+    } else if (label?.includes('state') && stateAvg) {
+      const percentage = (stateNum / maxVal * 100);
+      barFill.style.width = percentage + '%';
+      barValue.textContent = stateAvg;
+      animateFieldUpdate(barFill);
+    }
+  });
+}
+
+// Helper function (make it globally accessible)
+function findStatCardByTitle(titleText) {
+  const statCards = document.querySelectorAll('.stat-card');
+  for (const card of statCards) {
+    const titleElement = card.querySelector('.stat-title');
+    if (titleElement && titleElement.textContent.toLowerCase().includes(titleText.toLowerCase())) {
+      return card;
+    }
+  }
+  return null;
+}
+
+function animateFieldUpdate(element) {
+  element.style.transition = 'all 0.5s ease';
+  element.style.backgroundColor = '#fef3c7'; // Light yellow highlight
+  element.style.transform = 'scale(1.05)';
+  
+  setTimeout(() => {
+    element.style.backgroundColor = '';
+    element.style.transform = '';
+  }, 1500);
+}
+
+
+
+// ============================================================================
+// UI HELPERS - POLLING INDICATOR & NOTIFICATIONS
+// ============================================================================
+
+function showPollingIndicator() {
+  // Remove existing if any
+  hidePollingIndicator();
+  
+  const indicator = document.createElement('div');
+  indicator.id = 'polling-indicator';
+  indicator.style.cssText = `
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    z-index: 9999;
+    font-size: 0.95em;
+    font-weight: 600;
+    animation: slideInUp 0.3s ease;
+  `;
+  
+  indicator.innerHTML = `
+    <div style="
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    "></div>
+    <span>Loading additional data...</span>
+  `;
+  
+  document.body.appendChild(indicator);
+}
+
+function hidePollingIndicator() {
+  const indicator = document.getElementById('polling-indicator');
+  if (indicator) {
+    indicator.style.animation = 'slideOutDown 0.3s ease';
+    setTimeout(() => indicator.remove(), 300);
+  }
+}
+
+function showNotification(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = 'custom-toast';
+  
+  const icons = {
+    success: '✅',
+    warning: '⚠️',
+    error: '❌',
+    info: 'ℹ️'
+  };
+  
+  const colors = {
+    success: 'linear-gradient(135deg, #10b981, #059669)',
+    warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+    error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+    info: 'linear-gradient(135deg, #3b82f6, #2563eb)'
+  };
+  
+  toast.style.cssText = `
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    min-width: 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    padding: 18px 24px;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-left: 5px solid;
+    border-image: ${colors[type]} 1;
+  `;
+  
+  toast.innerHTML = `
+    <div style="font-size: 1.8em; line-height: 1;">${icons[type]}</div>
+    <div style="flex: 1;">
+      <div style="font-weight: 700; color: #1e293b; font-size: 1em; margin-bottom: 3px;">
+        ${type.charAt(0).toUpperCase() + type.slice(1)}
+      </div>
+      <div style="color: #64748b; font-size: 0.9em;">
+        ${message}
+      </div>
+    </div>
+    <button onclick="this.parentElement.remove()" style="
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s;
+    " onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='none'">
+      ×
+    </button>
+  `;
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.transform = 'translateX(0)';
+    toast.style.opacity = '1';
+  }, 10);
+  
+  setTimeout(() => {
+    toast.style.transform = 'translateX(400px)';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 400);
+  }, 4000);
+}
+
+window.addEventListener('beforeunload', () => {
+  stopPolling();
+});
+
+
+
+
+
+function renderMPDashboardFromServerData(prsData, candidateData) {
+  console.log('🎨 Rendering MP Dashboard');
+  console.log('PRS Data received:', prsData);
+
+  const data = {
+    name: currentMemberName,
+    imageUrl: prsData.imageUrl,
+    state: prsData.state,
+    constituency: prsData.constituency,
+    party: prsData.party,
+    type: 'MP',
+    age: 'N/A',
+    gender: 'N/A',
+    education: 'N/A',
+    termStart: 'N/A',
+    termEnd: 'N/A',
+    noOfTerm: 'N/A',
+    attendance: 'N/A',
+    natAttendance: 'N/A',
+    stateAttendance: 'N/A',
+    debates: 'N/A',
+    natDebates: 'N/A',
+    stateDebates: 'N/A',
+    questions: 'N/A',
+    natQuestions: 'N/A',
+    stateQuestions: 'N/A',
+    pmb: 'N/A',
+    natPMB: 'N/A',
+    attendanceTable: '',
+    debatesTable: '',
+    questionsTable: ''
+  };
+
+  // ✅ FIXED: Directly use the table data from prsData
+  if (prsData.attendanceTable) {
+    data.attendanceTable = prsData.attendanceTable;
+    console.log('✅ Attendance table loaded directly from prsData');
+  }
+  
+  if (prsData.debatesTable) {
+    data.debatesTable = prsData.debatesTable;
+    console.log('✅ Debates table loaded directly from prsData');
+  }
+  
+  if (prsData.questionsTable) {
+    data.questionsTable = prsData.questionsTable;
+    console.log('✅ Questions table loaded directly from prsData');
+  }
+
+  // Merge performance data
+  if (prsData.performance) {
+    Object.keys(prsData.performance).forEach(key => {
+      if (prsData.performance[key]) data[key] = prsData.performance[key];
+    });
+  }
+
+  // Merge personal data
+  if (prsData.personal) {
+    if (prsData.personal.age) data.age = prsData.personal.age;
+    if (prsData.personal.gender) data.gender = prsData.personal.gender;
+    if (prsData.personal.education) data.education = prsData.personal.education;
+    if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
+    if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
+    if (prsData.personal.noOfTerm) data.noOfTerm = prsData.personal.noOfTerm;
+  }
+
+  // ✅ FALLBACK: Only if tables are missing, try to parse from HTML
+  if ((!data.attendanceTable || !data.debatesTable || !data.questionsTable) && prsData.html) {
+    console.log('⚠️ Some tables missing, attempting to parse from HTML...');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(prsData.html, 'text/html');
+    
+    if (!data.attendanceTable) {
+      const attendanceTableEl = doc.querySelector('#block-views-mps-attendance-block table');
+      if (attendanceTableEl) {
+        data.attendanceTable = attendanceTableEl.outerHTML;
+        console.log('✅ Attendance table extracted from HTML');
+      }
+    }
+    
+    if (!data.debatesTable) {
+      const debatesTableEl = doc.querySelector('#block-views-mps-debate-related-views-block table');
+      if (debatesTableEl) {
+        data.debatesTable = debatesTableEl.outerHTML;
+        console.log('✅ Debates table extracted from HTML');
+      }
+    }
+    
+    if (!data.questionsTable) {
+      const questionsTableEl = doc.querySelector('#block-views-mp-related-views-block-2222 table');
+      if (questionsTableEl) {
+        data.questionsTable = questionsTableEl.outerHTML;
+        console.log('✅ Questions table extracted from HTML');
+      }
+    }
+  }
+
+  console.log('📊 Final table status:', {
+    hasAttendanceTable: !!data.attendanceTable,
+    hasDebatesTable: !!data.debatesTable,
+    hasQuestionsTable: !!data.questionsTable,
+    attendanceLength: data.attendanceTable?.length || 0,
+    debatesLength: data.debatesTable?.length || 0,
+    questionsLength: data.questionsTable?.length || 0
+  });
+
+  currentMemberData = data;
+  renderDashboard(data, candidateData); 
+}
+function renderMLADashboardFromServerData(prsData, candidateData) {
+  console.log('🎨 Rendering MLA Dashboard');
+  
+  const data = {
+    name: currentMemberName,
+    imageUrl: prsData.imageUrl,
+    state: prsData.state,
+    constituency: prsData.constituency,
+    party: prsData.party,
+    type: 'MLA',
+    age: 'N/A',
+    gender: 'N/A',
+    education: 'N/A',
+    termStart: 'N/A',
+    termEnd: 'N/A',
+    attendance: 'N/A',
+    natAttendance: 'N/A',
+    stateAttendance: 'N/A',
+    debates: 'N/A',
+    natDebates: 'N/A',
+    stateDebates: 'N/A',
+    questions: 'N/A',
+    natQuestions: 'N/A',
+    stateQuestions: 'N/A',
+    pmb: 'N/A',
+    natPMB: 'N/A',
+    attendanceTable: '',
+    debatesTable: '',
+    questionsTable: ''
+  };
+
+  // ✅ FIXED: Directly use table data
+  if (prsData.attendanceTable) data.attendanceTable = prsData.attendanceTable;
+  if (prsData.debatesTable) data.debatesTable = prsData.debatesTable;
+  if (prsData.questionsTable) data.questionsTable = prsData.questionsTable;
+
+  // Merge personal data
+  if (prsData.personal) {
+    if (prsData.personal.age) data.age = prsData.personal.age;
+    if (prsData.personal.gender) data.gender = prsData.personal.gender;
+    if (prsData.personal.education) data.education = prsData.personal.education;
+    if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
+    if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
+  }
+
+  // Merge performance data if available
+  if (prsData.performance) {
+    Object.keys(prsData.performance).forEach(key => {
+      if (prsData.performance[key]) data[key] = prsData.performance[key];
+    });
+  }
+
+  console.log('📊 MLA table status:', {
+    hasAttendanceTable: !!data.attendanceTable,
+    hasDebatesTable: !!data.debatesTable,
+    hasQuestionsTable: !!data.questionsTable
+  });
+
+  currentMemberData = data;
+  renderDashboard(data, candidateData); 
+}
+    // ============================================================================
+// DATA MERGING HELPER - Fills missing fields from candidateData
+// ============================================================================
+function mergeCandidateDataIntoMain(data, candidateData) {
+  if (!candidateData) return data;
+  
+  const merged = { ...data };
+  
+  const needsUpdate = (value) => {
+    return !value || value === 'N/A' || value === 'Unknown' || String(value).trim() === '';
+  };
+  
+  const getCandidateValue = (field) => {
+    return candidateData.candidate?.[field] || candidateData[field];
+  };
+  
+  const fieldsToMerge = ['age', 'gender', 'constituency', 'party', 'imageUrl', 'state'];
+  
+  fieldsToMerge.forEach(field => {
+    if (needsUpdate(merged[field])) {
+      const candidateValue = getCandidateValue(field);
+      
+      if (candidateValue && !needsUpdate(candidateValue)) {
+        merged[field] = candidateValue;
+        console.log(`✅ Filled ${field} from candidateData:`, candidateValue);
+      }
+    }
+  });
+  
+  if (needsUpdate(merged.education)) {
+    const candidateEducation = getCandidateValue('education');
+    if (candidateEducation && !needsUpdate(candidateEducation)) {
+      merged.education = cleanEducation(candidateEducation);
+      console.log(`✅ Filled education from candidateData:`, merged.education);
+    }
+  }
+  
+  if (needsUpdate(merged.relation)) {
+    const candidateRelation = getCandidateValue('relation');
+    if (candidateRelation && !needsUpdate(candidateRelation)) {
+      merged.relation = candidateRelation;
+    }
+  }
+  
+  return merged;
+}
+
+
+
+
+async function getValidImageUrl(data, candidateData) {
+  const defaultKeywords = ['placeholder', 'default', 'avatar', 'no-image', 'notfound'];
+  
+  const isPlaceholder = (url) => {
+    if (!url) return true;
+    const urlLower = url.toLowerCase();
+    return defaultKeywords.some(keyword => urlLower.includes(keyword)) || 
+           url.includes('via.placeholder.com');
+  };
+  
+  const testImageUrl = (url) => {
+    return new Promise((resolve) => {
+      if (!url || isPlaceholder(url)) {
+        resolve(false);
         return;
       }
-
-      console.log('⚠️ No server data, fetching via API...');
-      const params = getQueryParams();
-      const memberName = params.name;
-      const memberType = params.type;
       
-      if (!memberName || !memberType) {
-        throw new Error('Missing name or type parameter');
-      }
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
       
-      currentMemberName = memberName;
-      currentMemberType = memberType;
+      setTimeout(() => resolve(false), 3000);
+    });
+  };
+  
+  const imageUrls = [];
+  
+  if (data.imageUrl) {
+    imageUrls.push({ source: 'PRS India', url: data.imageUrl });
+  }
+  
+  if (candidateData?.candidate?.imageUrl) {
+    imageUrls.push({ source: 'MyNeta', url: candidateData.candidate.imageUrl });
+  }
+  if (candidateData?.imageUrl) {
+    imageUrls.push({ source: 'MyNeta', url: candidateData.imageUrl });
+  }
+  
+  if (currentMemberName) {
+   const cleanName = currentMemberName
+  .toLowerCase()
+  .replace(/\+/g, ' ')       
+  .replace(/\s+/g, '-')    
+  .replace(/[^a-z0-9-]/g, '');
 
-      try {
-        const response = await fetch(`/api/prs?name=${encodeURIComponent(memberName)}&type=${encodeURIComponent(memberType)}`);
-        const prsData = await response.json();
-
-        if (!prsData.found) throw new Error('Member not found');
-
-        let candidateData = null;
-        if (prsData.constituency && prsData.constituency !== 'Unknown') {
-          try {
-            const candidateResponse = await fetch(
-              `/api/candidate?name=${encodeURIComponent(memberName)}&constituency=${encodeURIComponent(prsData.constituency)}&party=${encodeURIComponent(prsData.party)}`
-            );
-            if (candidateResponse.ok) {
-              const rawData = await candidateResponse.json();
-              candidateData = rawData.data || rawData;
-              currentCandidateData = candidateData;
-            }
-          } catch (err) {
-            console.error('Error fetching candidate data:', err);
-          }
-        }
-
-        if (memberType === 'MP') {
-          renderMPDashboardFromServerData(prsData, candidateData);
-        } else {
-          renderMLADashboardFromServerData(prsData, candidateData);
-        }
-
-      } catch (err) {
-        console.error('Error:', err);
-        document.getElementById('content').innerHTML = `
-          <div class="error-card">
-            <div style="font-size: 5em; margin-bottom: 20px;">⚠️</div>
-            <div style="font-size: 1.8em; font-weight: 800; color: #e74c3c; margin-bottom: 15px;">Unable to Load Profile</div>
-            <div style="color: #64748b; font-size: 1.1em;">${escapeHtml(err.message)}</div>
-            <a href="/">← Back to Map</a>
-          </div>
-        `;
-      }
+    
+    const alternativeUrls = [
+      `https://myneta.info/images/${cleanName}.jpg`,
+      `https://prsindia.org/mptrack/sites/default/files/member_images/${cleanName}.jpg`,
+      `https://sansad.in/getFile/loksabhampimage?mpcodeval=${cleanName}`,
+    ];
+    
+    alternativeUrls.forEach(url => {
+      imageUrls.push({ source: 'Alternative', url });
+    });
+  }
+  
+  console.log(`🖼️ Testing ${imageUrls.length} image URLs...`);
+  
+  for (const { source, url } of imageUrls) {
+    console.log(`🔍 Testing image from ${source}: ${url}`);
+    
+    const isValid = await testImageUrl(url);
+    
+    if (isValid) {
+      console.log(`✅ Valid image found from ${source}`);
+      return { url, source };
+    } else {
+      console.log(`❌ Invalid image from ${source}`);
     }
-function renderMPDashboardFromServerData(prsData, candidateData) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(prsData.html, 'text/html');
-
-      const data = {
-        name: currentMemberName,
-        imageUrl: prsData.imageUrl,
-        state: prsData.state,
-        constituency: prsData.constituency,
-        party: prsData.party,
-        type: 'MP',
-        age: 'N/A',
-        gender: 'N/A',
-        education: 'N/A',
-        termStart: 'N/A',
-        termEnd: 'N/A',
-        noOfTerm: 'N/A',
-        attendance: 'N/A',
-        natAttendance: 'N/A',
-        stateAttendance: 'N/A',
-        debates: 'N/A',
-        natDebates: 'N/A',
-        stateDebates: 'N/A',
-        questions: 'N/A',
-        natQuestions: 'N/A',
-        stateQuestions: 'N/A',
-        pmb: 'N/A',
-        natPMB: 'N/A',
-        attendanceTable: '',
-        debatesTable: '',
-        questionsTable: ''
-      };
-
-      if (prsData.performance) {
-        Object.keys(prsData.performance).forEach(key => {
-          if (prsData.performance[key]) data[key] = prsData.performance[key];
-        });
-      }
-
-      if (prsData.personal) {
-        if (prsData.personal.age) data.age = prsData.personal.age;
-        if (prsData.personal.gender) data.gender = prsData.personal.gender;
-        if (prsData.personal.education) data.education = prsData.personal.education;
-        if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
-        if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
-        if (prsData.personal.noOfTerm) data.noOfTerm = prsData.personal.noOfTerm;
-      }
-
-      if (prsData.html) {
-        data.attendanceTable = doc.querySelector('#block-views-mps-attendance-block table')?.outerHTML || '';
-        data.debatesTable = doc.querySelector('#block-views-mps-debate-related-views-block table')?.outerHTML || '';
-        data.questionsTable = doc.querySelector('#block-views-mp-related-views-block-2222 table')?.outerHTML || '';
-      }
-
-      if (candidateData && candidateData.candidate) {
-        if (data.age === 'N/A' && candidateData.candidate.age) data.age = candidateData.candidate.age;
-        if (data.education === 'N/A' && candidateData.candidate.education) {
-          data.education = cleanEducation(candidateData.candidate.education);
-        }
-      }
-
-      renderDashboard(data, candidateData);
-    }
-
-    function renderMLADashboardFromServerData(prsData, candidateData) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(prsData.html, 'text/html');
-      
-      const data = {
-        name: currentMemberName,
-        imageUrl: prsData.imageUrl,
-        state: prsData.state,
-        constituency: prsData.constituency,
-        party: prsData.party,
-        type: 'MLA',
-        age: 'N/A',
-        gender: 'N/A',
-        education: 'N/A',
-        termStart: 'N/A',
-        termEnd: 'N/A',
-        attendance: 'N/A',
-        natAttendance: 'N/A',
-        stateAttendance: 'N/A',
-        debates: 'N/A',
-        natDebates: 'N/A',
-        stateDebates: 'N/A',
-        questions: 'N/A',
-        natQuestions: 'N/A',
-        stateQuestions: 'N/A',
-        pmb: 'N/A',
-        natPMB: 'N/A',
-        attendanceTable: '',
-        debatesTable: '',
-        questionsTable: ''
-      };
-
-      if (prsData.personal) {
-        if (prsData.personal.age) data.age = prsData.personal.age;
-        if (prsData.personal.gender) data.gender = prsData.personal.gender;
-        if (prsData.personal.education) data.education = prsData.personal.education;
-        if (prsData.personal.termStart) data.termStart = prsData.personal.termStart;
-        if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
-      }
-
-      if (candidateData && candidateData.candidate) {
-        if (data.age === 'N/A' && candidateData.candidate.age) data.age = candidateData.candidate.age;
-        if (data.education === 'N/A' && candidateData.candidate.education) {
-          data.education = cleanEducation(candidateData.candidate.education);
-        }
-      }
-
-      renderDashboard(data, candidateData);
-    }
+  }
+  
+  console.log('⚠️ No valid images found, using placeholder');
+  return { 
+    url: 'https://via.placeholder.com/200/667eea/ffffff?text=' + 
+         encodeURIComponent(currentMemberName?.charAt(0) || '?'), 
+    source: 'Placeholder' 
+  };
+}
 
      function renderDashboard(data, candidateData = null) {
   console.log('🎨 Rendering COMPLETE dashboard with ALL data');
   console.log('data', data);
   console.log("candidate data", candidateData);
 
-  if (candidateData && candidateData.candidate) {
-    if (candidateData.candidate.education) {
-      candidateData.candidate.education = cleanEducation(candidateData.candidate.education);
-    }
+
+
+  data = mergeCandidateDataIntoMain(data, candidateData);
+  console.log('Merged data:', data);
+
+
+
+ if (candidateData && candidateData.candidate && candidateData.candidate.education) {
+    candidateData.candidate.education = cleanEducation(candidateData.candidate.education);
   }
+
+ let imageUrl = data.imageUrl || 'https://via.placeholder.com/200';
+  let imageSource = 'PRS India';
+  
+  getValidImageUrl(data, candidateData).then(result => {
+    const imgElement = document.querySelector('.profile-image');
+    if (imgElement && result.url !== imgElement.src) {
+      console.log(`🔄 Updating image to source: ${result.source}`);
+      imgElement.src = result.url;
+      
+      const wrapper = document.querySelector('.profile-image-wrapper');
+      if (wrapper && result.source !== 'Placeholder') {
+        const existingBadge = wrapper.querySelector('.image-source-badge');
+        if (existingBadge) existingBadge.remove();
+        
+        const sourceBadge = document.createElement('div');
+            sourceBadge.className = 'image-source-badge';
+      sourceBadge.innerHTML = `✓ Official Profile`; 
+        wrapper.appendChild(sourceBadge);
+      }
+    }
+  });
 
   let totalAssets = 0;
   let totalLiabilities = 0;
@@ -1543,440 +2269,887 @@ const parseIncomeSeries = (incomeText) => {
     // ========================================
     // MOVABLE ASSETS - DETAILED BREAKDOWN
     // ========================================
-    if (candidateData.movableAssets && Array.isArray(candidateData.movableAssets)) {
-      detailsHTML += `
-        <div class="section-header-main reveal">
-          <h2><span class="icon">💎</span>Movable Assets</h2>
-        </div>
-      `;
+   // ========================================
+// MOVABLE ASSETS - COMPLETE DYNAMIC RENDERING
+// ========================================
+if (candidateData.movableAssets && Array.isArray(candidateData.movableAssets)) {
+  console.log('💎 Rendering ALL movable assets dynamically...');
+  
+  detailsHTML += `
+    <div class="section-header-main reveal">
+      <h2><span class="icon">💎</span>Movable Assets</h2>
+    </div>
+  `;
 
-      const cashAsset = candidateData.movableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('cash')
-      );
-      
-      if (cashAsset && cashAsset.self && cashAsset.self !== 'Nil') {
-        detailsHTML += `
-          <div class="details-section reveal">
-            <div class="summary-card">
-              <div class="summary-card-title">💵 Cash in Hand</div>
-              <div class="asset-card" style="text-align: center; padding: 30px;">
-                <div style="font-size: 3em; margin-bottom: 15px;">💰</div>
-                <div class="amount-large">${formatCurrency(cashAsset.self)}</div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      const bankAsset = candidateData.movableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('deposits in banks')
-      );
-      
-      if (bankAsset && bankAsset.self && bankAsset.self !== 'Nil') {
-        const accounts = parseBankAccounts(bankAsset.self);
-        
-        if (accounts.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🏦 Bank Accounts & Fixed Deposits (${accounts.length})</div>
-                <div style="overflow-x: auto;">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Bank</th>
-                        <th>Branch</th>
-                        <th>Account Number</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      ${accounts.map((acc, idx) => `
-                        <tr>
-                          <td><strong>${idx + 1}</strong></td>
-                          <td><span class="badge badge-info">${safeText(acc.bank)}</span></td>
-                          <td>${safeText(acc.branch)}</td>
-                          <td><code>${safeText(acc.accountNo)}</code></td>
-                          <td><span class="badge ${acc.type === 'Fixed Deposit' ? 'badge-success' : 'badge-purple'}">${safeText(acc.type)}</span></td>
-                          <td><strong>${formatCurrency(acc.amount)}</strong></td>
-                        </tr>
-                      `).join('')}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      const vehicleAsset = candidateData.movableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('motor vehicles')
-      );
-      
-      if (vehicleAsset && vehicleAsset.self && vehicleAsset.self !== 'Nil') {
-        const vehicles = parseVehicles(vehicleAsset.self);
-        
-        if (vehicles.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🚗 Motor Vehicles (${vehicles.length})</div>
-                <div class="grid-2">
-                  ${vehicles.map(v => `
-                    <div class="card-item vehicle">
-                      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
-                        <div>
-                          <div style="font-size: 1.4em; font-weight: 900; color: #d97706; margin-bottom: 5px;">
-                            ${safeText(v.make)} ${safeText(v.model)}
-                          </div>
-                          <div style="font-size: 0.9em; color: #78716c;">
-                            ${v.year ? `Year: ${safeText(v.year)}` : ''}
-                          </div>
-                        </div>
-                        <div style="font-size: 2em;">🚘</div>
-                      </div>
-                      ${v.registration ? `
-                        <div style="margin: 10px 0;">
-                          <span class="badge badge-warning">${safeText(v.registration)}</span>
-                        </div>
-                      ` : ''}
-                      <div style="font-size: 1.3em; font-weight: 800; color: #92400e; margin-top: 10px;">
-                        ${formatCurrency(v.amount)}
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      const jewelleryAsset = candidateData.movableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('jewellery')
-      );
-      
-      if (jewelleryAsset && jewelleryAsset.self && jewelleryAsset.self !== 'Nil') {
-        detailsHTML += `
-          <div class="details-section reveal">
-            <div class="summary-card">
-              <div class="summary-card-title">💎 Jewellery</div>
-              <div class="card-item jewellery">
-                <div style="font-size: 2.5em; text-align: center; margin-bottom: 15px;">💍</div>
-                <div class="data-row">
-                  <div class="data-label">Details</div>
-                  <div class="data-value">${safeText(jewelleryAsset.self)}</div>
-                </div>
-                <div class="data-row">
-                  <div class="data-label">Total Value</div>
-                  <div class="amount-large">${formatCurrency(jewelleryAsset.total)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // Insurance Policies
-      const insuranceAsset = candidateData.movableAssets.find(a => 
-        a.description && (a.description.toLowerCase().includes('lic') || a.description.toLowerCase().includes('insurance'))
-      );
-      
-      if (insuranceAsset && insuranceAsset.total && insuranceAsset.total !== 'Nil' && insuranceAsset.total !== 'Rs 70') {
-        detailsHTML += `
-          <div class="details-section reveal">
-            <div class="summary-card">
-              <div class="summary-card-title">🛡️ Insurance Policies</div>
-              <div class="card-item insurance">
-                <div class="data-row">
-                  <div class="data-label">Policy Details</div>
-                  <div class="data-value">${safeText(insuranceAsset.description)}</div>
-                </div>
-                <div class="data-row">
-                  <div class="data-label">Total Coverage</div>
-                  <div class="amount-large">${formatCurrency(insuranceAsset.total)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      // Personal Loans Given
-      const loansGivenAsset = candidateData.movableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('personal loans')
-      );
-      
-      if (loansGivenAsset && loansGivenAsset.self && loansGivenAsset.self !== 'Nil') {
-        detailsHTML += `
-          <div class="details-section reveal">
-            <div class="summary-card">
-              <div class="summary-card-title">📤 Personal Loans Given</div>
-              <div class="card-item income">
-                <div class="data-row">
-                  <div class="data-label">Loan Details</div>
-                  <div class="data-value">${safeText(loansGivenAsset.self)}</div>
-                </div>
-                <div class="data-row">
-                  <div class="data-label">Total Amount</div>
-                  <div class="amount-large">${formatCurrency(loansGivenAsset.total)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
+  // ASSET CATEGORY CONFIGURATION - Maps srNo to metadata
+  const assetCategoryConfig = {
+    'i': { 
+      name: 'Cash in Hand', 
+      icon: '💵', 
+      color: '#10b981',
+      type: 'simple'
+    },
+    'ii': { 
+      name: 'Bank Deposits & Fixed Deposits', 
+      icon: '🏦', 
+      color: '#3b82f6',
+      type: 'bank_accounts'
+    },
+    'iii': { 
+      name: 'Bonds, Debentures & Shares', 
+      icon: '📊', 
+      color: '#8b5cf6',
+      type: 'investments'
+    },
+    'iv': { 
+      name: 'NSS, Postal Savings etc.', 
+      icon: '📮', 
+      color: '#f59e0b',
+      type: 'simple'
+    },
+    'v': { 
+      name: 'Personal Loans Given', 
+      icon: '📤', 
+      color: '#06b6d4',
+      type: 'line_items'
+    },
+    'vi': { 
+      name: 'Motor Vehicles', 
+      icon: '🚗', 
+      color: '#f59e0b',
+      type: 'vehicles'
+    },
+    'vii': { 
+      name: 'Jewellery & Valuables', 
+      icon: '💎', 
+      color: '#ec4899',
+      type: 'valuables'
+    },
+    'viii': { 
+      name: 'Other Assets', 
+      icon: '📦', 
+      color: '#64748b',
+      type: 'line_items'
     }
+  };
 
-    // ========================================
-    // IMMOVABLE ASSETS - DETAILED PROPERTIES
-    // ========================================
-    if (candidateData.immovableAssets && Array.isArray(candidateData.immovableAssets)) {
-      detailsHTML += `
-        <div class="section-header-main reveal">
-          <h2><span class="icon">🏠</span>Immovable Assets</h2>
-        </div>
-      `;
-
-      // Agricultural Land
-      const agricLand = candidateData.immovableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('agricultural land')
-      );
-      
-      if (agricLand && agricLand.self && agricLand.self !== 'Nil') {
-        const properties = parseProperty(agricLand.self);
-        
-        if (properties.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🌾 Agricultural Land (${properties.length})</div>
-                <div class="grid-2">
-                  ${properties.map((p, idx) => `
-                    <div class="card-item property">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
-                        <span style="font-size: 1.5em;">🌾</span>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Location</div>
-                        <div class="data-value">${safeText(p.address)}</div>
-                      </div>
-                      ${p.area ? `
-                        <div class="data-row">
-                          <div class="data-label">Area</div>
-                          <div class="data-value">${safeText(p.area)}</div>
-                        </div>
-                      ` : ''}
-                      <div class="data-row">
-                        <div class="data-label">Value</div>
-                        <div class="amount-large">${formatCurrency(p.value)}</div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      // Non-Agricultural Land
-      const nonAgricLand = candidateData.immovableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('non agricultural land')
-      );
-      
-      if (nonAgricLand && nonAgricLand.self && nonAgricLand.self !== 'Nil') {
-        const properties = parseProperty(nonAgricLand.self);
-        
-        if (properties.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🏞️ Non-Agricultural Land (${properties.length})</div>
-                <div class="grid-2">
-                  ${properties.map((p, idx) => `
-                    <div class="card-item property">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
-                        <span style="font-size: 1.5em;">🏞️</span>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Location</div>
-                        <div class="data-value">${safeText(p.address)}</div>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Value</div>
-                        <div class="amount-large">${formatCurrency(p.value)}</div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      // Residential Buildings
-      const residential = candidateData.immovableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('residential buildings')
-      );
-      
-      if (residential && residential.self && residential.self !== 'Nil') {
-        const properties = parseProperty(residential.self);
-        
-        if (properties.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🏘️ Residential Properties (${properties.length})</div>
-                <div class="grid-2">
-                  ${properties.map((p, idx) => `
-                    <div class="card-item property">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
-                        <span style="font-size: 1.5em;">🏠</span>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Address</div>
-                        <div class="data-value">${safeText(p.address)}</div>
-                      </div>
-                      ${p.area ? `
-                        <div class="data-row">
-                          <div class="data-label">Area</div>
-                          <div class="data-value">${safeText(p.area)}</div>
-                        </div>
-                      ` : ''}
-                      ${p.built ? `
-                        <div class="data-row">
-                          <div class="data-label">Built-up Area</div>
-                          <div class="data-value">${safeText(p.built)}</div>
-                        </div>
-                      ` : ''}
-                      ${p.purchaseDate ? `
-                        <div class="data-row">
-                          <div class="data-label">Purchase Date</div>
-                          <div class="data-value">${safeText(p.purchaseDate)}</div>
-                        </div>
-                      ` : ''}
-                      <div class="data-row">
-                        <div class="data-label">Value</div>
-                        <div class="amount-large">${formatCurrency(p.value)}</div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-
-      // Commercial Buildings
-      const commercial = candidateData.immovableAssets.find(a => 
-        a.description && a.description.toLowerCase().includes('commercial buildings')
-      );
-      
-      if (commercial && commercial.self && commercial.self !== 'Nil' && commercial.self !== 'Rs 70') {
-        const properties = parseProperty(commercial.self);
-        
-        if (properties.length > 0) {
-          detailsHTML += `
-            <div class="details-section reveal">
-              <div class="summary-card">
-                <div class="summary-card-title">🏢 Commercial Properties (${properties.length})</div>
-                <div class="grid-2">
-                  ${properties.map((p, idx) => `
-                    <div class="card-item property">
-                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
-                        <span style="font-size: 1.5em;">🏢</span>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Address</div>
-                        <div class="data-value">${safeText(p.address)}</div>
-                      </div>
-                      <div class="data-row">
-                        <div class="data-label">Value</div>
-                        <div class="amount-large">${formatCurrency(p.value)}</div>
-                      </div>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }
-      }
-    }
-
+  // SMART INVESTMENT PARSER - For Bonds, Shares, Mutual Funds
+  const parseInvestments = (text) => {
+    if (!text || text === 'Nil') return [];
     
+    const items = [];
+    const lines = text.split('\n').filter(l => l.trim().length > 5);
+    
+    for (const line of lines) {
+      const parts = line.split(':');
+      if (parts.length >= 2) {
+        const name = parts[0].trim();
+        const value = parts.slice(1).join(':').trim();
+        
+        items.push({ 
+          name, 
+          value: value.replace(/Rs\s*/i, 'Rs '),
+          type: name.toLowerCase().includes('mutual') || name.toLowerCase().includes('fund') ? 'Mutual Fund' :
+                name.toLowerCase().includes('share') ? 'Shares' :
+                name.toLowerCase().includes('deposit') ? 'Deposit' : 'Investment'
+        });
+      }
+    }
+    
+    return items;
+  };
 
-    // ========================================
-    // LIABILITIES - DETAILED LOANS
-    // ========================================
-    if (candidateData.liabilities && Array.isArray(candidateData.liabilities)) {
-      const loans = candidateData.liabilities.filter(l => 
-        l.description && l.description.toLowerCase().includes('loan') && l.self && l.self !== 'Nil'
-      );
+  // SMART VALUABLES PARSER - For Jewellery with weights
+  const parseValuables = (text) => {
+    if (!text || text === 'Nil') return [];
+    
+    const items = [];
+    const lines = text.split('\n').filter(l => l.trim().length > 5);
+    
+    for (const line of lines) {
+      const parts = line.split(':');
+      const description = parts[0]?.trim() || line;
+      const value = parts[1]?.trim() || 'N/A';
       
-      if (loans.length > 0) {
-        detailsHTML += `
-          <div class="section-header-main reveal">
-            <h2><span class="icon">💳</span>Liabilities</h2>
-          </div>
-        `;
+      // Extract weight if present
+      const weightMatch = description.match(/(\d+\.?\d*)\s*(Gm|Kg|gm|kg)/i);
+      const weight = weightMatch ? `${weightMatch[1]} ${weightMatch[2]}` : null;
+      
+      items.push({ description, value, weight });
+    }
+    
+    return items;
+  };
 
-        loans.forEach(loanCategory => {
-          const parsedLoans = parseLoans(loanCategory.self);
-          
-          if (parsedLoans.length > 0) {
-            detailsHTML += `
-              <div class="details-section reveal">
-                <div class="summary-card">
-                  <div class="summary-card-title">💳 ${safeText(loanCategory.description)}</div>
+  // PROCESS EACH ASSET CATEGORY
+  candidateData.movableAssets.forEach((asset, index) => {
+    const srNo = asset.srNo?.toLowerCase().trim();
+    const config = assetCategoryConfig[srNo];
+    
+    // Skip if no self data or nil
+    if (!asset.self || asset.self === 'Nil' || asset.total === 'Rs 70') {
+      console.log(`⏭️ Skipping ${srNo}: No data`);
+      return;
+    }
+
+    const categoryName = config?.name || asset.description || 'Other Asset';
+    const icon = config?.icon || '📋';
+    const color = config?.color || '#64748b';
+    const type = config?.type || 'line_items';
+
+    console.log(`✅ Rendering: ${categoryName} (${type})`);
+
+    // ========================================
+    // RENDER BASED ON TYPE
+    // ========================================
+
+    if (type === 'simple') {
+      // Simple amount display (Cash, NSS, etc.)
+      detailsHTML += `
+        <div class="details-section reveal">
+          <div class="summary-card">
+            <div class="summary-card-title">${icon} ${escapeHtml(categoryName)}</div>
+            <div class="asset-card" style="text-align: center; padding: 30px;">
+              <div style="font-size: 3em; margin-bottom: 15px;">${icon}</div>
+              <div class="amount-large" style="color: ${color};">${formatCurrency(asset.self)}</div>
+              ${asset.spouse && asset.spouse !== 'Nil' ? `
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                  <div style="color: #64748b; font-weight: 600; margin-bottom: 8px;">Spouse</div>
+                  <div class="amount-large" style="font-size: 1.3em; color: ${color};">${formatCurrency(asset.spouse)}</div>
+                </div>
+              ` : ''}
+              ${asset.total && asset.total !== 'Nil' && asset.total !== 'Rs 70' ? `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px;">
+                  <div style="font-size: 0.9em; color: #0369a1; font-weight: 700; margin-bottom: 5px;">TOTAL</div>
+                  <div style="font-size: 1.8em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    else if (type === 'bank_accounts') {
+      // Bank accounts with detailed parsing
+      const accounts = parseBankAccounts(asset.self);
+      const spouseAccounts = asset.spouse && asset.spouse !== 'Nil' ? parseBankAccounts(asset.spouse) : [];
+      
+      if (accounts.length > 0 || spouseAccounts.length > 0) {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">${icon} ${escapeHtml(categoryName)} (${accounts.length + spouseAccounts.length})</div>
+              
+              ${accounts.length > 0 ? `
+                <div style="margin-bottom: ${spouseAccounts.length > 0 ? '30px' : '0'};">
+                  <div style="font-weight: 700; color: #1e293b; margin-bottom: 15px; padding: 10px; background: #f8fafc; border-radius: 8px;">
+                    👤 Self (${accounts.length})
+                  </div>
                   <div style="overflow-x: auto;">
                     <table>
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Lender</th>
-                          <th>Type</th>
+                          <th>Bank</th>
+                          <th>Branch</th>
                           <th>Account Number</th>
+                          <th>Type</th>
                           <th>Amount</th>
                         </tr>
                       </thead>
                       <tbody>
-                        ${parsedLoans.map((loan, idx) => `
+                        ${accounts.map((acc, idx) => `
                           <tr>
                             <td><strong>${idx + 1}</strong></td>
-                            <td><span class="badge badge-info">${safeText(loan.lender)}</span></td>
-                            <td><span class="badge badge-warning">${safeText(loan.type)}</span></td>
-                            <td><code>${safeText(loan.accountNo)}</code></td>
-                            <td><strong style="color: #dc2626;">${formatCurrency(loan.amount)}</strong></td>
+                            <td><span class="badge badge-info">${safeText(acc.bank)}</span></td>
+                            <td>${safeText(acc.branch)}</td>
+                            <td><code>${safeText(acc.accountNo)}</code></td>
+                            <td><span class="badge ${acc.type === 'Fixed Deposit' ? 'badge-success' : 'badge-purple'}">${safeText(acc.type)}</span></td>
+                            <td><strong>${formatCurrency(acc.amount)}</strong></td>
                           </tr>
                         `).join('')}
                       </tbody>
                     </table>
                   </div>
-                  <div style="margin-top: 20px; padding: 15px; background: #fef2f2; border-radius: 10px; text-align: center;">
-                    <div style="font-size: 0.9em; color: #991b1b; font-weight: 700; margin-bottom: 5px;">TOTAL LIABILITY</div>
-                    <div class="amount-large" style="background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text;">
-                      ${formatCurrency(loanCategory.total)}
-                    </div>
+                </div>
+              ` : ''}
+              
+              ${spouseAccounts.length > 0 ? `
+                <div>
+                  <div style="font-weight: 700; color: #1e293b; margin-bottom: 15px; padding: 10px; background: #fef3c7; border-radius: 8px;">
+                    👰 Spouse (${spouseAccounts.length})
+                  </div>
+                  <div style="overflow-x: auto;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Bank</th>
+                          <th>Branch</th>
+                          <th>Account Number</th>
+                          <th>Type</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${spouseAccounts.map((acc, idx) => `
+                          <tr>
+                            <td><strong>${idx + 1}</strong></td>
+                            <td><span class="badge badge-info">${safeText(acc.bank)}</span></td>
+                            <td>${safeText(acc.branch)}</td>
+                            <td><code>${safeText(acc.accountNo)}</code></td>
+                            <td><span class="badge ${acc.type === 'Fixed Deposit' ? 'badge-success' : 'badge-purple'}">${safeText(acc.type)}</span></td>
+                            <td><strong>${formatCurrency(acc.amount)}</strong></td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              </div>
-            `;
-          }
-        });
+              ` : ''}
+              
+              ${asset.total && asset.total !== 'Nil' ? `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; text-align: center;">
+                  <div style="font-size: 0.9em; color: #0369a1; font-weight: 700; margin-bottom: 5px;">TOTAL DEPOSITS</div>
+                  <div style="font-size: 2em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
       }
     }
 
+    else if (type === 'investments') {
+      // Bonds, Shares, Mutual Funds
+      const investments = parseInvestments(asset.self);
+      
+      if (investments.length > 0) {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">${icon} ${escapeHtml(categoryName)} (${investments.length})</div>
+              <div class="grid-2">
+                ${investments.map((inv, idx) => `
+                  <div class="card-item" style="border-left: 4px solid ${color}; background: linear-gradient(135deg, #faf5ff, #f3e8ff);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                      <strong style="color: #581c87; font-size: 0.95em;">Investment ${idx + 1}</strong>
+                      <span class="badge badge-purple">${escapeHtml(inv.type)}</span>
+                    </div>
+                    <div class="data-row">
+                      <div class="data-label">Fund/Security Name</div>
+                      <div class="data-value" style="font-weight: 700; color: #6b21a8;">${safeText(inv.name)}</div>
+                    </div>
+                    <div class="data-row">
+                      <div class="data-label">Current Value</div>
+                      <div class="amount-large" style="color: ${color};">${formatCurrency(inv.value)}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              ${asset.total && asset.total !== 'Nil' ? `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #faf5ff, #f3e8ff); border-radius: 10px; text-align: center;">
+                  <div style="font-size: 0.9em; color: #6b21a8; font-weight: 700; margin-bottom: 5px;">TOTAL INVESTMENT VALUE</div>
+                  <div style="font-size: 2em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    else if (type === 'vehicles') {
+      // Motor Vehicles
+      const vehicles = parseVehicles(asset.self);
+      
+      if (vehicles.length > 0) {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">${icon} ${escapeHtml(categoryName)} (${vehicles.length})</div>
+              <div class="grid-2">
+                ${vehicles.map((v, idx) => `
+                  <div class="card-item vehicle">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                      <div>
+                        <div style="font-size: 1.4em; font-weight: 900; color: #d97706; margin-bottom: 5px;">
+                          ${safeText(v.make)} ${safeText(v.model)}
+                        </div>
+                        <div style="font-size: 0.9em; color: #78716c;">
+                          ${v.year ? `Year: ${safeText(v.year)}` : ''}
+                        </div>
+                      </div>
+                      <div style="font-size: 2em;">🚘</div>
+                    </div>
+                    ${v.registration ? `
+                      <div style="margin: 10px 0;">
+                        <span class="badge badge-warning">${safeText(v.registration)}</span>
+                      </div>
+                    ` : ''}
+                    <div style="font-size: 1.3em; font-weight: 800; color: #92400e; margin-top: 10px;">
+                      ${formatCurrency(v.amount)}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              ${asset.total && asset.total !== 'Nil' ? `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fffbeb, #fef3c7); border-radius: 10px; text-align: center;">
+                  <div style="font-size: 0.9em; color: #92400e; font-weight: 700; margin-bottom: 5px;">TOTAL VEHICLE VALUE</div>
+                  <div style="font-size: 2em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    else if (type === 'valuables') {
+      const items = parseValuables(asset.self);
+      const spouseItems = asset.spouse && asset.spouse !== 'Nil' ? parseValuables(asset.spouse) : [];
+      
+      if (items.length > 0 || spouseItems.length > 0) {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">${icon} ${escapeHtml(categoryName)}</div>
+              
+              ${items.length > 0 ? `
+                <div class="card-item jewellery" style="margin-bottom: ${spouseItems.length > 0 ? '20px' : '0'};">
+                  <div style="font-size: 2em; text-align: center; margin-bottom: 15px;">💍</div>
+                  <div style="font-weight: 700; color: #831843; margin-bottom: 15px; padding: 10px; background: #fdf2f8; border-radius: 8px; text-align: center;">
+                    👤 Self
+                  </div>
+                  ${items.map(item => `
+                    <div class="data-row">
+                      <div class="data-label">
+                        ${safeText(item.description)}
+                        ${item.weight ? `<br><span style="font-size: 0.85em; color: #9ca3af;">(${item.weight})</span>` : ''}
+                      </div>
+                      <div class="data-value" style="font-weight: 800; color: #be185d;">${formatCurrency(item.value)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+              
+              ${spouseItems.length > 0 ? `
+                <div class="card-item jewellery">
+                  <div style="font-size: 2em; text-align: center; margin-bottom: 15px;">💎</div>
+                  <div style="font-weight: 700; color: #831843; margin-bottom: 15px; padding: 10px; background: #fef3c7; border-radius: 8px; text-align: center;">
+                    👰 Spouse
+                  </div>
+                  ${spouseItems.map(item => `
+                    <div class="data-row">
+                      <div class="data-label">
+                        ${safeText(item.description)}
+                        ${item.weight ? `<br><span style="font-size: 0.85em; color: #9ca3af;">(${item.weight})</span>` : ''}
+                      </div>
+                      <div class="data-value" style="font-weight: 800; color: #be185d;">${formatCurrency(item.value)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+              
+              ${asset.total && asset.total !== 'Nil' ? `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fdf2f8, #fce7f3); border-radius: 10px; text-align: center;">
+                  <div style="font-size: 0.9em; color: #831843; font-weight: 700; margin-bottom: 5px;">TOTAL VALUE</div>
+                  <div style="font-size: 2em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    else if (type === 'line_items') {
+      const items = parseSimpleList(asset.self);
+      
+      if (items.length > 0) {
+        detailsHTML += `
+          <div class="details-section reveal">
+            <div class="summary-card">
+              <div class="summary-card-title">${icon} ${escapeHtml(categoryName)}</div>
+              <div class="card-item" style="border-left: 4px solid ${color};">
+                ${items.map(item => `
+                  <div class="data-row">
+                    <div class="data-label">${safeText(item.description)}</div>
+                    <div class="data-value" style="font-weight: 800; color: ${color};">${formatCurrency(item.amount)}</div>
+                  </div>
+                `).join('')}
+                ${asset.total && asset.total !== 'Nil' && asset.total !== 'Rs 70' ? `
+                  <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center;">
+                    <div style="font-size: 0.9em; color: #64748b; font-weight: 700; margin-bottom: 5px;">TOTAL</div>
+                    <div style="font-size: 1.8em; font-weight: 900; color: ${color};">${formatCurrency(asset.total)}</div>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+  });
+
+  console.log('✅ All movable assets rendered dynamically!');
+}
+
+    // ========================================
+    // IMMOVABLE ASSETS - DETAILED PROPERTIES
+    // ========================================
+   // ========================================
+// IMMOVABLE ASSETS - COMPLETE WITH SPOUSE
+// ========================================
+if (candidateData.immovableAssets && Array.isArray(candidateData.immovableAssets)) {
+  const hasAnyImmovableAssets = candidateData.immovableAssets.some(a => 
+    (a.self && a.self !== 'Nil') || 
+    (a.spouse && a.spouse !== 'Nil') ||
+    (a.total && a.total !== 'Nil' && a.total !== 'Rs 70')
+  );
+
+  if (hasAnyImmovableAssets) {
+    detailsHTML += `
+      <div class="section-header-main reveal">
+        <h2><span class="icon">🏠</span>Immovable Assets</h2>
+      </div>
+    `;
+
+    candidateData.immovableAssets.forEach(asset => {
+      // Skip if no real data
+      if ((!asset.self || asset.self === 'Nil') && 
+          (!asset.spouse || asset.spouse === 'Nil') &&
+          (!asset.total || asset.total === 'Nil' || asset.total === 'Rs 70')) {
+        return;
+      }
+
+      const categoryName = asset.description || 'Property';
+      let icon = '🏘️';
+      
+      if (categoryName.toLowerCase().includes('agricultural')) icon = '🌾';
+      else if (categoryName.toLowerCase().includes('residential')) icon = '🏠';
+      else if (categoryName.toLowerCase().includes('commercial')) icon = '🏢';
+      else if (categoryName.toLowerCase().includes('non agricultural')) icon = '🏞️';
+
+      const selfProperties = parseProperty(asset.self);
+      const spouseProperties = parseProperty(asset.spouse);
+
+      detailsHTML += `
+        <div class="details-section reveal">
+          <div class="summary-card">
+            <div class="summary-card-title">${icon} ${escapeHtml(categoryName)}</div>
+            
+            ${selfProperties.length > 0 ? `
+              <div style="margin-bottom: ${spouseProperties.length > 0 ? '25px' : '0'};">
+                <div style="font-weight: 700; color: #1e293b; margin-bottom: 15px; padding: 10px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-radius: 8px; border-left: 4px solid #10b981;">
+                  👤 Self (${selfProperties.length} ${selfProperties.length === 1 ? 'Property' : 'Properties'})
+                </div>
+                <div class="grid-2">
+                  ${selfProperties.map((p, idx) => `
+                    <div class="card-item property">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #065f46;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">${icon}</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">📍 Location</div>
+                        <div class="data-value" style="font-size: 0.95em; line-height: 1.5;">${safeText(p.address)}</div>
+                      </div>
+                      ${p.area ? `
+                        <div class="data-row">
+                          <div class="data-label">📏 Area</div>
+                          <div class="data-value"><span class="badge badge-success">${safeText(p.area)}</span></div>
+                        </div>
+                      ` : ''}
+                      <div class="data-row">
+                        <div class="data-label">💰 Value</div>
+                        <div class="amount-large">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+            
+            ${spouseProperties.length > 0 ? `
+              <div>
+                <div style="font-weight: 700; color: #1e293b; margin-bottom: 15px; padding: 10px; background: linear-gradient(135deg, #fffbeb, #fef3c7); border-radius: 8px; border-left: 4px solid #f59e0b;">
+                  👰 Spouse (${spouseProperties.length} ${spouseProperties.length === 1 ? 'Property' : 'Properties'})
+                </div>
+                <div class="grid-2">
+                  ${spouseProperties.map((p, idx) => `
+                    <div class="card-item property" style="border-left-color: #f59e0b;">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <strong style="color: #92400e;">Property ${idx + 1}</strong>
+                        <span style="font-size: 1.5em;">${icon}</span>
+                      </div>
+                      <div class="data-row">
+                        <div class="data-label">📍 Location</div>
+                        <div class="data-value" style="font-size: 0.95em; line-height: 1.5;">${safeText(p.address)}</div>
+                      </div>
+                      ${p.area ? `
+                        <div class="data-row">
+                          <div class="data-label">📏 Area</div>
+                          <div class="data-value"><span class="badge badge-warning">${safeText(p.area)}</span></div>
+                        </div>
+                      ` : ''}
+                      <div class="data-row">
+                        <div class="data-label">💰 Value</div>
+                        <div class="amount-large" style="color: #d97706;">${formatCurrency(p.value)}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+            
+            ${asset.total && asset.total !== 'Nil' && asset.total !== 'Rs 70' ? `
+              <div style="margin-top: 25px; padding: 18px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 12px; text-align: center; border: 2px solid #0ea5e9;">
+                <div style="font-size: 0.95em; color: #0369a1; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                  Total ${escapeHtml(categoryName)} Value
+                </div>
+                <div style="font-size: 2.2em; font-weight: 900; background: linear-gradient(135deg, #0ea5e9, #0369a1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                  ${formatCurrency(asset.total)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    });
+  }
+}
+
+    // ========================================
+// SOURCES OF INCOME
+// ========================================
+if (candidateData.sourcesOfIncome) {
+  const hasIncomeData = candidateData.sourcesOfIncome.self || 
+                        candidateData.sourcesOfIncome.spouse || 
+                        candidateData.sourcesOfIncome.dependent;
+  
+  if (hasIncomeData) {
+    detailsHTML += `
+      <div class="details-section reveal">
+        <div class="summary-card">
+          <div class="summary-card-title">💰 Sources of Income</div>
+          <div class="grid-2">
+            ${candidateData.sourcesOfIncome.self && candidateData.sourcesOfIncome.self !== 'NA' ? `
+              <div class="card-item" style="border-left: 4px solid #10b981;">
+                <div style="font-weight: 700; color: #065f46; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3em;">👤</span>
+                  Self
+                </div>
+                <div class="data-value" style="font-size: 1.05em; line-height: 1.6; color: #1e293b;">
+                  ${safeText(candidateData.sourcesOfIncome.self)}
+                </div>
+              </div>
+            ` : ''}
+            
+            ${candidateData.sourcesOfIncome.spouse && candidateData.sourcesOfIncome.spouse !== 'NA' ? `
+              <div class="card-item" style="border-left: 4px solid #3b82f6;">
+                <div style="font-weight: 700; color: #1e40af; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3em;">👰</span>
+                  Spouse
+                </div>
+                <div class="data-value" style="font-size: 1.05em; line-height: 1.6; color: #1e293b;">
+                  ${safeText(candidateData.sourcesOfIncome.spouse)}
+                </div>
+              </div>
+            ` : ''}
+            
+            ${candidateData.sourcesOfIncome.dependent && candidateData.sourcesOfIncome.dependent !== 'NA' ? `
+              <div class="card-item" style="border-left: 4px solid #ec4899;">
+                <div style="font-weight: 700; color: #831843; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3em;">👶</span>
+                  Dependent
+                </div>
+                <div class="data-value" style="font-size: 1.05em; line-height: 1.6; color: #1e293b;">
+                  ${safeText(candidateData.sourcesOfIncome.dependent)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+    
+
+    // ========================================
+    // LIABILITIES - DETAILED LOANS
+    // ========================================
+   // ========================================
+// LIABILITIES - SHOW ALL CATEGORIES
+// ========================================
+if (candidateData.liabilities && Array.isArray(candidateData.liabilities)) {
+  const hasAnyLiabilities = candidateData.liabilities.some(l => 
+    (l.self && l.self !== 'Nil') || 
+    (l.spouse && l.spouse !== 'Nil') ||
+    (l.total && l.total !== 'Nil' && l.total !== 'Rs 70')
+  );
+
+  if (hasAnyLiabilities) {
+    detailsHTML += `
+      <div class="section-header-main reveal">
+        <h2><span class="icon">💳</span>Liabilities</h2>
+      </div>
+    `;
+
+    candidateData.liabilities.forEach((liability, index) => {
+      // Skip if completely empty
+      if ((!liability.self || liability.self === 'Nil') && 
+          (!liability.spouse || liability.spouse === 'Nil') &&
+          (!liability.total || liability.total === 'Nil' || liability.total === 'Rs 70')) {
+        return;
+      }
+
+      const categoryName = liability.description || 'Liability';
+      const icon = categoryName.toLowerCase().includes('loan') ? '🏦' : 
+                   categoryName.toLowerCase().includes('dues') ? '🏛️' : 
+                   categoryName.toLowerCase().includes('dispute') ? '⚖️' : '💳';
+
+      const parsedLoans = liability.self && liability.self !== 'Nil' ? parseLoans(liability.self) : [];
+      const spouseLoans = liability.spouse && liability.spouse !== 'Nil' ? parseLoans(liability.spouse) : [];
+
+      detailsHTML += `
+        <div class="details-section reveal">
+          <div class="summary-card">
+            <div class="summary-card-title">${icon} ${escapeHtml(categoryName)}</div>
+      `;
+
+      // If has structured loan data
+      if (parsedLoans.length > 0 || spouseLoans.length > 0) {
+        detailsHTML += `
+          ${parsedLoans.length > 0 ? `
+            <div style="margin-bottom: ${spouseLoans.length > 0 ? '20px' : '0'};">
+              <div style="font-weight: 700; color: #991b1b; margin-bottom: 12px; padding: 8px; background: #fef2f2; border-radius: 6px;">
+                👤 Self
+              </div>
+              <div style="overflow-x: auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Lender</th>
+                      <th>Type</th>
+                      <th>Account Number</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${parsedLoans.map((loan, idx) => `
+                      <tr>
+                        <td><strong>${idx + 1}</strong></td>
+                        <td><span class="badge badge-info">${safeText(loan.lender)}</span></td>
+                        <td><span class="badge badge-warning">${safeText(loan.type)}</span></td>
+                        <td><code>${safeText(loan.accountNo)}</code></td>
+                        <td><strong style="color: #dc2626;">${formatCurrency(loan.amount)}</strong></td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${spouseLoans.length > 0 ? `
+            <div>
+              <div style="font-weight: 700; color: #991b1b; margin-bottom: 12px; padding: 8px; background: #fef2f2; border-radius: 6px;">
+                👰 Spouse
+              </div>
+              <div style="overflow-x: auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Lender</th>
+                      <th>Type</th>
+                      <th>Account Number</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${spouseLoans.map((loan, idx) => `
+                      <tr>
+                        <td><strong>${idx + 1}</strong></td>
+                        <td><span class="badge badge-info">${safeText(loan.lender)}</span></td>
+                        <td><span class="badge badge-warning">${safeText(loan.type)}</span></td>
+                        <td><code>${safeText(loan.accountNo)}</code></td>
+                        <td><strong style="color: #dc2626;">${formatCurrency(loan.amount)}</strong></td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ` : ''}
+        `;
+      } else {
+        // Simple display for Nil/descriptive liabilities
+        detailsHTML += `
+          <div class="card-item" style="text-align: center; padding: 30px; background: linear-gradient(135deg, #f0fdf4, #dcfce7);">
+            <div style="font-size: 3em; margin-bottom: 10px;">✅</div>
+            <div style="font-size: 1.2em; font-weight: 700; color: #166534; margin-bottom: 8px;">
+              No ${escapeHtml(categoryName)}
+            </div>
+            <div style="color: #15803d; font-size: 0.95em;">
+              ${liability.self === 'Nil' && liability.spouse === 'Nil' ? 'No liabilities reported in this category' : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      // Total section
+      if (liability.total && liability.total !== 'Nil' && liability.total !== 'Rs 70') {
+        detailsHTML += `
+          <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fef2f2, #fee2e2); border-radius: 10px; text-align: center; border: 2px solid #ef4444;">
+            <div style="font-size: 0.9em; color: #991b1b; font-weight: 700; margin-bottom: 5px; text-transform: uppercase;">
+              Total Liability
+            </div>
+            <div style="font-size: 2em; font-weight: 900; background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              ${formatCurrency(liability.total)}
+            </div>
+          </div>
+        `;
+      }
+
+      detailsHTML += `
+          </div>
+        </div>
+      `;
+    });
+
+    // No liabilities message if all are Nil
+  } else {
+    detailsHTML += `
+      <div class="section-header-main reveal">
+        <h2><span class="icon">💳</span>Liabilities</h2>
+      </div>
+      <div class="details-section reveal">
+        <div class="summary-card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7);">
+          <div style="text-align: center; padding: 50px;">
+            <div style="font-size: 5em; margin-bottom: 20px;">✅</div>
+            <div style="font-size: 1.5em; font-weight: 800; color: #166534; margin-bottom: 10px;">
+              No Liabilities Declared
+            </div>
+            <div style="color: #15803d; font-size: 1.1em;">
+              Clean financial record - No loans or dues reported
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+// ========================================
+// PROFESSIONS
+// ========================================
+if (candidateData.professions) {
+  const hasProfessionData = candidateData.professions.self || candidateData.professions.spouse;
+  
+  if (hasProfessionData) {
+    detailsHTML += `
+      <div class="details-section reveal">
+        <div class="summary-card">
+          <div class="summary-card-title">💼 Professions</div>
+          <div class="grid-2">
+            ${candidateData.professions.self ? `
+              <div class="card-item" style="border-left: 4px solid #7c3aed;">
+                <div style="font-weight: 700; color: #5b21b6; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3em;">👤</span>
+                  Self
+                </div>
+                <div class="data-value" style="font-size: 1.05em; line-height: 1.6; color: #1e293b;">
+                  ${safeText(candidateData.professions.self)}
+                </div>
+              </div>
+            ` : ''}
+            
+            ${candidateData.professions.spouse ? `
+              <div class="card-item" style="border-left: 4px solid #f59e0b;">
+                <div style="font-weight: 700; color: #92400e; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.3em;">👰</span>
+                  Spouse
+                </div>
+                <div class="data-value" style="font-size: 1.05em; line-height: 1.6; color: #1e293b;">
+                  ${safeText(candidateData.professions.spouse)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+// ========================================
+// OTHER ELECTIONS - HISTORICAL DATA
+// ========================================
+if (candidateData.otherElections && Array.isArray(candidateData.otherElections) && candidateData.otherElections.length > 0) {
+  detailsHTML += `
+    <div class="section-header-main reveal">
+      <h2><span class="icon">🗳️</span>Electoral History</h2>
+    </div>
+    <div class="details-section reveal">
+      <div class="summary-card">
+        <div class="summary-card-title">📊 Past Elections Contested (${candidateData.otherElections.length})</div>
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Election</th>
+                <th>Declared Assets</th>
+                <th>Criminal Cases</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${candidateData.otherElections.map((election, idx) => {
+                const assetMatch = election.declaredAssets?.match(/Rs\s*([\d,]+)/);
+                const assetAmount = assetMatch ? parseInt(assetMatch[1].replace(/,/g, '')) : 0;
+                const prevAssetMatch = idx < candidateData.otherElections.length - 1 ? 
+                  candidateData.otherElections[idx + 1].declaredAssets?.match(/Rs\s*([\d,]+)/) : null;
+                const prevAmount = prevAssetMatch ? parseInt(prevAssetMatch[1].replace(/,/g, '')) : 0;
+                
+                const trend = idx < candidateData.otherElections.length - 1 ? 
+                  (assetAmount > prevAmount ? '📈 Increased' : 
+                   assetAmount < prevAmount ? '📉 Decreased' : '➡️ Same') : 
+                  '—';
+                
+                const casesColor = election.declaredCases > 0 ? '#dc2626' : '#10b981';
+                
+                return `
+                  <tr>
+                    <td><strong>${idx + 1}</strong></td>
+                    <td>
+                      <span class="badge badge-info">${safeText(election.declarationIn)}</span>
+                    </td>
+                    <td>
+                      <strong style="color: #7c3aed; font-size: 1.1em;">
+                        ${safeText(election.declaredAssets)}
+                      </strong>
+                    </td>
+                    <td>
+                      <span class="badge ${election.declaredCases > 0 ? 'badge-danger' : 'badge-success'}">
+                        ${election.declaredCases} ${election.declaredCases === 1 ? 'Case' : 'Cases'}
+                      </span>
+                    </td>
+                    <td>${trend}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
     // ========================================
     // ASSET SUMMARY
     // ========================================
@@ -2034,7 +3207,7 @@ const parseIncomeSeries = (incomeText) => {
     infoItems.push(`
       <div class="info-item">
         <div class="info-label">🎂 Age</div>
-        <div class="info-value">${escapeHtml(ageDisplay)}</div>
+        <div class="info-value" data-field="age">${escapeHtml(ageDisplay)}</div>
       </div>
     `);
   }
@@ -2043,7 +3216,7 @@ const parseIncomeSeries = (incomeText) => {
   infoItems.push(`
     <div class="info-item" style="grid-column: 1 ;">
       <div class="info-label">🎓 Education</div>
-      <div class="info-value" style="line-height: 1.6;">${escapeHtml(data.education)}</div>
+      <div class="info-value" data-field="education" style="line-height: 1.6;">${escapeHtml(data.education)}</div>
     </div>
   `);
 
@@ -2053,7 +3226,7 @@ const parseIncomeSeries = (incomeText) => {
     infoItems.push(`
       <div class="info-item">
         <div class="info-label">👤 Gender</div>
-        <div class="info-value">${escapeHtml(data.gender)}</div>
+        <div class="info-value" data-field="gender">${escapeHtml(data.gender)}</div>
       </div>
     `);
   }
@@ -2081,8 +3254,10 @@ const parseIncomeSeries = (incomeText) => {
       <div class="header-content">
         <div class="profile-section">
           <div class="profile-image-wrapper">
-            <img src="${escapeHtml(data.imageUrl || 'https://via.placeholder.com/200')}" alt="${escapeHtml(data.name)}" class="profile-image" onerror="this.src='https://via.placeholder.com/200'">
-            <div class="verification-badge" title="Verified Profile">✓</div>
+           <img src="${escapeHtml(imageUrl)}" 
+     alt="${escapeHtml(data.name)}" 
+     class="profile-image" 
+     onerror="this.src='https://via.placeholder.com/200/667eea/ffffff?text=${encodeURIComponent(data.name?.charAt(0) || '?')}'">   <div class="verification-badge" title="Verified Profile">✓</div>
           </div>
           <div class="profile-info">
             <h1 class="member-name">${escapeHtml(data.name)}</h1>

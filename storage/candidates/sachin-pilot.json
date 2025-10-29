@@ -1,0 +1,288 @@
+{
+  "name": "SACHIN+PILOT",
+  "timestamp": "2025-10-29T20:55:11.071Z",
+  "metadata": {
+    "constituency": "Ajmer",
+    "party": "INC",
+    "source": "appwrite-candidate"
+  },
+  "data": {
+    "name": "SACHIN PILOT",
+    "age": 31,
+    "constituency": "Ajmer  (RAJASTHAN)",
+    "party": "INC",
+    "imageUrl": "N/A",
+    "state": "N/A",
+    "relation": "LATE RAJESH PIALOT",
+    "voterEnrollment": null,
+    "education": "Post Graduate 10TH AND 12TH FROM AIR FORCE BAL BHARTI, NEW DELHI.B.A. HONS. IN ENGLISH FROM ST. STEPHENS COLLEGE, DELHI UNIVERSITY, NEW DELHI.DIPLOMA IN MARKETING FROM I.M.T. GHAZIABAD,U.P. M.B.A. FROM WHARTON BUSINESS SCHOOL FROM THE UNIVERSITY OF PENNYSYLVANIA, U.S.A",
+    "professions": {
+      "self": "NA",
+      "spouse": "NA"
+    },
+    "candidate": {
+      "name": "SACHIN PILOT",
+      "age": 31,
+      "constituency": "Ajmer  (RAJASTHAN)",
+      "party": "INC",
+      "imageUrl": "N/A",
+      "state": "N/A",
+      "relation": "LATE RAJESH PIALOT",
+      "voterEnrollment": null,
+      "education": "Post Graduate 10TH AND 12TH FROM AIR FORCE BAL BHARTI, NEW DELHI.B.A. HONS. IN ENGLISH FROM ST. STEPHENS COLLEGE, DELHI UNIVERSITY, NEW DELHI.DIPLOMA IN MARKETING FROM I.M.T. GHAZIABAD,U.P. M.B.A. FROM WHARTON BUSINESS SCHOOL FROM THE UNIVERSITY OF PENNYSYLVANIA, U.S.A",
+      "professions": {
+        "self": "NA",
+        "spouse": "NA"
+      }
+    },
+    "otherElections": [
+      {
+        "declarationIn": "Loksabha 2014",
+        "declaredAssets": "Rs5,39,34,000~5 Crore+",
+        "declaredCases": 0
+      },
+      {
+        "declarationIn": "Union Council of Ministers 2013",
+        "declaredAssets": "Rs5,36,81,203~5 Crore+",
+        "declaredCases": 0
+      },
+      {
+        "declarationIn": "Union Council of Ministers 2012",
+        "declaredAssets": "Rs5,47,05,000~5 Crore+",
+        "declaredCases": 0
+      },
+      {
+        "declarationIn": "Union Council of Ministers 2011",
+        "declaredAssets": "Rs4,96,52,000~4 Crore+",
+        "declaredCases": 0
+      },
+      {
+        "declarationIn": "Lok Sabha 2004",
+        "declaredAssets": "Rs25,55,000~25 Lacs+",
+        "declaredCases": 0
+      }
+    ],
+    "crimeOMeter": {
+      "cases": 0
+    },
+    "incomeTax": [],
+    "criminalCases": {
+      "briefIPC": [],
+      "pendingCases": [],
+      "convictedCases": [
+        "No Cases"
+      ]
+    },
+    "movableAssets": [
+      {
+        "srNo": "i",
+        "description": "Cash",
+        "self": "Rs 70,000",
+        "spouse": "Rs 25,000",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 95,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "ii",
+        "description": "Deposits in Banks, Financial Institutions and Non-Banking Financial Companies",
+        "self": "UNION BANK OF INDIA, NEW DELHIS.B.I. SANSAD BHAVAN, NEW DELHISTATE BANK OF PATIALA, GHAZIABAD, U.P.: Rs 10,95,946",
+        "spouse": "UNION BANK OF INDIA, NEW DELHIH.D.F.C. BANK, NEW DELHI: Rs 23,758",
+        "huf": "UNION BANK OF INDIA, NEW DELHIF.D.R. UNION BANK OF INDIA, NEW DELHI: Rs 2,14,750",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 35,88,233",
+        "total": "Nil"
+      },
+      {
+        "srNo": "iii",
+        "description": "Bonds, Debentures and Shares in companies",
+        "self": "3000 SHARES@ RS10 EACH: Rs 30,000",
+        "spouse": "3500 SHARES @ RS 10 EACH: Rs 10",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 65,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "iv",
+        "description": "(a) NSS, Postal Savings etc",
+        "self": "P.P.F.UIT ULIP: Rs 99,724",
+        "spouse": "P.P.F.: Rs 1,79,946",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 4,69,325",
+        "total": "Nil"
+      },
+      {
+        "srNo": "iv",
+        "description": "(b)LIC or other insurance Policies **Not counted in total assets",
+        "self": "L.I.C. POLICY: Rs 6,34,000",
+        "spouse": "L.I.C. POLICY: Rs 1,52,000",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 7,86,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "v",
+        "description": "Motor Vehicles (details of make, etc.)",
+        "self": "Nil",
+        "spouse": "XILO MAHINDRA,MODEL 2009: Rs 7,50,000",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 7,50,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "vi",
+        "description": "Jewellery (give details weight value)",
+        "self": "1 TOLA GOLD CHAINRING: Rs 16,000",
+        "spouse": "20 TOLAS GOLD15 KGS SILVER: Rs 3,00,000",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 6,22,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "vii",
+        "description": "Other assets, such as values of claims / interests",
+        "self": "Nil",
+        "spouse": "Nil",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Nil",
+        "total": "Nil"
+      }
+    ],
+    "immovableAssets": [
+      {
+        "srNo": "i",
+        "description": "Agricultural Land",
+        "self": "DANKAUR, ZILLA GAUTAMBUDDHANAGAR, U.P. 38BIGHAS,15 BISWIS,14 BISWANSIS | Value: Rs 2,54,00,000",
+        "spouse": "Nil",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 3,50,00,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "ii",
+        "description": "Non Agricultural Land",
+        "self": "Nil",
+        "spouse": "Nil",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Nil",
+        "total": "Nil"
+      },
+      {
+        "srNo": "iii",
+        "description": "Buildings",
+        "self": "500 VARG GAZ ANCESTRAL HOME. GAUTAMBUDDHA NAGAR, U.P. | Value: Rs 9,00,000",
+        "spouse": "UNITECH TRADE CENTRE,SUSHANT LOK - 1,SECTOR 43, GURGAON, HARYANA. 1738 SQR. FT. | Value: Rs 50,00,000",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Rs 59,00,000",
+        "total": "Nil"
+      },
+      {
+        "srNo": "iv",
+        "description": "Houses",
+        "self": "Nil",
+        "spouse": "Nil",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Nil",
+        "total": "Nil"
+      },
+      {
+        "srNo": "v",
+        "description": "Others",
+        "self": "Nil",
+        "spouse": "Nil",
+        "huf": "Nil",
+        "dependent1": "Nil",
+        "dependent2": "Nil",
+        "dependent3": "Nil",
+        "total": "Nil"
+      }
+    ],
+    "liabilities": [],
+    "profession": {
+      "self": "NA",
+      "spouse": "NA"
+    },
+    "sourcesOfIncome": {
+      "self": "Nil",
+      "spouse": "NA",
+      "dependent": "NA"
+    },
+    "contracts": {
+      "candidate": "NA",
+      "spouse": "NA",
+      "dependents": "NA",
+      "huf": "NA",
+      "partnerships": "NA",
+      "privateCompanies": "NA"
+    },
+    "summary": {
+      "totalAssets": "Rs 4,64,89,558 ~4 Crore+",
+      "totalLiabilities": "Nil"
+    },
+    "assetLink": "https://www.myneta.info/ls2009/candidate.php?candidate_id=5847",
+    "source": "appwrite",
+    "fetchedAt": "2025-10-29T20:50:27.014Z",
+    "aiSummary": {
+      "available": true,
+      "politician": "SACHIN PILOT",
+      "summary": {
+        "identity": "Sachin Pilot is a prominent young leader of the Indian National Congress (INC), known for his organizational skills and having served as a Union Minister and Deputy Chief Minister of Rajasthan.",
+        "promisesVsReality": "As Deputy CM, he focused on farm loan waivers and rural development schemes, achieving partial success but facing internal friction regarding implementation speed. His promise of internal party balance often clashed with the reality of factional politics.",
+        "controversies": "The most significant controversy was the 2020 political crisis in Rajasthan where he led a rebellion against CM Ashok Gehlot, leading to his temporary sidelining from the state government.",
+        "criticView": "Critics often label him as overly ambitious, accusing him of prioritizing personal power gains over party unity, particularly during the 2020 political standoff.",
+        "supporterView": "Supporters view him as a dynamic, modern face of the INC, praising his administrative experience, connect with youth, and ability to mobilize support in the Jat-Meena belt.",
+        "economicRecord": "During his tenure as Deputy CM, the focus was on reviving stalled infrastructure projects and managing the state's finances post-elections, though major structural reforms were limited by the short tenure.",
+        "definingMoments": "His successful tenure as the Rajasthan Congress President leading the party to victory in 2018; the 2020 political rebellion; and his subsequent reinstatement in a key role.",
+        "threats": "The primary threat remains the deeply entrenched factional rivalry with Ashok Gehlot, which limits his current influence within the Rajasthan unit. He also faces pressure to deliver electoral wins in his constituency.",
+        "currentTalk": "Current discussions revolve around his role in the post-election setup in Rajasthan, his potential future ministerial berth, and whether he will be given a larger organizational role at the national level.",
+        "bottomLine": "Pilot is a high-potential leader whose career is currently defined by navigating internal party power dynamics in Rajasthan while aiming for a larger role in national politics."
+      },
+      "parsedAt": "2025-10-29T20:50:28.425Z",
+      "totalWordCount": 294,
+      "responseTime": 1579
+    },
+    "metadata": {
+      "totalTime": 1582,
+      "concurrentTime": 1582,
+      "timestamp": "2025-10-29T20:50:28.425Z",
+      "mode": "direct-link",
+      "sources": {
+        "myneta": true,
+        "ai": true
+      },
+      "performance": {
+        "myNetaTime": 171,
+        "aiTime": 1579,
+        "efficiency": 1.11
+      }
+    },
+    "meow": "2993d2fcd9f8d634da75e49ac5f3b789:fbea0387b9066ac74de8353adb17fe0d",
+    "bhaw": "e68b7738f2161a4ef17ac439b2d5ef4c:4b8ee348ce177cdfd70748fb67b228aa",
+    "searchUrl": "https://www.myneta.info/search_myneta.php?q=SACHIN%2BPILOT",
+    "timestamp": "2025-10-29T20:50:29.077Z"
+  },
+  "version": "1.0"
+}

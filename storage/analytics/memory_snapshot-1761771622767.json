@@ -1,0 +1,84 @@
+{
+  "eventType": "memory_snapshot",
+  "timestamp": "2025-10-29T21:00:22.767Z",
+  "data": {
+    "records": [
+      {
+        "timestamp": "2025-10-29T20:54:25.796Z",
+        "uptime": 302,
+        "memory": {
+          "rss": 231,
+          "heapTotal": 40,
+          "heapUsed": 37,
+          "external": 144,
+          "arrayBuffers": 140
+        },
+        "cpu": {
+          "user": 3718,
+          "system": 1375
+        },
+        "connections": {
+          "websocket": 0,
+          "http": 0
+        }
+      },
+      {
+        "timestamp": "2025-10-29T20:59:25.808Z",
+        "uptime": 602,
+        "memory": {
+          "rss": 232,
+          "heapTotal": 47,
+          "heapUsed": 35,
+          "external": 144,
+          "arrayBuffers": 140
+        },
+        "cpu": {
+          "user": 4812,
+          "system": 1625
+        },
+        "connections": {
+          "websocket": 0,
+          "http": 0
+        }
+      }
+    ],
+    "metadata": {
+      "createdAt": "2025-10-29T20:49:25.775Z",
+      "platform": "Local",
+      "nodeVersion": "v22.9.0",
+      "environment": "production"
+    },
+    "stats": {
+      "current": {
+        "timestamp": "2025-10-29T20:59:25.808Z",
+        "uptime": 602,
+        "memory": {
+          "rss": 232,
+          "heapTotal": 47,
+          "heapUsed": 35,
+          "external": 144,
+          "arrayBuffers": 140
+        },
+        "cpu": {
+          "user": 4812,
+          "system": 1625
+        },
+        "connections": {
+          "websocket": 0,
+          "http": 0
+        }
+      },
+      "average": {
+        "rss": 232,
+        "heapUsed": 36
+      },
+      "peak": {
+        "rss": 232,
+        "heapUsed": 37,
+        "timestamp": "2025-10-29T20:54:25.796Z"
+      },
+      "total": 2,
+      "retention": "0 hours"
+    }
+  }
+}

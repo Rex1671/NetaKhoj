@@ -1,0 +1,22 @@
+{
+  "eventType": "http_request",
+  "timestamp": "2025-10-29T20:55:10.962Z",
+  "data": {
+    "sessionId": "sess_1761771310951_acdd16e83b08df40",
+    "method": "GET",
+    "path": "/",
+    "query": {
+      "name": "SACHIN PILOT",
+      "type": "MP",
+      "constituency": "Ajmer",
+      "party": "INC",
+      "meow": "5847",
+      "bhaw": "ls2009"
+    },
+    "statusCode": 304,
+    "duration": 8,
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "timestamp": "2025-10-29T20:55:10.962Z"
+  }
+}
