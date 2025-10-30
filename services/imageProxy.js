@@ -1,7 +1,6 @@
 // services/imageProxy.js
 import crypto from 'crypto';
 import { createLogger } from '../utils/logger.js';
-import fileStorage from '../utils/fileStorage.js';
 
 const logger = createLogger('IMAGE-PROXY');
 
@@ -25,31 +24,20 @@ class ImageProxyService {
    */
   async _loadMappings() {
     try {
-      const result = await fileStorage.loadImageMappings();
-      if (result.mappings && Object.keys(result.mappings).length > 0) {
-        this.urlMap = new Map(Object.entries(result.mappings));
-        // Rebuild reverse map
-        this.reverseMap.clear();
-        this.urlMap.forEach((url, id) => {
-          this.reverseMap.set(url, id);
-        });
-        logger.success('MAPPINGS-LOADED', `Loaded ${this.urlMap.size} image mappings from storage`);
-      } else {
-        logger.info('MAPPINGS-LOADED', 'No existing mappings found, starting fresh');
-      }
+      // Since loadImageMappings was removed, just initialize empty maps
+      logger.info('MAPPINGS-LOADED', 'Starting with empty mappings (loadImageMappings removed)');
     } catch (error) {
-      logger.error('MAPPINGS-LOAD-FAILED', 'Failed to load image mappings', error);
+      logger.error('MAPPINGS-LOAD-FAILED', 'Failed to initialize mappings', error);
     }
   }
 
   /**
-   * Save mappings to persistent storage
+   * Save mappings to persistent storage (disabled)
    */
   async _saveMappings() {
     try {
-      const mappings = Object.fromEntries(this.urlMap);
-      await fileStorage.saveImageMappings(mappings);
-      logger.info('MAPPINGS-SAVED', `Saved ${this.urlMap.size} mappings to storage`);
+      // Since saveImageMappings was removed, just log
+      logger.info('MAPPINGS-SAVED', `Would save ${this.urlMap.size} mappings (disabled)`);
     } catch (error) {
       logger.error('MAPPINGS-SAVE-FAILED', 'Failed to save image mappings', error);
     }
@@ -87,7 +75,7 @@ class ImageProxyService {
     this.reverseMap.set(url, imageId);
     this.stats.created++;
 
-    // Save mappings to persistent storage
+    // Save mappings to persistent storage (disabled)
     this._saveMappings();
 
     logger.success('ID-CREATED', `Created image ID`, {
@@ -183,7 +171,7 @@ class ImageProxyService {
         this.reverseMap.set(url, id);
       });
 
-      // Save updated mappings
+      // Save updated mappings (disabled)
       this._saveMappings();
 
       logger.info('CLEANUP', `Cleaned up ${before - this.urlMap.size} old mappings`, {

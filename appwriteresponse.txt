@@ -793,3 +793,109 @@
   },
   "responseSize": 97319
 }
+
+================================================================================
+{
+  "timestamp": "2025-10-30T09:38:23.574Z",
+  "functionName": "fetchMemberFromAppwrite (SECONDARY)",
+  "params": {
+    "name": "Narendra+Modi",
+    "type": "MP",
+    "constituency": "VARANASI"
+  },
+  "response": {
+    "found": true,
+    "type": "MP",
+    "name": "Narendra Modi",
+    "imageUrl": "https://prsindia.org/files/mptrack/18-lok-sabha/profile_image/180466.jpg",
+    "state": "Uttar Pradesh",
+    "constituency": "Varanasi",
+    "party": "Bharatiya Janata Party",
+    "termStart": "09-06-2024",
+    "termEnd": "In Office",
+    "noOfTerm": "Third Term",
+    "membership": "Elected",
+    "age": "74",
+    "gender": "Male",
+    "education": "Graduate",
+    "attendance": "N/A",
+    "natAttendance": "N/A",
+    "stateAttendance": "N/A",
+    "debates": "0",
+    "natDebates": "N/A",
+    "stateDebates": "N/A",
+    "questions": "0",
+    "natQuestions": "N/A",
+    "stateQuestions": "N/A",
+    "pmb": "0",
+    "natPMB": "0",
+    "statePMB": "N/A",
+    "attendanceTable": "",
+    "debatesTable": "",
+    "questionsTable": "",
+    "_meta": {
+      "searchedAs": "MP",
+      "foundAs": "MP",
+      "source": "PRS India",
+      "scrapedAt": "2025-10-30T09:38:24.026Z"
+    },
+    "_timing": {
+      "duration": "1114ms",
+      "timestamp": "2025-10-30T09:38:24.026Z"
+    }
+  },
+  "responseSize": 814
+}
+
+================================================================================
+{
+  "timestamp": "2025-10-30T09:39:20.937Z",
+  "functionName": "fetchMemberFromAppwrite (SECONDARY)",
+  "params": {
+    "name": "Narendra+Modi",
+    "type": "MP",
+    "constituency": "VARANASI"
+  },
+  "response": {
+    "found": true,
+    "type": "MP",
+    "name": "Narendra Modi",
+    "imageUrl": "https://prsindia.org/files/mptrack/18-lok-sabha/profile_image/180466.jpg",
+    "state": "Uttar Pradesh",
+    "constituency": "Varanasi",
+    "party": "Bharatiya Janata Party",
+    "termStart": "09-06-2024",
+    "termEnd": "In Office",
+    "noOfTerm": "Third Term",
+    "membership": "Elected",
+    "age": "74",
+    "gender": "Male",
+    "education": "Graduate",
+    "attendance": "N/A",
+    "natAttendance": "N/A",
+    "stateAttendance": "N/A",
+    "debates": "0",
+    "natDebates": "N/A",
+    "stateDebates": "N/A",
+    "questions": "0",
+    "natQuestions": "N/A",
+    "stateQuestions": "N/A",
+    "pmb": "0",
+    "natPMB": "0",
+    "statePMB": "N/A",
+    "attendanceTable": "",
+    "debatesTable": "",
+    "questionsTable": "",
+    "_meta": {
+      "searchedAs": "MP",
+      "foundAs": "MP",
+      "source": "PRS India",
+      "scrapedAt": "2025-10-30T09:39:21.415Z"
+    },
+    "_timing": {
+      "duration": "806ms",
+      "timestamp": "2025-10-30T09:39:21.415Z"
+    }
+  },
+  "responseSize": 813
+}
