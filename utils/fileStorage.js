@@ -1,4 +1,4 @@
- thi// utils/fileStorage.js - RESULT STORAGE SYSTEM
+// utils/fileStorage.js - RESULT STORAGE SYSTEM
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -16,7 +16,8 @@ class FileStorage {
       candidates: path.join(this.storageDir, 'candidates'),
       prs: path.join(this.storageDir, 'prs'),
       analytics: path.join(this.storageDir, 'analytics'),
-      cache: path.join(this.storageDir, 'cache')
+      cache: path.join(this.storageDir, 'cache'),
+      images: path.join(this.storageDir, 'images')
     };
 
     this._ensureDirectories();
@@ -79,10 +80,10 @@ class FileStorage {
     try {
       fs.writeFileSync(filepath, JSON.stringify(record, null, 2), 'utf8');
       logger.success('SAVE', `Candidate data saved: ${name}`, { filepath });
-      
+
       // Also append to daily log
       this._appendToDailyLog('candidates', record);
-      
+
       return { success: true, filepath };
     } catch (error) {
       logger.error('SAVE', `Failed to save candidate: ${name}`, error);
@@ -106,9 +107,9 @@ class FileStorage {
     try {
       fs.writeFileSync(filepath, JSON.stringify(record, null, 2), 'utf8');
       logger.success('SAVE', `PRS data saved: ${name} (${type})`, { filepath });
-      
+
       this._appendToDailyLog('prs', record);
-      
+
       return { success: true, filepath };
     } catch (error) {
       logger.error('SAVE', `Failed to save PRS: ${name}`, error);
@@ -128,10 +129,10 @@ class FileStorage {
 
     try {
       fs.writeFileSync(filepath, JSON.stringify(record, null, 2), 'utf8');
-      
+
       // Also append to aggregated analytics
       this._appendToAnalyticsLog(record);
-      
+
       return { success: true, filepath };
     } catch (error) {
       logger.error('SAVE', 'Failed to save analytics', error);
@@ -154,7 +155,7 @@ class FileStorage {
 
       const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
       logger.info('READ', `Candidate data retrieved: ${name}`);
-      
+
       return { found: true, data };
     } catch (error) {
       logger.error('READ', `Failed to read candidate: ${name}`, error);
@@ -173,7 +174,7 @@ class FileStorage {
 
       const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
       logger.info('READ', `PRS data retrieved: ${name} (${type})`);
-      
+
       return { found: true, data };
     } catch (error) {
       logger.error('READ', `Failed to read PRS: ${name}`, error);
@@ -198,7 +199,7 @@ class FileStorage {
         const filepath = path.join(this.categories.candidates, file);
         try {
           const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-          
+
           if (data.name.toLowerCase().includes(lowerQuery)) {
             results.push({
               name: data.name,
@@ -257,7 +258,7 @@ class FileStorage {
     try {
       const files = fs.readdirSync(this.categories.analytics);
       const cutoffDate = Date.now() - (days * 24 * 60 * 60 * 1000);
-      
+
       const summary = {
         totalEvents: 0,
         eventsByType: {},
@@ -503,3 +504,45 @@ class FileStorage {
 }
 
 export default new FileStorage();
+    / /   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+     / /   I M A G E   M A P P I N G S   P E R S I S T E N C E 
+     / /   = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+ 
+     a s y n c   s a v e I m a g e M a p p i n g s ( m a p p i n g s )   { 
+         c o n s t   f i l e n a m e   =   " i m a g e - m a p p i n g s . j s o n " ; 
+         c o n s t   f i l e p a t h   =   p a t h . j o i n ( t h i s . c a t e g o r i e s . i m a g e s ,   f i l e n a m e ) ; 
+ 
+         c o n s t   r e c o r d   =   { 
+             t i m e s t a m p :   n e w   D a t e ( ) . t o I S O S t r i n g ( ) , 
+             m a p p i n g s , 
+             v e r s i o n :   " 1 . 0 " 
+         } ; 
+ 
+         t r y   { 
+             f s . w r i t e F i l e S y n c ( f i l e p a t h ,   J S O N . s t r i n g i f y ( r e c o r d ,   n u l l ,   2 ) ,   " u t f 8 " ) ; 
+             l o g g e r . s u c c e s s ( " S A V E " ,   ` I m a g e   m a p p i n g s   s a v e d :   $ { O b j e c t . k e y s ( m a p p i n g s ) . l e n g t h }   m a p p i n g s ` ,   {   f i l e p a t h   } ) ; 
+             r e t u r n   {   s u c c e s s :   t r u e ,   f i l e p a t h   } ; 
+         }   c a t c h   ( e r r o r )   { 
+             l o g g e r . e r r o r ( " S A V E " ,   ` F a i l e d   t o   s a v e   i m a g e   m a p p i n g s ` ,   e r r o r ) ; 
+             r e t u r n   {   s u c c e s s :   f a l s e ,   e r r o r :   e r r o r . m e s s a g e   } ; 
+         } 
+     } 
+ 
+     a s y n c   l o a d I m a g e M a p p i n g s ( )   { 
+         c o n s t   f i l e n a m e   =   " i m a g e - m a p p i n g s . j s o n " ; 
+         c o n s t   f i l e p a t h   =   p a t h . j o i n ( t h i s . c a t e g o r i e s . i m a g e s ,   f i l e n a m e ) ; 
+ 
+         t r y   { 
+             i f   ( ! f s . e x i s t s S y n c ( f i l e p a t h ) )   { 
+                 r e t u r n   {   f o u n d :   f a l s e ,   m a p p i n g s :   { }   } ; 
+             } 
+ 
+             c o n s t   d a t a   =   J S O N . p a r s e ( f s . r e a d F i l e S y n c ( f i l e p a t h ,   " u t f 8 " ) ) ; 
+             l o g g e r . i n f o ( " R E A D " ,   ` I m a g e   m a p p i n g s   l o a d e d :   $ { O b j e c t . k e y s ( d a t a . m a p p i n g s   | |   { } ) . l e n g t h }   m a p p i n g s ` ) ; 
+             r e t u r n   {   f o u n d :   t r u e ,   m a p p i n g s :   d a t a . m a p p i n g s   | |   { }   } ; 
+         }   c a t c h   ( e r r o r )   { 
+             l o g g e r . e r r o r ( " R E A D " ,   ` F a i l e d   t o   l o a d   i m a g e   m a p p i n g s ` ,   e r r o r ) ; 
+             r e t u r n   {   f o u n d :   f a l s e ,   m a p p i n g s :   { } ,   e r r o r :   e r r o r . m e s s a g e   } ; 
+         } 
+     }  
+ 
