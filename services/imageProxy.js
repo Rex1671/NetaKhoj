@@ -1,3 +1,4 @@
+// services/imageProxy.js
 import crypto from 'crypto';
 import { createLogger } from '../utils/logger.js';
 
@@ -17,9 +18,12 @@ class ImageProxyService {
     this._loadMappings();
   }
 
- 
+  /**
+   * Load mappings from persistent storage
+   */
   async _loadMappings() {
     try {
+      // Since loadImageMappings was removed, just initialize empty maps
       logger.info('MAPPINGS-LOADED', 'Starting with empty mappings (loadImageMappings removed)');
     } catch (error) {
       logger.error('MAPPINGS-LOAD-FAILED', 'Failed to initialize mappings', error);
@@ -124,7 +128,9 @@ class ImageProxyService {
       return originalUrl; // Return original URL as fallback
     }
 
-    const proxyUrl = `${baseUrl}/api/image/${imageId}`;
+    // For Railway deployment, use the full Railway URL
+    const railwayUrl = process.env.RAILWAY_STATIC_URL || baseUrl;
+    const proxyUrl = `${railwayUrl}/api/image/${imageId}`;
 
     logger.success('PROXY-CREATED', `Proxy URL created`, {
       imageId,
@@ -135,7 +141,9 @@ class ImageProxyService {
     return proxyUrl;
   }
 
-  
+  /**
+   * Get stats
+   */
   getStats() {
     return {
       totalMappings: this.urlMap.size,
@@ -145,10 +153,13 @@ class ImageProxyService {
     };
   }
 
-  
+  /**
+   * Clear old mappings (optional cleanup)
+   */
   cleanup() {
     const before = this.urlMap.size;
 
+    // Keep only last 10000 mappings
     if (this.urlMap.size > 10000) {
       const entries = Array.from(this.urlMap.entries());
       const toKeep = entries.slice(-10000);
@@ -161,6 +172,7 @@ class ImageProxyService {
         this.reverseMap.set(url, id);
       });
 
+      // Save updated mappings (disabled)
       this._saveMappings();
 
       logger.info('CLEANUP', `Cleaned up ${before - this.urlMap.size} old mappings`, {
@@ -175,7 +187,9 @@ class ImageProxyService {
     }
   }
 
-  
+  /**
+   * Debug: List all mappings
+   */
   listAllMappings() {
     const mappings = [];
     this.urlMap.forEach((url, id) => {
@@ -185,5 +199,6 @@ class ImageProxyService {
   }
 }
 
+// Export singleton instance
 const imageProxy = new ImageProxyService();
 export default imageProxy;
