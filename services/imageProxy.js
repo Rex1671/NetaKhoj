@@ -1,6 +1,7 @@
 // services/imageProxy.js
 import crypto from 'crypto';
 import { createLogger } from '../utils/logger.js';
+import fileStorage from '../utils/fileStorage.js';
 
 const logger = createLogger('IMAGE-PROXY');
 
@@ -14,6 +15,44 @@ class ImageProxyService {
       served: 0,
       errors: 0
     };
+
+    // Load existing mappings on startup
+    this._loadMappings();
+  }
+
+  /**
+   * Load mappings from persistent storage
+   */
+  async _loadMappings() {
+    try {
+      const result = await fileStorage.loadImageMappings();
+      if (result.mappings && Object.keys(result.mappings).length > 0) {
+        this.urlMap = new Map(Object.entries(result.mappings));
+        // Rebuild reverse map
+        this.reverseMap.clear();
+        this.urlMap.forEach((url, id) => {
+          this.reverseMap.set(url, id);
+        });
+        logger.success('MAPPINGS-LOADED', `Loaded ${this.urlMap.size} image mappings from storage`);
+      } else {
+        logger.info('MAPPINGS-LOADED', 'No existing mappings found, starting fresh');
+      }
+    } catch (error) {
+      logger.error('MAPPINGS-LOAD-FAILED', 'Failed to load image mappings', error);
+    }
+  }
+
+  /**
+   * Save mappings to persistent storage
+   */
+  async _saveMappings() {
+    try {
+      const mappings = Object.fromEntries(this.urlMap);
+      await fileStorage.saveImageMappings(mappings);
+      logger.info('MAPPINGS-SAVED', `Saved ${this.urlMap.size} mappings to storage`);
+    } catch (error) {
+      logger.error('MAPPINGS-SAVE-FAILED', 'Failed to save image mappings', error);
+    }
   }
 
   /**
@@ -27,7 +66,7 @@ class ImageProxyService {
     // Check if we already have an ID for this URL
     if (this.reverseMap.has(url)) {
       const existingId = this.reverseMap.get(url);
-      logger.info('ID-EXISTS', `Reusing existing ID for URL`, { 
+      logger.info('ID-EXISTS', `Reusing existing ID for URL`, {
         id: existingId,
         url: url.substring(0, 50) + '...'
       });
@@ -42,18 +81,21 @@ class ImageProxyService {
       .substring(0, 16);
 
     const imageId = `img_${hash}`;
-    
+
     // Store bidirectional mapping
     this.urlMap.set(imageId, url);
     this.reverseMap.set(url, imageId);
     this.stats.created++;
 
-    logger.success('ID-CREATED', `Created image ID`, { 
+    // Save mappings to persistent storage
+    this._saveMappings();
+
+    logger.success('ID-CREATED', `Created image ID`, {
       id: imageId,
       url: url.substring(0, 50) + '...',
       totalMappings: this.urlMap.size
     });
-    
+
     return imageId;
   }
 
@@ -62,7 +104,7 @@ class ImageProxyService {
    */
   getActualUrl(imageId) {
     const url = this.urlMap.get(imageId);
-    
+
     if (!url) {
       logger.warn('URL-NOT-FOUND', `No mapping found for image ID: ${imageId}`, {
         totalMappings: this.urlMap.size,
@@ -93,14 +135,14 @@ class ImageProxyService {
     }
 
     const imageId = this.generateImageId(originalUrl);
-    
+
     if (!imageId) {
       logger.error('ID-GENERATION-FAILED', 'Failed to generate image ID');
       return originalUrl; // Return original URL as fallback
     }
 
     const proxyUrl = `${baseUrl}/api/image/${imageId}`;
-    
+
     logger.success('PROXY-CREATED', `Proxy URL created`, {
       imageId,
       proxyUrl,
@@ -127,28 +169,31 @@ class ImageProxyService {
    */
   cleanup() {
     const before = this.urlMap.size;
-    
+
     // Keep only last 10000 mappings
     if (this.urlMap.size > 10000) {
       const entries = Array.from(this.urlMap.entries());
       const toKeep = entries.slice(-10000);
-      
+
       this.urlMap.clear();
       this.reverseMap.clear();
-      
+
       toKeep.forEach(([id, url]) => {
         this.urlMap.set(id, url);
         this.reverseMap.set(url, id);
       });
-      
+
+      // Save updated mappings
+      this._saveMappings();
+
       logger.info('CLEANUP', `Cleaned up ${before - this.urlMap.size} old mappings`, {
         before,
         after: this.urlMap.size
       });
     } else {
-      logger.info('CLEANUP', 'No cleanup needed', { 
+      logger.info('CLEANUP', 'No cleanup needed', {
         currentSize: this.urlMap.size,
-        maxSize: 10000 
+        maxSize: 10000
       });
     }
   }
