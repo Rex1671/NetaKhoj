@@ -740,7 +740,7 @@ app.use(cors({
     const allowedOrigins = IS_RAILWAY
       ? [
           process.env.RAILWAY_STATIC_URL,
-          'https://*.up.railway.app',
+          'https://fixkaro-web-production.up.railway.app/',
           ...(process.env.ALLOWED_ORIGINS?.split(',') || [])
         ]
       : config.server.allowedOrigins;
@@ -764,7 +764,7 @@ app.use(cors({
     }
   },
   credentials: true,
-  maxAge: 86400 // 24 hours
+  maxAge: 86400
 }));
 
 app.use(compression());
