@@ -96,7 +96,6 @@ async function testRawResponse() {
     console.log('Response Status:', response.status);
     console.log('Response OK:', response.ok);
 
-    // Parse and display the actual response body from the function
     if (rawResult.responseBody) {
       try {
         const actualData = JSON.parse(rawResult.responseBody);
@@ -130,7 +129,7 @@ async function runTests() {
   console.log('\nTests completed.');
 }
 
-// Run tests
+
 runTests().catch(console.error);
 
 export { runTests, testValidMP, testInvalidName, testMLA, testCacheHit, testHealthCheck, testStats };
