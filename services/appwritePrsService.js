@@ -390,7 +390,6 @@ _parseResponse(requestId, result, type) {
     responseBodyType: typeof result.responseBody
   });
 
-  // ✅ Appwrite Functions API returns 'responseBody', not 'response'
   let responseData;
   
   if (result.responseBody) {
@@ -412,7 +411,6 @@ _parseResponse(requestId, result, type) {
       return this._getEmptyResponse();
     }
   } 
-  // Fallback to 'response' (for direct function calls via Postman)
   else if (result.response) {
     try {
       responseData = typeof result.response === 'string'
@@ -423,7 +421,6 @@ _parseResponse(requestId, result, type) {
       return this._getEmptyResponse();
     }
   }
-  // If called directly (not via execution endpoint)
   else if (result.success) {
     responseData = result;
   }
@@ -434,7 +431,6 @@ _parseResponse(requestId, result, type) {
     return this._getEmptyResponse();
   }
 
-  // Validate response structure
   if (!responseData.success) {
     logger.warn(requestId, 'Function returned success=false', {
       error: responseData.error || 'Unknown error'
@@ -449,7 +445,6 @@ _parseResponse(requestId, result, type) {
     return this._getEmptyResponse();
   }
 
-  // ✅ Log the actual data we received
   logger.info(requestId, 'Valid PRS data received from Appwrite', {
     name: responseData.data.name,
     party: responseData.data.party,
@@ -459,7 +454,6 @@ _parseResponse(requestId, result, type) {
     totalFields: Object.keys(responseData.data).length
   });
 
-  // ✅ Normalize the flat data structure into nested format
   const normalized = this._normalizeData(responseData.data, type);
   
   logger.success(requestId, 'Data normalized successfully', {
@@ -473,7 +467,6 @@ _parseResponse(requestId, result, type) {
 }
 
   _normalizeData(data, type) {
-  // ✅ Appwrite returns flat data, we structure it for frontend
   return {
     found: true,
     source: 'appwrite-prs',

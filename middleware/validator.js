@@ -16,8 +16,6 @@ export const memberQueryValidator = [
   query('type').isIn(['MP', 'MLA']),
   query('constituency').optional().trim().escape().isLength({ min: 0, max: 100 }),
   query('party').optional().trim().escape().isLength({ min: 0, max: 100 }),
-  query('meow').optional().isNumeric().withMessage('meow must be a number'),
-  query('bhaw').optional().trim().escape().isLength({ min: 0, max: 50 }),
   validate
 ];
 

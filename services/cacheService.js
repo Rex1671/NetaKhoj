@@ -1,11 +1,10 @@
-// services/cacheService.js
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('CACHE');
 
 class CacheService {
   constructor() {
-    this.cache = new Map(); // ✅ THIS WAS MISSING!
+    this.cache = new Map(); 
     this.stats = {
       prs: { hits: 0, misses: 0, sets: 0, expirations: 0 },
       candidate: { hits: 0, misses: 0, sets: 0, expirations: 0 },
@@ -23,20 +22,19 @@ class CacheService {
 
   getTTL(type) {
     const ttls = {
-      image: 24 * 60 * 60 * 1000,      // 24 hours for images
-      prs: 60 * 60 * 1000,             // 1 hour for PRS data
-      candidate: 60 * 60 * 1000,       // 1 hour for candidate data
-      geojson: 24 * 60 * 60 * 1000     // 24 hours for geojson
+      image: 24 * 60 * 60 * 1000,     
+      prs: 60 * 60 * 1000,            
+      candidate: 60 * 60 * 1000,       
+      geojson: 24 * 60 * 60 * 1000     
     };
     
-    return ttls[type] || 60 * 60 * 1000; // Default 1 hour
+    return ttls[type] || 60 * 60 * 1000; 
   }
 
   set(type, key, value, ttl = null) {
     const cacheKey = this.getCacheKey(type, key);
     const expiresAt = Date.now() + (ttl || this.getTTL(type));
     
-    // Initialize stats for this type if it doesn't exist
     if (!this.stats[type]) {
       this.stats[type] = { hits: 0, misses: 0, sets: 0, expirations: 0 };
     }
@@ -50,7 +48,6 @@ class CacheService {
 
     this.stats[type].sets++;
     
-    // Log for image caching
     if (type === 'image') {
       this.logger.info('SET', `Cached image: ${key}`, {
         size: value?.buffer ? `${(value.buffer.length / 1024).toFixed(2)} KB` : 'unknown',
@@ -68,7 +65,6 @@ class CacheService {
     const cacheKey = this.getCacheKey(type, key);
     const entry = this.cache.get(cacheKey);
 
-    // Initialize stats for this type if it doesn't exist
     if (!this.stats[type]) {
       this.stats[type] = { hits: 0, misses: 0, sets: 0, expirations: 0 };
     }
@@ -79,7 +75,6 @@ class CacheService {
       return null;
     }
 
-    // Check expiration
     if (Date.now() > entry.expiresAt) {
       this.cache.delete(cacheKey);
       this.stats[type].misses++;
@@ -108,7 +103,6 @@ class CacheService {
     
     if (!entry) return false;
     
-    // Check if expired
     if (Date.now() > entry.expiresAt) {
       this.cache.delete(cacheKey);
       return false;
@@ -130,7 +124,6 @@ class CacheService {
 
   flush(type = null) {
     if (type) {
-      // Delete all entries of specific type
       let deleted = 0;
       for (const [key, entry] of this.cache.entries()) {
         if (entry.type === type) {
@@ -139,18 +132,15 @@ class CacheService {
         }
       }
       
-      // Reset stats for this type
       if (this.stats[type]) {
         this.stats[type] = { hits: 0, misses: 0, sets: 0, expirations: 0 };
       }
       
       this.logger.info('FLUSH', `Flushed cache type: ${type}`, { deleted });
     } else {
-      // Clear everything
       const size = this.cache.size;
       this.cache.clear();
       
-      // Reset all stats
       Object.keys(this.stats).forEach(key => {
         this.stats[key] = { hits: 0, misses: 0, sets: 0, expirations: 0 };
       });
@@ -208,16 +198,13 @@ class CacheService {
     let totalBytes = 0;
     
     for (const [key, entry] of this.cache.entries()) {
-      // Estimate key size
-      totalBytes += key.length * 2; // Rough estimate for string
+      totalBytes += key.length * 2; 
       
-      // Estimate value size
       if (entry.data?.buffer && Buffer.isBuffer(entry.data.buffer)) {
         totalBytes += entry.data.buffer.length;
       } else if (typeof entry.data === 'string') {
         totalBytes += entry.data.length * 2;
       } else if (entry.data) {
-        // Rough estimate for objects
         totalBytes += JSON.stringify(entry.data).length * 2;
       }
     }
@@ -230,10 +217,8 @@ class CacheService {
   }
 }
 
-// Create and export singleton instance
 const cacheService = new CacheService();
 
-// Auto-cleanup every 5 minutes
 setInterval(() => {
   cacheService.cleanup();
 }, 5 * 60 * 1000);

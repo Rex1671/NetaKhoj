@@ -219,6 +219,7 @@ function mergeCandidate(target, data) {
   delete cleanedCandidateData.timestamp;
   delete cleanedCandidateData.fetchedAt;
   delete cleanedCandidateData.metadata;
+  delete cleanedCandidateData.assetLink;
 
   // Proxy image URLs in candidate data
   if (cleanedCandidateData.imageUrl) {

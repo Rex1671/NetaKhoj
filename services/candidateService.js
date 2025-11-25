@@ -543,6 +543,9 @@ class CandidateService {
       logger.debug(requestId, 'Encrypted meow/bhaw', { encryptedMeow: encryptedMeow.substring(0, 20) + '...', encryptedBhaw: encryptedBhaw.substring(0, 20) + '...' });
     }
 
+    // Remove assetLink from candidateData before returning
+    delete candidateData.assetLink;
+
     return {
       data: {
         ...candidateData,

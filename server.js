@@ -702,108 +702,6 @@ const getClientIP = (req) => {
 const generateSessionId = () => {
   return `sess_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
 };
-
-// ============================================================================
-// ENHANCED MIDDLEWARE
-// ============================================================================
-
-// Enhanced Helmet configuration
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-hashes'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
-      scriptSrcAttr: ["'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://cdnjs.cloudflare.com", "https://use.fontawesome.com", "https://fonts.googleapis.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://unpkg.com", "https://cdnjs.cloudflare.com"],
-      fontSrc: ["'self'", "https://use.fontawesome.com", "https://cdnjs.cloudflare.com"],
-      objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
-    },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  },
-  noSniff: true,
-  xssFilter: true,
-  hidePoweredBy: true,
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
-}));
-
-// CORS with strict configuration
-app.use(cors({
-  origin: (origin, callback) => {
-    const allowedOrigins = IS_RAILWAY
-      ? [
-          process.env.RAILWAY_STATIC_URL,
-          'https://fixkaro-web-production.up.railway.app/',
-          ...(process.env.ALLOWED_ORIGINS?.split(',') || [])
-        ]
-      : config.server.allowedOrigins;
-
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed.includes('*')) {
-        const regex = new RegExp(allowed.replace('*', '.*'));
-        return regex.test(origin);
-      }
-      return allowed === origin;
-    });
-
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      logger.warn('CORS', 'Blocked origin', { origin });
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  maxAge: 86400
-}));
-
-app.use(compression());
-
-// Request size limits
-app.use(express.json({ limit: '10kb' })); // Limit JSON body size
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
-
-// Trust proxy configuration
-if (IS_RAILWAY) {
-  app.set('trust proxy', true);
-  logger.info('INIT', 'Trust proxy enabled (Railway environment)');
-} else if (process.env.BEHIND_PROXY === 'true') {
-  app.set('trust proxy', 'loopback');
-  logger.info('INIT', 'Trust proxy enabled for localhost');
-} else {
-  app.set('trust proxy', false);
-  logger.info('INIT', 'Trust proxy disabled (direct connection)');
-}
-
-// Session ID and IP tracking
-app.use((req, res, next) => {
-  req.sessionId = generateSessionId();
-  req.clientIP = getClientIP(req);
-  next();
-});
-
-// Apply security middleware
-app.use(ipBlocker);
-app.use(pathTraversalProtection);
-app.use(advancedRateLimit);
-app.use(validateRequest);
-app.use(requestLogger);
-
-// ============================================================================
-// ROUTES - SECURED
-// ============================================================================
-
-// Health check - minimal information exposure
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'healthy',
@@ -834,6 +732,26 @@ app.get('/health/detailed', (req, res) => {
       node: process.version,
       platform: IS_RAILWAY ? 'Railway' : 'Local',
       env: process.env.NODE_ENV || 'production'
+    }
+  });
+
+});
+
+// Welcome endpoint
+app.get('/api/welcome', (req, res) => {
+  logger.info(req.sessionId, 'Welcome endpoint accessed', {
+    method: req.method,
+    path: req.path,
+    ip: req.clientIP,
+    userAgent: req.headers['user-agent']
+  });
+
+  res.json({
+    message: 'Welcome to the API service!',
+    timestamp: new Date().toISOString(),
+    request: {
+      method: req.method,
+      path: req.path
     }
   });
 });
@@ -927,21 +845,87 @@ app.get('/api/search-proxy', async (req, res) => {
     const data = await response.json();
     const duration = Date.now() - startTime;
 
-    logger.success(req.sessionId, `Search completed: ${data.suggestions?.length || 0} results`, {
+    // ✅ GET BASE URL FOR PROXY
+    let host = req.get('host');
+    if (host.includes('0.0.0.0')) {
+      host = host.replace('0.0.0.0', 'localhost');
+    }
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${host}`;
+
+    // ✅ PROCESS EACH SUGGESTION - PROXY IMAGES & REMOVE SENSITIVE DATA
+    const processedSuggestions = (data.suggestions || []).map(suggestion => {
+      const processed = { ...suggestion };
+
+      // Extract meow and bhaw from link before removing it
+      let meow = '';
+      let bhaw = '';
+
+      if (processed.link) {
+        try {
+          const url = new URL(processed.link);
+          const params = new URLSearchParams(url.search);
+          meow = params.get('candidate_id') || '';
+
+          const pathParts = url.pathname.split('/');
+          const stateIndex = pathParts.findIndex(part => part && part !== '');
+          if (stateIndex !== -1) {
+            bhaw = pathParts[stateIndex];
+          }
+        } catch (error) {
+          logger.warn(req.sessionId, 'Failed to parse link URL', { link: processed.link });
+        }
+      }
+
+      // Add extracted values
+      if (meow) processed.meow = meow;
+      if (bhaw) processed.bhaw = bhaw;
+
+      // ✅ PROXY THE IMAGE
+      if (processed.image) {
+        const proxyUrl = imageProxy.createProxyUrl(processed.image, baseUrl);
+        
+        if (proxyUrl) {
+          processed.imageUrl = proxyUrl;
+          processed._imageProxied = true;
+          
+          logger.info(req.sessionId, 'Image proxied for search result', {
+            name: processed.name,
+            original: processed.image.substring(0, 50) + '...',
+            proxied: proxyUrl
+          });
+        } else {
+          // Fallback to original if proxy fails
+          processed.imageUrl = processed.image;
+          processed._imageProxied = false;
+        }
+
+        // ✅ REMOVE ORIGINAL IMAGE URL
+        delete processed.image;
+      }
+
+      // ✅ REMOVE SENSITIVE LINK
+      delete processed.link;
+
+      return processed;
+    });
+
+    logger.success(req.sessionId, `Search completed: ${processedSuggestions.length} results`, {
       duration: `${duration}ms`,
-      query: sanitizedQuery
+      query: sanitizedQuery,
+      proxiedImages: processedSuggestions.filter(s => s._imageProxied).length
     });
 
     fileStorage.saveAnalytics('search_query', {
       query: sanitizedQuery,
-      results: data.suggestions?.length || 0,
+      results: processedSuggestions.length,
       duration,
       ip,
       timestamp: new Date().toISOString()
     });
 
     res.json({
-      ...data,
+      suggestions: processedSuggestions,
+      count: processedSuggestions.length,
       responseTime: duration,
       timestamp: new Date().toISOString()
     });
