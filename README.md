@@ -23,7 +23,7 @@
 
 ## 🎯 **What is Netakhoj?**
 
-**Netakhoj** is India's premier electoral intelligence platform that transforms how citizens discover and connect with their representatives. Our cutting-edge web application provides comprehensive, real-time access to India's democratic landscape through interactive maps, detailed analytics, and intelligent search capabilities. Built with enterprise-grade security and performance, Netakhoj serves as the most trusted digital gateway to electoral information in India.
+**Netakhoj** is India's premier electoral intelligence platform that transforms how citizens discover and connect with their representatives. Our cutting-edge web application provides comprehensive, real-time access to India's democratic landscape through interactive maps, detailed analytics, and intelligent search capabilities. Netakhoj serves as thegateway to electoral information in India.
 
 ### 🌟 **Why Netakhoj?**
 
