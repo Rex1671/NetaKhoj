@@ -6,7 +6,6 @@
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Appwrite](https://img.shields.io/badge/Appwrite-F02E65?style=for-the-badge&logo=appwrite&logoColor=white)
-![Gemini AI](https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=google&logoColor=white)
 
 [![Production Ready](https://img.shields.io/badge/Production-Ready-28a745?style=for-the-badge)](https://fixkaro-web-production.up.railway.app/)
 [![Security Enhanced](https://img.shields.io/badge/Security-Enhanced-dc3545?style=for-the-badge)](https://fixkaro-web-production.up.railway.app/)
@@ -14,7 +13,7 @@
 
 *Discover Your Representatives - Interactive Electoral Intelligence & Constituency Analytics*
 
-[🌐 Live Demo](https://fixkaro-web-production.up.railway.app/)
+[🌐 Live Demo](https://fixkaro-web-production.up.railway.app/) • [📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start)
 
 > **⚠️ Development Notice**: Netakhoj is currently in active development. You may experience some bugs or temporary service interruptions as we continuously improve the platform.
 
@@ -24,14 +23,14 @@
 
 ## 🎯 **What is Netakhoj?**
 
-**Netakhoj** is India's premier electoral intelligence platform that transforms how citizens discover and connect with their representatives. Our  web application provides comprehensive, real-time access to India's democratic landscape through interactive maps, detailed analytics, and intelligent search capabilities. Built with enterprise-grade security and performance, Netakhoj serves as the most trusted digital gateway to electoral information in India.
+**Netakhoj** is India's premier electoral intelligence platform that transforms how citizens discover and connect with their representatives. Our cutting-edge web application provides comprehensive, real-time access to India's democratic landscape through interactive maps, detailed analytics, and intelligent search capabilities. Built with enterprise-grade security and performance, Netakhoj serves as the most trusted digital gateway to electoral information in India.
 
 ### 🌟 **Why Netakhoj?**
 
 - **🗺️ Interactive Maps**: Navigate through all 543 parliamentary and 4,120+ assembly constituencies.
 - **📊 Live Analytics**: Real-time statistics on political representation across India.
 - **🔍 Smart Search**: Find representatives by name, constituency, or party affiliation.
-- **🧠 AI-Powered Insights**: Leverages Google Gemini AI to enrich candidate data and provide deeper insights.
+- **📊 Automated Data Aggregation**: Aggregates and processes publicly available data from various online sources to provide comprehensive insights.
 - **🛡️ Secure & Reliable**: Enterprise-level security with custom threat detection and Appwrite integration.
 - **⚡ Real-time Updates**: Live data synchronization via WebSockets.
 
@@ -110,9 +109,9 @@ graph TD
 - **Styling**: Custom CSS (Responsive)
 - **Icons**: Font Awesome 6+
 
-#### **Data Processing & AI**
+#### **Data Processing**
 - **Scraping**: Puppeteer, Cheerio
-- **AI**: Google Generative AI (Gemini)
+- **Data Collection**: Advanced Web Scraping & Parsing
 - **Image Processing**: Custom Image Proxy with retry logic
 - **PDF Generation**: Dynamic document creation
 
@@ -230,7 +229,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **OpenStreetMap** contributors for mapping data.
 - **Leaflet.js** community for the amazing mapping library.
 - **Appwrite** for backend services.
-- **Google DeepMind** for Gemini AI.
 
 ---
 
