@@ -11,9 +11,11 @@
 [![Security Enhanced](https://img.shields.io/badge/Security-Enhanced-dc3545?style=for-the-badge)](https://fixkaro-web-production.up.railway.app/)
 [![Real-time Data](https://img.shields.io/badge/Real--time-Data-007bff?style=for-the-badge)](https://fixkaro-web-production.up.railway.app/)
 
-*Discover Your Representatives - Interactive Electoral Intelligence & Constituency Analytics*
+## Discover Your Representatives  
+Interactive Electoral Intelligence & Constituency Analytics
 
-[🌐 Live Demo](https://netakhoj-web-production.up.railway.app//) 
+[🌐 Live Demo](https://netakhoj-web-production.up.railway.app/)
+
 
 > **⚠️ Development Notice**: Netakhoj is currently in active development. You may experience some bugs or temporary service interruptions as we continuously improve the platform.
 
