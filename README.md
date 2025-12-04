@@ -133,7 +133,7 @@ graph TD
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/netakhoj-web.git
+git clone https://github.com/Rex1671/NetaKhoj.git
 cd netakhoj-web
 
 # Install dependencies
