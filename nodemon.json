@@ -1,0 +1,12 @@
+{
+    "ignore": [
+        "storage/",
+        "logs/",
+        "data/",
+        "*.txt",
+        "*.log",
+        "appwriteresponse.txt",
+        "tempCodeRunnerFile.js"
+    ],
+    "ext": "js,json,mjs"
+}

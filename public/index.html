@@ -4,29 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>India Constituency Map - Enhanced Analytics</title>
+    <title>NetaKhoj</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
-      <style>
-    * {
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-    
-    input, textarea {
-       -webkit-user-select: text;
-      -khtml-user-select: text;
-      -moz-user-select: text;
-      -ms-user-select: text;
-      user-select: text;
-    }
-  </style>
+    <style>
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        input,
+        textarea {
+            -webkit-user-select: text;
+            -khtml-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
 </head>
 
 <body>
@@ -77,7 +78,7 @@
         <div class="header-content">
             <h1>
                 <i class="fas fa-map-marked-alt"></i>
-                India Constituency Analytics
+                NetaKhoj
             </h1>
             <div class="search-container">
                 <input type="text" id="searchBox" class="search-box"
@@ -196,7 +197,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script >
+    <script>
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 40;
@@ -330,10 +331,10 @@
 
         function highlightStyle(feature) {
             return {
-                color: '#667eea',
+                color: '#FFD700',
                 weight: 3,
                 fillOpacity: 0.5,
-                fillColor: '#667eea'
+                fillColor: '#FFD700'
             };
         }
 
@@ -395,10 +396,10 @@
             geojsonLayer.eachLayer(function (layer) {
                 if (layer.feature === feature) {
                     layer.setStyle({
-                        color: '#f59e0b',
+                        color: '#FFD700',
                         weight: 4,
                         fillOpacity: 0.5,
-                        fillColor: '#f59e0b',
+                        fillColor: '#FFD700',
                         dashArray: ''
                     });
                     highlightedLayers.push(layer);
@@ -555,78 +556,74 @@
                 });
         }
 
-       
-      // ==================== CONSTITUENCY DETAILS WITH API INTEGRATION ====================
 
-async function showConstituencyDetails(feature) {
-    const constituencyName = getConstituencyName(feature.properties);
-    const stateName = getStateName(feature.properties);
-    const cleanedName = cleanName(constituencyName);
-    const data = constituencyData[cleanedName];
 
-    const detailPanel = document.getElementById('detailPanel');
-    const detailBody = document.getElementById('detailBody');
+        async function showConstituencyDetails(feature) {
+            const constituencyName = getConstituencyName(feature.properties);
+            const stateName = getStateName(feature.properties);
+            const cleanedName = cleanName(constituencyName);
+            const data = constituencyData[cleanedName];
 
-    document.getElementById('detailTitle').textContent = constituencyName;
-    document.getElementById('detailSubtitle').innerHTML = `
+            const detailPanel = document.getElementById('detailPanel');
+            const detailBody = document.getElementById('detailBody');
+
+            document.getElementById('detailTitle').textContent = constituencyName;
+            document.getElementById('detailSubtitle').innerHTML = `
         <i class="fas fa-map-marker-alt"></i>
         ${stateName}
     `;
 
-    console.log('Showing details for:', constituencyName, '(cleaned:', cleanedName, ')');
+            console.log('Showing details for:', constituencyName, '(cleaned:', cleanedName, ')');
 
-    detailBody.innerHTML = `
+            detailBody.innerHTML = `
         <div class="detail-loading">
             <div class="loading-spinner-detail"></div>
             <div class="loading-text-detail">Loading constituency data...</div>
         </div>
     `;
-    detailPanel.classList.add('active');
+            detailPanel.classList.add('active');
 
-    let html = '';
-    const state = data?.MP?.state || stateName;
+            let html = '';
+            const state = data?.MP?.state || stateName;
 
-    // ========== LOCAL MP DATA ==========
-    html += `<div class="detail-section">
+            html += `<div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-landmark"></i>
             Lok Sabha Representative (Local Data)
         </div>`;
 
-    if (data?.MP && isCurrentTerm(data.MP.term_start_date, data.MP.term_end_date)) {
-        const mpName = data.MP.name.replace(/'/g, "\\'");
-        html += generateRepresentativeCard(data.MP, 'MP', constituencyName);
-    } else {
-        html += '<p class="no-data">No current Lok Sabha MP in local database</p>';
-    }
-    html += '</div>';
+            if (data?.MP && isCurrentTerm(data.MP.term_start_date, data.MP.term_end_date)) {
+                const mpName = data.MP.name.replace(/'/g, "\\'");
+                html += generateRepresentativeCard(data.MP, 'MP', constituencyName);
+            } else {
+                html += '<p class="no-data">No current Lok Sabha MP in local database</p>';
+            }
+            html += '</div>';
 
-    // ========== LOCAL MLA DATA ==========
-    html += `<div class="detail-section">
+            html += `<div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-users"></i>
             Assembly Members (Local Data)
         </div>`;
 
-    if (data?.MLAs) {
-        const currentMLAs = data.MLAs.filter(mla =>
-            isCurrentTerm(mla.term_start_date, mla.term_end_date)
-        );
+            if (data?.MLAs) {
+                const currentMLAs = data.MLAs.filter(mla =>
+                    isCurrentTerm(mla.term_start_date, mla.term_end_date)
+                );
 
-        if (currentMLAs.length > 0) {
-            currentMLAs.forEach(mla => {
-                html += generateRepresentativeCard(mla, 'MLA', mla.ac_name);
-            });
-        } else {
-            html += '<p class="no-data">No current MLAs in local database</p>';
-        }
-    } else {
-        html += '<p class="no-data">No MLA data available</p>';
-    }
-    html += '</div>';
+                if (currentMLAs.length > 0) {
+                    currentMLAs.forEach(mla => {
+                        html += generateRepresentativeCard(mla, 'MLA', mla.ac_name);
+                    });
+                } else {
+                    html += '<p class="no-data">No current MLAs in local database</p>';
+                }
+            } else {
+                html += '<p class="no-data">No MLA data available</p>';
+            }
+            html += '</div>';
 
-    // ========== NATIONAL DATABASE SECTION (PLACEHOLDER) ==========
-  html += `
+            html += `
     <div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-database"></i>
@@ -646,119 +643,116 @@ async function showConstituencyDetails(feature) {
         </div>
     </div>
 `;
-    // ========== RAJYA SABHA LINK ==========
-    if (state) {
-        html += `
+            if (state) {
+                html += `
             <div class="state-link" onclick="event.stopPropagation(); showStateModal('${state}')">
                 <i class="fas fa-arrow-right"></i>
                 <span>View ${state} Rajya Sabha Members</span>
             </div>
         `;
-    }
+            }
 
-    detailBody.innerHTML = html;
+            detailBody.innerHTML = html;
 
-    // ========== FETCH NATIONAL DATABASE ==========
-    fetchNationalDatabaseForConstituency(constituencyName);
-}
-
-
-
-// ==================== ROTATING LOADING MESSAGES ====================
-
-const loadingMessages = [
-    { text: "Searching Electoral Commission Records", icon: "fa-landmark" },
-    { text: "Accessing Official Candidate Registry", icon: "fa-file-certificate" },
-    { text: "Loading Election Commission Archive", icon: "fa-archive" },
-    { text: "Fetching Verified Candidate Database", icon: "fa-shield-check" },
-    { text: "Retrieving Pan-India Electoral Records", icon: "fa-globe-asia" },
-    { text: "Analyzing Constituency Data", icon: "fa-chart-line" },
-    { text: "Cross-referencing Electoral Intelligence", icon: "fa-brain" },
-     { text: "Validating Candidate Information", icon: "fa-check-double" },
-    { text: "Scanning Election History", icon: "fa-history" },
-    { text: "Processing Electoral Data", icon: "fa-cog" },
-    { text: "Querying Central Database", icon: "fa-server" }
-];
-
-let loadingInterval = null;
-function startRotatingLoadingText(containerId) {
-    let container = document.getElementById(containerId);
-    
-    if (!container) {
-        container = document.querySelector(`#${containerId}, .api-loading, .search-loading`);
-    }
-    
-    if (!container) return;
-
-    let currentIndex = 0;
-
-    const textElement = container.querySelector('.rotating-loading-text');
-    const iconElement = container.querySelector('.rotating-loading-icon i');
-    
-    if (!textElement || !iconElement) return;
-
-    updateLoadingMessage(container, loadingMessages[0]);
-
-    if (loadingInterval) {
-        clearInterval(loadingInterval);
-    }
-
-    loadingInterval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % loadingMessages.length;
-        updateLoadingMessage(container, loadingMessages[currentIndex]);
-    }, 1000);
-}
-function updateLoadingMessage(container, message) {
-    const textElement = container.querySelector('.rotating-loading-text');
-    const iconElement = container.querySelector('.rotating-loading-icon i');
-    
-    if (textElement && iconElement) {
-        textElement.classList.add('fade-out');
-        
-        setTimeout(() => {
-            textElement.textContent = message.text + '...';
-            iconElement.className = `fas ${message.icon}`;
-            
-            textElement.classList.remove('fade-out');
-            textElement.classList.add('fade-in');
-            
-            setTimeout(() => {
-                textElement.classList.remove('fade-in');
-            }, 300);
-        }, 150);
-    }
-}
-
-function stopRotatingLoadingText() {
-    if (loadingInterval) {
-        clearInterval(loadingInterval);
-        loadingInterval = null;
-    }
-}
-
-
-async function fetchNationalDatabaseForConstituency(constituencyName) {
-    const container = document.getElementById('nationalDbResults');
-    
-    if (!container) return;
-
-    startRotatingLoadingText('nationalDbResults');
-
-    try {
-        const response = await fetch(`/api/search-proxy?q=${encodeURIComponent(constituencyName)}`);
-        
-        stopRotatingLoadingText();
-        
-        if (!response.ok) {
-            throw new Error('API request failed');
+            fetchNationalDatabaseForConstituency(constituencyName);
         }
 
-        const data = await response.json();
 
-        console.log('📊 National DB Results for', constituencyName, ':', data);
 
-        if (data.fallback || !data.suggestions || data.suggestions.length === 0) {
-            container.innerHTML = `
+
+        const loadingMessages = [
+            { text: "Searching Electoral Commission Records", icon: "fa-landmark" },
+            { text: "Accessing Official Candidate Registry", icon: "fa-file-certificate" },
+            { text: "Loading Election Commission Archive", icon: "fa-archive" },
+            { text: "Fetching Verified Candidate Database", icon: "fa-shield-check" },
+            { text: "Retrieving Pan-India Electoral Records", icon: "fa-globe-asia" },
+            { text: "Analyzing Constituency Data", icon: "fa-chart-line" },
+            { text: "Cross-referencing Electoral Intelligence", icon: "fa-brain" },
+            { text: "Validating Candidate Information", icon: "fa-check-double" },
+            { text: "Scanning Election History", icon: "fa-history" },
+            { text: "Processing Electoral Data", icon: "fa-cog" },
+            { text: "Querying Central Database", icon: "fa-server" }
+        ];
+
+        let loadingInterval = null;
+        function startRotatingLoadingText(containerId) {
+            let container = document.getElementById(containerId);
+
+            if (!container) {
+                container = document.querySelector(`#${containerId}, .api-loading, .search-loading`);
+            }
+
+            if (!container) return;
+
+            let currentIndex = 0;
+
+            const textElement = container.querySelector('.rotating-loading-text');
+            const iconElement = container.querySelector('.rotating-loading-icon i');
+
+            if (!textElement || !iconElement) return;
+
+            updateLoadingMessage(container, loadingMessages[0]);
+
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+            }
+
+            loadingInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % loadingMessages.length;
+                updateLoadingMessage(container, loadingMessages[currentIndex]);
+            }, 1000);
+        }
+        function updateLoadingMessage(container, message) {
+            const textElement = container.querySelector('.rotating-loading-text');
+            const iconElement = container.querySelector('.rotating-loading-icon i');
+
+            if (textElement && iconElement) {
+                textElement.classList.add('fade-out');
+
+                setTimeout(() => {
+                    textElement.textContent = message.text + '...';
+                    iconElement.className = `fas ${message.icon}`;
+
+                    textElement.classList.remove('fade-out');
+                    textElement.classList.add('fade-in');
+
+                    setTimeout(() => {
+                        textElement.classList.remove('fade-in');
+                    }, 300);
+                }, 150);
+            }
+        }
+
+        function stopRotatingLoadingText() {
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+                loadingInterval = null;
+            }
+        }
+
+
+        async function fetchNationalDatabaseForConstituency(constituencyName) {
+            const container = document.getElementById('nationalDbResults');
+
+            if (!container) return;
+
+            startRotatingLoadingText('nationalDbResults');
+
+            try {
+                const response = await fetch(`/api/search-proxy?q=${encodeURIComponent(constituencyName)}`);
+
+                stopRotatingLoadingText();
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+
+                console.log('📊 National DB Results for', constituencyName, ':', data);
+
+                if (data.fallback || !data.suggestions || data.suggestions.length === 0) {
+                    container.innerHTML = `
                 <div class="no-api-results">
                     <div class="no-results-icon-small">
                         <i class="fas fa-database"></i>
@@ -767,17 +761,17 @@ async function fetchNationalDatabaseForConstituency(constituencyName) {
                     <div class="no-results-hint-small">Try searching by candidate name in the search box above</div>
                 </div>
             `;
-            return;
-        }
+                    return;
+                }
 
-        const relevantResults = data.suggestions.filter(item => 
-            item.constituency && 
-            cleanName(item.constituency) === cleanName(constituencyName)
-        );
+                const relevantResults = data.suggestions.filter(item =>
+                    item.constituency &&
+                    cleanName(item.constituency) === cleanName(constituencyName)
+                );
 
-        const allResults = relevantResults.length > 0 ? relevantResults : data.suggestions.slice(0, 8);
+                const allResults = relevantResults.length > 0 ? relevantResults : data.suggestions.slice(0, 8);
 
-        let html = `
+                let html = `
             <div class="api-results-header">
                 <div class="api-results-count">
                     <i class="fas fa-check-circle"></i>
@@ -789,20 +783,20 @@ async function fetchNationalDatabaseForConstituency(constituencyName) {
             <div class="national-db-grid">
         `;
 
-        allResults.forEach(result => {
-            html += generateNationalDbCard(result);
-        });
+                allResults.forEach(result => {
+                    html += generateNationalDbCard(result);
+                });
 
-        html += '</div>';
+                html += '</div>';
 
-        container.innerHTML = html;
+                container.innerHTML = html;
 
-    } catch (error) {
-        console.error('❌ Error fetching national database:', error);
-        
-        stopRotatingLoadingText();
-        
-        container.innerHTML = `
+            } catch (error) {
+                console.error('❌ Error fetching national database:', error);
+
+                stopRotatingLoadingText();
+
+                container.innerHTML = `
             <div class="api-error">
                 <div class="error-icon">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -811,15 +805,15 @@ async function fetchNationalDatabaseForConstituency(constituencyName) {
                 <div class="error-hint">Local data is still available above</div>
             </div>
         `;
-    }
-}
-// ==================== GENERATE REPRESENTATIVE CARD ====================
+            }
+        }
+        // ==================== GENERATE REPRESENTATIVE CARD ====================
 
-function generateRepresentativeCard(member, type, constituency) {
-    const memberName = member.name.replace(/'/g, "\\'");
-    const party = member.party || 'N/A';
-    
-    return `
+        function generateRepresentativeCard(member, type, constituency) {
+            const memberName = member.name.replace(/'/g, "\\'");
+            const party = member.party || 'N/A';
+
+            return `
         <div class="representative-card clickable-card"
              data-member-name="${memberName}"
              data-member-type="${type}"
@@ -865,26 +859,26 @@ function generateRepresentativeCard(member, type, constituency) {
             </div>
         </div>
     `;
-}
+        }
 
-// ==================== GENERATE NATIONAL DB CARD ====================
+        // ==================== GENERATE NATIONAL DB CARD ====================
 
-// index.html - UPDATE generateNationalDbCard function
+        // index.html - UPDATE generateNationalDbCard function
 
-function generateNationalDbCard(result) {
-    const typeInfo = detectMemberType(result.type);
-    const criminalBadge = result.criminal ?
-        '<span class="criminal-badge-inline"><i class="fas fa-exclamation-triangle"></i> Criminal Record</span>' : '';
+        function generateNationalDbCard(result) {
+            const typeInfo = detectMemberType(result.type);
+            const criminalBadge = result.criminal ?
+                '<span class="criminal-badge-inline"><i class="fas fa-exclamation-triangle"></i> Criminal Record</span>' : '';
 
-    // ✅ USE imageUrl (proxied) instead of image
-    const imageUrl = result.imageUrl || '';
-    const hasImage = imageUrl && imageUrl !== 'N/A';
+            // ✅ USE imageUrl (proxied) instead of image
+            const imageUrl = result.imageUrl || '';
+            const hasImage = imageUrl && imageUrl !== 'N/A';
 
-    // meow and bhaw should already be in the result from backend
-    const meow = result.meow || '';
-    const bhaw = result.bhaw || '';
+            // meow and bhaw should already be in the result from backend
+            const meow = result.meow || '';
+            const bhaw = result.bhaw || '';
 
-    return `
+            return `
         <div class="national-db-card clickable-card"
              data-member-name="${result.name.replace(/'/g, "\\'")}"
              data-member-type="${typeInfo.type}"
@@ -943,28 +937,28 @@ function generateNationalDbCard(result) {
             </div>
         </div>
     `;
-}
-// ==================== HANDLE NATIONAL DB CLICK ====================
+        }
+        // ==================== HANDLE NATIONAL DB CLICK ====================
 
-// index.html - UPDATE handleNationalDbClick function
+        // index.html - UPDATE handleNationalDbClick function
 
-function handleNationalDbClick(cardElement) {
-    const name = cardElement.getAttribute('data-member-name');
-    const type = cardElement.getAttribute('data-member-type');
-    const constituency = cardElement.getAttribute('data-constituency') || '';
-    const party = cardElement.getAttribute('data-party') || '';
-    const meow = cardElement.getAttribute('data-meow') || '';
-    const bhaw = cardElement.getAttribute('data-bhaw') || '';
+        function handleNationalDbClick(cardElement) {
+            const name = cardElement.getAttribute('data-member-name');
+            const type = cardElement.getAttribute('data-member-type');
+            const constituency = cardElement.getAttribute('data-constituency') || '';
+            const party = cardElement.getAttribute('data-party') || '';
+            const meow = cardElement.getAttribute('data-meow') || '';
+            const bhaw = cardElement.getAttribute('data-bhaw') || '';
 
-    console.log('🎯 National DB Card clicked:', { name, type, constituency, party, meow, bhaw });
+            console.log('🎯 National DB Card clicked:', { name, type, constituency, party, meow, bhaw });
 
-    if (name && type) {
-        navigateToMember(name, type, constituency, party, meow, bhaw);
-    } else {
-        console.error('❌ Missing name or type in national DB card');
-    }
-}  
-// ==================== NAVIGATION ====================
+            if (name && type) {
+                navigateToMember(name, type, constituency, party, meow, bhaw);
+            } else {
+                console.error('❌ Missing name or type in national DB card');
+            }
+        }
+        // ==================== NAVIGATION ====================
 
         function handleCardClick(cardElement) {
             const name = cardElement.getAttribute('data-member-name');
@@ -981,22 +975,22 @@ function handleNationalDbClick(cardElement) {
             }
         }
 
-       function navigateToMember(name, type, constituency = '', party = '', meow = '', bhaw = '') {
-    console.log('🚀 Navigating to:', name, type, constituency, party, meow, bhaw);
+        function navigateToMember(name, type, constituency = '', party = '', meow = '', bhaw = '') {
+            console.log('🚀 Navigating to:', name, type, constituency, party, meow, bhaw);
 
-    const params = new URLSearchParams();
-    params.append('name', name);
-    params.append('type', type);
-    if (constituency) params.append('constituency', constituency);
-    if (party) params.append('party', party);
-    if (meow) params.append('meow', meow);
-    if (bhaw) params.append('bhaw', bhaw);
+            const params = new URLSearchParams();
+            params.append('name', name);
+            params.append('type', type);
+            if (constituency) params.append('constituency', constituency);
+            if (party) params.append('party', party);
+            if (meow) params.append('meow', meow);
+            if (bhaw) params.append('bhaw', bhaw);
 
-    const url = `/member?${params.toString()}`;
-    console.log('📍 URL:', url);
+            const url = `/member?${params.toString()}`;
+            console.log('📍 URL:', url);
 
-    window.location.href = url;
-}
+            window.location.href = url;
+        }
 
 
         function testNavigation(name, type) {
@@ -1138,99 +1132,99 @@ function handleNationalDbClick(cardElement) {
             }
         }
 
-       // ==================== OPTIMIZED SEARCH CONFIGURATION ====================
- const searchBox = document.getElementById('searchBox');
+        // ==================== OPTIMIZED SEARCH CONFIGURATION ====================
+        const searchBox = document.getElementById('searchBox');
         const suggestionsBox = document.getElementById('searchSuggestions');
-        
-const SEARCH_CONFIG = {
-    minChars: 3,            
-    debounceTime: 600,      
-    maxCacheSize: 100,       
-    maxCacheAge: 300000,     
-    apiThrottle: 1000         
-};
 
-let searchTimeout = null;
-let apiCache = new Map();
-let abortController = null;
-let lastAPICallTime = 0;
-let pendingSearchTerm = null;
-let isSearching = false;
+        const SEARCH_CONFIG = {
+            minChars: 3,
+            debounceTime: 600,
+            maxCacheSize: 100,
+            maxCacheAge: 300000,
+            apiThrottle: 1000
+        };
 
-// ==================== CACHE MANAGEMENT ====================
+        let searchTimeout = null;
+        let apiCache = new Map();
+        let abortController = null;
+        let lastAPICallTime = 0;
+        let pendingSearchTerm = null;
+        let isSearching = false;
 
-function getCachedResult(searchTerm) {
-    const cached = apiCache.get(searchTerm.toLowerCase());
-    
-    if (!cached) return null;
-    
-    const age = Date.now() - cached.timestamp;
-    if (age > SEARCH_CONFIG.maxCacheAge) {
-        apiCache.delete(searchTerm.toLowerCase());
-        return null;
-    }
-    
-    console.log(`✅ Using cached result for "${searchTerm}" (age: ${Math.round(age/1000)}s)`);
-    return cached.data;
-}
+        // ==================== CACHE MANAGEMENT ====================
 
-function setCachedResult(searchTerm, data) {
-    if (apiCache.size >= SEARCH_CONFIG.maxCacheSize) {
-        const firstKey = apiCache.keys().next().value;
-        apiCache.delete(firstKey);
-        console.log('🗑️ Cache limit reached, removed oldest entry');
-    }
-    
-    apiCache.set(searchTerm.toLowerCase(), {
-        data: data,
-        timestamp: Date.now()
-    });
-    
-    console.log(`💾 Cached result for "${searchTerm}" (total cached: ${apiCache.size})`);
-}
+        function getCachedResult(searchTerm) {
+            const cached = apiCache.get(searchTerm.toLowerCase());
 
-function clearExpiredCache() {
-    const now = Date.now();
-    let removed = 0;
-    
-    for (let [key, value] of apiCache.entries()) {
-        if (now - value.timestamp > SEARCH_CONFIG.maxCacheAge) {
-            apiCache.delete(key);
-            removed++;
+            if (!cached) return null;
+
+            const age = Date.now() - cached.timestamp;
+            if (age > SEARCH_CONFIG.maxCacheAge) {
+                apiCache.delete(searchTerm.toLowerCase());
+                return null;
+            }
+
+            console.log(`✅ Using cached result for "${searchTerm}" (age: ${Math.round(age / 1000)}s)`);
+            return cached.data;
         }
-    }
-    
-    if (removed > 0) {
-        console.log(`🗑️ Removed ${removed} expired cache entries`);
-    }
-}
 
-setInterval(clearExpiredCache, 120000);
+        function setCachedResult(searchTerm, data) {
+            if (apiCache.size >= SEARCH_CONFIG.maxCacheSize) {
+                const firstKey = apiCache.keys().next().value;
+                apiCache.delete(firstKey);
+                console.log('🗑️ Cache limit reached, removed oldest entry');
+            }
 
-// ==================== OPTIMIZED SEARCH INPUT HANDLER ====================
+            apiCache.set(searchTerm.toLowerCase(), {
+                data: data,
+                timestamp: Date.now()
+            });
 
-searchBox.addEventListener('input', function (e) {
-    const searchTerm = e.target.value.trim();
-    
-    clearTimeout(searchTimeout);
-    
-    if (searchTerm.length < SEARCH_CONFIG.minChars) {
-        suggestionsBox.classList.remove('active');
-        clearHighlightedLayers();
-        stopRotatingLoadingText();
-        isSearching = false;
-        return;
-    }
-    
-    showSearchLoading();
-    
-    searchTimeout = setTimeout(() => {
-        performOptimizedSearch(searchTerm);
-    }, SEARCH_CONFIG.debounceTime);
-});
+            console.log(`💾 Cached result for "${searchTerm}" (total cached: ${apiCache.size})`);
+        }
 
-function showSearchLoading() {
-    suggestionsBox.innerHTML = `
+        function clearExpiredCache() {
+            const now = Date.now();
+            let removed = 0;
+
+            for (let [key, value] of apiCache.entries()) {
+                if (now - value.timestamp > SEARCH_CONFIG.maxCacheAge) {
+                    apiCache.delete(key);
+                    removed++;
+                }
+            }
+
+            if (removed > 0) {
+                console.log(`🗑️ Removed ${removed} expired cache entries`);
+            }
+        }
+
+        setInterval(clearExpiredCache, 120000);
+
+        // ==================== OPTIMIZED SEARCH INPUT HANDLER ====================
+
+        searchBox.addEventListener('input', function (e) {
+            const searchTerm = e.target.value.trim();
+
+            clearTimeout(searchTimeout);
+
+            if (searchTerm.length < SEARCH_CONFIG.minChars) {
+                suggestionsBox.classList.remove('active');
+                clearHighlightedLayers();
+                stopRotatingLoadingText();
+                isSearching = false;
+                return;
+            }
+
+            showSearchLoading();
+
+            searchTimeout = setTimeout(() => {
+                performOptimizedSearch(searchTerm);
+            }, SEARCH_CONFIG.debounceTime);
+        });
+
+        function showSearchLoading() {
+            suggestionsBox.innerHTML = `
         <div class="search-loading">
             <div class="loading-spinner"></div>
             <div class="rotating-loading-content">
@@ -1241,214 +1235,214 @@ function showSearchLoading() {
             </div>
         </div>
     `;
-    suggestionsBox.classList.add('active');
-    
-    setTimeout(() => {
-        startRotatingLoadingText('searchLoadingText');
-    }, 100);
-}
+            suggestionsBox.classList.add('active');
 
-// ==================== OPTIMIZED SEARCH FUNCTION ====================
-
-async function performOptimizedSearch(searchTerm) {
-    if (isSearching) {
-        console.log('⏸️ Search already in progress, queuing...');
-        pendingSearchTerm = searchTerm;
-        return;
-    }
-    
-    isSearching = true;
-    
-    try {
-        const localResults = performLocalSearch(searchTerm);
-        
-        const cachedApiResults = getCachedResult(searchTerm);
-        
-        if (cachedApiResults !== null) {
-            stopRotatingLoadingText();
-            displayCombinedResults(localResults, cachedApiResults, searchTerm);
-            isSearching = false;
-            checkPendingSearch();
-            return;
-        }
-        
-        displayCombinedResults(localResults, [], searchTerm, true);
-        
-        const timeSinceLastCall = Date.now() - lastAPICallTime;
-        if (timeSinceLastCall < SEARCH_CONFIG.apiThrottle) {
-            const waitTime = SEARCH_CONFIG.apiThrottle - timeSinceLastCall;
-            console.log(`⏱️ Throttling API call, waiting ${waitTime}ms...`);
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-        }
-        
-        const apiResults = await fetchAPIResultsOptimized(searchTerm);
-        
-        if (apiResults && apiResults.length > 0) {
-            setCachedResult(searchTerm, apiResults);
-        }
-        
-        stopRotatingLoadingText();
-        displayCombinedResults(localResults, apiResults, searchTerm);
-        
-    } catch (error) {
-        if (error.name !== 'AbortError') {
-            console.error('Search error:', error);
-            stopRotatingLoadingText();
-            const localResults = performLocalSearch(searchTerm);
-            displayCombinedResults(localResults, [], searchTerm);
-        }
-    } finally {
-        isSearching = false;
-        checkPendingSearch();
-    }
-}
-
-function checkPendingSearch() {
-    if (pendingSearchTerm) {
-        const term = pendingSearchTerm;
-        pendingSearchTerm = null;
-        console.log(`▶️ Processing pending search: "${term}"`);
-        performOptimizedSearch(term);
-    }
-}
-
-// ==================== OPTIMIZED API FETCH ====================
-
-async function fetchAPIResultsOptimized(query) {
-    if (abortController) {
-        abortController.abort();
-        console.log('🛑 Cancelled previous API request');
-    }
-    
-    abortController = new AbortController();
-    lastAPICallTime = Date.now();
-    
-    const apiUrl = `/api/search-proxy?q=${encodeURIComponent(query)}`;
-    
-    console.log(`🌐 API Request: "${query}"`);
-    
-    try {
-        const response = await fetch(apiUrl, {
-            signal: abortController.signal,
-            headers: { 'Accept': 'application/json' }
-        });
-
-        if (!response.ok) {
-            console.warn(`⚠️ API returned ${response.status}`);
-            return [];
+            setTimeout(() => {
+                startRotatingLoadingText('searchLoadingText');
+            }, 100);
         }
 
-        const data = await response.json();
+        // ==================== OPTIMIZED SEARCH FUNCTION ====================
 
-        if (data.fallback) {
-            console.warn('⚠️ API in fallback mode:', data.error);
-            return [];
-        }
+        async function performOptimizedSearch(searchTerm) {
+            if (isSearching) {
+                console.log('⏸️ Search already in progress, queuing...');
+                pendingSearchTerm = searchTerm;
+                return;
+            }
 
-        console.log(`✅ API Response: ${data.count || data.suggestions?.length || 0} results (${data.responseTime}ms)`);
-        return data.suggestions || [];
+            isSearching = true;
 
-    } catch (error) {
-        if (error.name === 'AbortError') {
-            console.log('🛑 Request aborted');
-        } else {
-            console.warn('⚠️ API error:', error.message);
-        }
-        return [];
-    }
-}
+            try {
+                const localResults = performLocalSearch(searchTerm);
 
-// ==================== KEEP EXISTING FUNCTIONS ====================
+                const cachedApiResults = getCachedResult(searchTerm);
 
-function performLocalSearch(searchTerm) {
-    const results = [];
-    const lowerTerm = searchTerm.toLowerCase();
+                if (cachedApiResults !== null) {
+                    stopRotatingLoadingText();
+                    displayCombinedResults(localResults, cachedApiResults, searchTerm);
+                    isSearching = false;
+                    checkPendingSearch();
+                    return;
+                }
 
-    allFeatures.forEach(feature => {
-        const pcName = getConstituencyName(feature.properties);
-        const stName = getStateName(feature.properties);
+                displayCombinedResults(localResults, [], searchTerm, true);
 
-        if (pcName.toLowerCase().includes(lowerTerm) ||
-            stName.toLowerCase().includes(lowerTerm)) {
-            results.push({
-                type: 'constituency',
-                name: pcName,
-                state: stName,
-                feature: feature,
-                source: 'local'
-            });
-        }
-    });
+                const timeSinceLastCall = Date.now() - lastAPICallTime;
+                if (timeSinceLastCall < SEARCH_CONFIG.apiThrottle) {
+                    const waitTime = SEARCH_CONFIG.apiThrottle - timeSinceLastCall;
+                    console.log(`⏱️ Throttling API call, waiting ${waitTime}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                }
 
-    for (let key in constituencyData) {
-        const data = constituencyData[key];
+                const apiResults = await fetchAPIResultsOptimized(searchTerm);
 
-        if (data.MP && data.MP.name.toLowerCase().includes(lowerTerm)) {
-            const feature = allFeatures.find(f => {
-                const fname = getConstituencyName(f.properties);
-                return cleanName(fname) === key;
-            });
-            if (feature) {
-                results.push({
-                    type: 'mp',
-                    name: data.MP.name,
-                    party: data.MP.party,
-                    constituency: getConstituencyName(feature.properties),
-                    feature: feature,
-                    source: 'local'
-                });
+                if (apiResults && apiResults.length > 0) {
+                    setCachedResult(searchTerm, apiResults);
+                }
+
+                stopRotatingLoadingText();
+                displayCombinedResults(localResults, apiResults, searchTerm);
+
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error('Search error:', error);
+                    stopRotatingLoadingText();
+                    const localResults = performLocalSearch(searchTerm);
+                    displayCombinedResults(localResults, [], searchTerm);
+                }
+            } finally {
+                isSearching = false;
+                checkPendingSearch();
             }
         }
 
-        if (data.MLAs) {
-            data.MLAs.forEach(mla => {
-                if (mla.name.toLowerCase().includes(lowerTerm)) {
+        function checkPendingSearch() {
+            if (pendingSearchTerm) {
+                const term = pendingSearchTerm;
+                pendingSearchTerm = null;
+                console.log(`▶️ Processing pending search: "${term}"`);
+                performOptimizedSearch(term);
+            }
+        }
+
+        // ==================== OPTIMIZED API FETCH ====================
+
+        async function fetchAPIResultsOptimized(query) {
+            if (abortController) {
+                abortController.abort();
+                console.log('🛑 Cancelled previous API request');
+            }
+
+            abortController = new AbortController();
+            lastAPICallTime = Date.now();
+
+            const apiUrl = `/api/search-proxy?q=${encodeURIComponent(query)}`;
+
+            console.log(`🌐 API Request: "${query}"`);
+
+            try {
+                const response = await fetch(apiUrl, {
+                    signal: abortController.signal,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    console.warn(`⚠️ API returned ${response.status}`);
+                    return [];
+                }
+
+                const data = await response.json();
+
+                if (data.fallback) {
+                    console.warn('⚠️ API in fallback mode:', data.error);
+                    return [];
+                }
+
+                console.log(`✅ API Response: ${data.count || data.suggestions?.length || 0} results (${data.responseTime}ms)`);
+                return data.suggestions || [];
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log('🛑 Request aborted');
+                } else {
+                    console.warn('⚠️ API error:', error.message);
+                }
+                return [];
+            }
+        }
+
+        // ==================== KEEP EXISTING FUNCTIONS ====================
+
+        function performLocalSearch(searchTerm) {
+            const results = [];
+            const lowerTerm = searchTerm.toLowerCase();
+
+            allFeatures.forEach(feature => {
+                const pcName = getConstituencyName(feature.properties);
+                const stName = getStateName(feature.properties);
+
+                if (pcName.toLowerCase().includes(lowerTerm) ||
+                    stName.toLowerCase().includes(lowerTerm)) {
+                    results.push({
+                        type: 'constituency',
+                        name: pcName,
+                        state: stName,
+                        feature: feature,
+                        source: 'local'
+                    });
+                }
+            });
+
+            for (let key in constituencyData) {
+                const data = constituencyData[key];
+
+                if (data.MP && data.MP.name.toLowerCase().includes(lowerTerm)) {
                     const feature = allFeatures.find(f => {
                         const fname = getConstituencyName(f.properties);
                         return cleanName(fname) === key;
                     });
                     if (feature) {
                         results.push({
-                            type: 'mla',
-                            name: mla.name,
-                            party: mla.party,
+                            type: 'mp',
+                            name: data.MP.name,
+                            party: data.MP.party,
                             constituency: getConstituencyName(feature.properties),
-                            assembly: mla.ac_name,
                             feature: feature,
                             source: 'local'
                         });
                     }
                 }
-            });
-        }
 
-        if (data.MP && data.MP.party.toLowerCase().includes(lowerTerm)) {
-            const feature = allFeatures.find(f => {
-                const fname = getConstituencyName(f.properties);
-                return cleanName(fname) === key;
-            });
-            if (feature && !results.find(r => r.feature === feature && r.type === 'mp')) {
-                results.push({
-                    type: 'mp',
-                    name: data.MP.name,
-                    party: data.MP.party,
-                    constituency: getConstituencyName(feature.properties),
-                    feature: feature,
-                    source: 'local'
-                });
+                if (data.MLAs) {
+                    data.MLAs.forEach(mla => {
+                        if (mla.name.toLowerCase().includes(lowerTerm)) {
+                            const feature = allFeatures.find(f => {
+                                const fname = getConstituencyName(f.properties);
+                                return cleanName(fname) === key;
+                            });
+                            if (feature) {
+                                results.push({
+                                    type: 'mla',
+                                    name: mla.name,
+                                    party: mla.party,
+                                    constituency: getConstituencyName(feature.properties),
+                                    assembly: mla.ac_name,
+                                    feature: feature,
+                                    source: 'local'
+                                });
+                            }
+                        }
+                    });
+                }
+
+                if (data.MP && data.MP.party.toLowerCase().includes(lowerTerm)) {
+                    const feature = allFeatures.find(f => {
+                        const fname = getConstituencyName(f.properties);
+                        return cleanName(fname) === key;
+                    });
+                    if (feature && !results.find(r => r.feature === feature && r.type === 'mp')) {
+                        results.push({
+                            type: 'mp',
+                            name: data.MP.name,
+                            party: data.MP.party,
+                            constituency: getConstituencyName(feature.properties),
+                            feature: feature,
+                            source: 'local'
+                        });
+                    }
+                }
             }
+
+            return results;
         }
-    }
 
-    return results;
-}
+        function displayCombinedResults(localResults, apiResults, searchTerm, loading = false) {
+            clearHighlightedLayers();
 
-  function displayCombinedResults(localResults, apiResults, searchTerm, loading = false) {
-    clearHighlightedLayers();
-
-    if (localResults.length === 0 && apiResults.length === 0 && !loading) {
-        stopRotatingLoadingText();
-        suggestionsBox.innerHTML = `
+            if (localResults.length === 0 && apiResults.length === 0 && !loading) {
+                stopRotatingLoadingText();
+                suggestionsBox.innerHTML = `
             <div class="no-results">
                 <div class="no-results-icon">
                     <i class="fas fa-search-minus"></i>
@@ -1457,14 +1451,14 @@ function performLocalSearch(searchTerm) {
                 <div class="no-results-hint">Try searching for a constituency, MP, MLA, or party name</div>
             </div>
         `;
-        suggestionsBox.classList.add('active');
-        return;
-    }
+                suggestionsBox.classList.add('active');
+                return;
+            }
 
-    let html = '';
+            let html = '';
 
-    if (localResults.length > 0) {
-        html += `
+            if (localResults.length > 0) {
+                html += `
             <div class="search-section">
                 <div class="search-section-header">
                     <i class="fas fa-map-marked-alt"></i>
@@ -1474,21 +1468,21 @@ function performLocalSearch(searchTerm) {
                 <div class="search-results-grid">
         `;
 
-        localResults.slice(0, 5).forEach((result, index) => {
-            html += generateLocalResultCard(result, index, searchTerm);
-            if (result.feature) {
-                highlightConstituencyOnMap(result.feature);
+                localResults.slice(0, 5).forEach((result, index) => {
+                    html += generateLocalResultCard(result, index, searchTerm);
+                    if (result.feature) {
+                        highlightConstituencyOnMap(result.feature);
+                    }
+                });
+
+                html += `</div></div>`;
             }
-        });
 
-        html += `</div></div>`;
-    }
+            if (apiResults.length > 0) {
+                const cached = getCachedResult(searchTerm);
+                const isCached = cached !== null;
 
-    if (apiResults.length > 0) {
-        const cached = getCachedResult(searchTerm);
-        const isCached = cached !== null;
-        
-        html += `
+                html += `
             <div class="search-section">
                 <div class="search-section-header">
                     <i class="fas fa-database"></i>
@@ -1499,13 +1493,13 @@ function performLocalSearch(searchTerm) {
                 <div class="search-results-grid">
         `;
 
-        apiResults.slice(0, 8).forEach((result, index) => {
-            html += generateAPIResultCard(result, index, searchTerm);
-        });
+                apiResults.slice(0, 8).forEach((result, index) => {
+                    html += generateAPIResultCard(result, index, searchTerm);
+                });
 
-        html += `</div></div>`;
-    } else if (loading) {
-        html += `
+                html += `</div></div>`;
+            } else if (loading) {
+                html += `
             <div class="search-section">
                 <div class="search-section-header">
                     <i class="fas fa-database"></i>
@@ -1522,19 +1516,19 @@ function performLocalSearch(searchTerm) {
                 </div>
             </div>
         `;
-        
-        setTimeout(() => {
-            startRotatingLoadingText('searchLoadingText');
-        }, 100);
-    }
 
-    suggestionsBox.innerHTML = html;
-    suggestionsBox.classList.add('active');
+                setTimeout(() => {
+                    startRotatingLoadingText('searchLoadingText');
+                }, 100);
+            }
 
-    attachResultClickHandlers(localResults, apiResults);
-}
+            suggestionsBox.innerHTML = html;
+            suggestionsBox.classList.add('active');
 
-function generateLocalResultCard(result, index, searchTerm) {
+            attachResultClickHandlers(localResults, apiResults);
+        }
+
+        function generateLocalResultCard(result, index, searchTerm) {
             let icon = 'fa-map-pin';
             let subtitle = result.state || '';
             let badgeClass = 'badge-constituency';
@@ -1569,16 +1563,16 @@ function generateLocalResultCard(result, index, searchTerm) {
         }
 
 
-function generateAPIResultCard(result, index, searchTerm) {
-    const typeInfo = detectMemberType(result.type);
-    const highlightedName = highlightText(result.name, searchTerm);
-    const criminalBadge = result.criminal ? 
-        '<span class="criminal-badge"><i class="fas fa-exclamation-triangle"></i></span>' : '';
+        function generateAPIResultCard(result, index, searchTerm) {
+            const typeInfo = detectMemberType(result.type);
+            const highlightedName = highlightText(result.name, searchTerm);
+            const criminalBadge = result.criminal ?
+                '<span class="criminal-badge"><i class="fas fa-exclamation-triangle"></i></span>' : '';
 
-    const imageUrl = result.imageUrl || '';
-    const hasImage = imageUrl && imageUrl !== 'N/A';
+            const imageUrl = result.imageUrl || '';
+            const hasImage = imageUrl && imageUrl !== 'N/A';
 
-    return `
+            return `
         <div class="suggestion-item api-result" data-index="${index}" data-source="api">
             ${hasImage ? `
                 <div class="suggestion-image">
@@ -1615,7 +1609,7 @@ function generateAPIResultCard(result, index, searchTerm) {
             </div>
         </div>
     `;
-}
+        }
         function detectMemberType(typeString) {
             const lower = typeString.toLowerCase();
 
@@ -1638,50 +1632,50 @@ function generateAPIResultCard(result, index, searchTerm) {
         }
 
 
-function attachResultClickHandlers(localResults, apiResults) {
-    document.querySelectorAll('.suggestion-item.local-result').forEach((item, index) => {
-        item.addEventListener('click', () => {
-            const result = localResults[index];
-            if (result.type === 'constituency') {
-                selectSearchResult(result);
-            } else {
-                const memberType = result.type === 'mp' ? 'MP' : 'MLA';
-                navigateToMember(result.name, memberType, result.constituency || '', result.party || '');
-            }
-        });
-    });
-
-    document.querySelectorAll('.suggestion-item.api-result').forEach((item, index) => {
-        item.addEventListener('click', () => {
-            const result = apiResults[index];
-            console.log("API Result clicked:", result);
-            
-            const typeInfo = detectMemberType(result.type);
-
-            // ✅ meow and bhaw are already in the result from backend
-            const meow = result.meow || '';
-            const bhaw = result.bhaw || '';
-
-            console.log('🚀 Navigation params:', {
-                name: result.name,
-                type: typeInfo.type,
-                constituency: result.constituency,
-                party: result.party,
-                meow,
-                bhaw
+        function attachResultClickHandlers(localResults, apiResults) {
+            document.querySelectorAll('.suggestion-item.local-result').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    const result = localResults[index];
+                    if (result.type === 'constituency') {
+                        selectSearchResult(result);
+                    } else {
+                        const memberType = result.type === 'mp' ? 'MP' : 'MLA';
+                        navigateToMember(result.name, memberType, result.constituency || '', result.party || '');
+                    }
+                });
             });
 
-            navigateToMember(
-                result.name, 
-                typeInfo.type, 
-                result.constituency || '', 
-                result.party || '', 
-                meow, 
-                bhaw
-            );
-        });
-    });
-}
+            document.querySelectorAll('.suggestion-item.api-result').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    const result = apiResults[index];
+                    console.log("API Result clicked:", result);
+
+                    const typeInfo = detectMemberType(result.type);
+
+                    // ✅ meow and bhaw are already in the result from backend
+                    const meow = result.meow || '';
+                    const bhaw = result.bhaw || '';
+
+                    console.log('🚀 Navigation params:', {
+                        name: result.name,
+                        type: typeInfo.type,
+                        constituency: result.constituency,
+                        party: result.party,
+                        meow,
+                        bhaw
+                    });
+
+                    navigateToMember(
+                        result.name,
+                        typeInfo.type,
+                        result.constituency || '',
+                        result.party || '',
+                        meow,
+                        bhaw
+                    );
+                });
+            });
+        }
         function selectSearchResult(result) {
             suggestionsBox.classList.remove('active');
             searchBox.value = result.name;
@@ -1792,15 +1786,15 @@ function attachResultClickHandlers(localResults, apiResults) {
         // ==================== PRODUCTION SECURITY MEASURES ====================
 
         if (window.IS_PRODUCTION) {
-            document.addEventListener('contextmenu', function(e) {
+            document.addEventListener('contextmenu', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
                 return false;
             }, true);
 
-            document.addEventListener('mousedown', function(e) {
-                if (e.button === 2) { 
+            document.addEventListener('mousedown', function (e) {
+                if (e.button === 2) {
                     e.preventDefault();
                     e.stopPropagation();
                     e.stopImmediatePropagation();
@@ -1808,7 +1802,7 @@ function attachResultClickHandlers(localResults, apiResults) {
                 }
             }, true);
 
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
                 const ctrlOrCmd = e.ctrlKey || (isMac && e.metaKey);
 
@@ -1881,13 +1875,13 @@ function attachResultClickHandlers(localResults, apiResults) {
             const checkWindowSize = () => {
                 const threshold = 200;
                 const sizeOpen = window.outerHeight - window.innerHeight > threshold ||
-                               window.outerWidth - window.innerWidth > threshold;
+                    window.outerWidth - window.innerWidth > threshold;
                 devtools.methods.size = sizeOpen;
             };
 
             const checkDebugger = () => {
                 const start = performance.now();
-                debugger; 
+                debugger;
                 const end = performance.now();
                 devtools.methods.debugger = end - start > 100;
             };
@@ -1971,38 +1965,38 @@ function attachResultClickHandlers(localResults, apiResults) {
             };
 
             const createSecureConsole = () => ({
-                log: function(...args) {
+                log: function (...args) {
                     if (devtools.open) {
                         originalConsole.log('%c[SECURE] Console access restricted', 'color: red; font-weight: bold;');
                         return;
                     }
                     originalConsole.log.apply(console, args);
                 },
-                warn: function(...args) {
+                warn: function (...args) {
                     if (devtools.open) {
                         return;
                     }
                     originalConsole.warn.apply(console, args);
                 },
-                error: function(...args) {
+                error: function (...args) {
                     if (devtools.open) {
                         return;
                     }
                     originalConsole.error.apply(console, args);
                 },
-                info: function(...args) {
+                info: function (...args) {
                     if (devtools.open) {
                         return;
                     }
                     originalConsole.info.apply(console, args);
                 },
-                debug: function(...args) {
+                debug: function (...args) {
                     if (devtools.open) {
                         return;
                     }
                     originalConsole.debug.apply(console, args);
                 },
-                clear: function() {
+                clear: function () {
                     if (devtools.open) {
                         return;
                     }
@@ -2011,17 +2005,17 @@ function attachResultClickHandlers(localResults, apiResults) {
             });
 
             Object.defineProperty(window, 'console', {
-                get: function() {
+                get: function () {
                     return devtools.open ? createSecureConsole() : originalConsole;
                 },
-                set: function() {}
+                set: function () { }
             });
 
-            window.eval = function() {
+            window.eval = function () {
                 throw new Error('eval() is disabled for security reasons');
             };
 
-            document.addEventListener('selectstart', function(e) {
+            document.addEventListener('selectstart', function (e) {
                 if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2029,19 +2023,19 @@ function attachResultClickHandlers(localResults, apiResults) {
                 }
             }, true);
 
-            document.addEventListener('dragover', function(e) {
+            document.addEventListener('dragover', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }, true);
 
-            document.addEventListener('drop', function(e) {
+            document.addEventListener('drop', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }, true);
 
-            document.addEventListener('copy', function(e) {
+            document.addEventListener('copy', function (e) {
                 if (devtools.open) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2049,7 +2043,7 @@ function attachResultClickHandlers(localResults, apiResults) {
                 }
             }, true);
 
-            document.addEventListener('paste', function(e) {
+            document.addEventListener('paste', function (e) {
                 if (devtools.open) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2060,6 +2054,38 @@ function attachResultClickHandlers(localResults, apiResults) {
             console.clear();
             console.log('%c🔒 Enhanced Production Security Active', 'color: green; font-size: 16px; font-weight: bold;');
             console.log('%c⚠️ Developer tools are monitored and restricted', 'color: orange; font-size: 14px;');
+        }
+    </script>
+    <div class="disclaimer-modal" id="disclaimerModal">
+        <div class="disclaimer-content">
+            <div class="disclaimer-icon">
+                <i class="fas fa-hammer"></i>
+            </div>
+            <div class="disclaimer-title">Welcome to NetaKhoj (Beta)</div>
+            <div class="disclaimer-text">
+                We are currently in the beta testing phase. While we strive for accuracy, you may encounter occasional
+                errors or missing data for certain constituencies. We are actively working to improve the platform and
+                expand our database. Thank you for your patience and support as we build India's most comprehensive
+                political analytics tool.
+            </div>
+            <button class="disclaimer-btn" onclick="closeDisclaimer()">Got it, let's explore!</button>
+        </div>
+    </div>
+
+    <script>
+        // Disclaimer Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const hasSeenDisclaimer = sessionStorage.getItem('hasSeenDisclaimer');
+            if (!hasSeenDisclaimer) {
+                setTimeout(() => {
+                    document.getElementById('disclaimerModal').classList.add('active');
+                }, 1000);
+            }
+        });
+
+        function closeDisclaimer() {
+            document.getElementById('disclaimerModal').classList.remove('active');
+            sessionStorage.setItem('hasSeenDisclaimer', 'true');
         }
     </script>
 </body>

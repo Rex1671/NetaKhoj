@@ -2,17 +2,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import fetch from 'node-fetch';
 import NodeCache from 'node-cache';
 import crypto from 'crypto';
 import { createLogger } from '../utils/logger.js';
 import fileStorage from '../utils/fileStorage.js';
+import appwriteService from './AppwriteService.js';
 
 const logger = createLogger('CANDIDATE');
-const cache = new NodeCache({ 
-  stdTTL: 7200,        
+const cache = new NodeCache({
+  stdTTL: 7200,
   checkperiod: 600,
-  useClones: false 
+  useClones: false
 });
 
 // ============================================================================
@@ -116,7 +116,7 @@ class CandidateMetrics {
     this.metrics.failedRequests++;
     const errorType = error.name || 'UnknownError';
     this.metrics.errors[errorType] = (this.metrics.errors[errorType] || 0) + 1;
-    
+
     if (error instanceof CandidateTimeoutError) {
       this.metrics.timeouts++;
     }
@@ -181,46 +181,17 @@ class CandidateMetrics {
 class CandidateService {
   constructor() {
     this.config = {
-      endpoint: process.env.APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1',
-      projectId: process.env.APPWRITE_PROJECT_ID,
-      functionId: process.env.APPWRITE_FUNCTION_ID,
-      apiKey: process.env.APPWRITE_API_KEY,
       timeout: parseInt(process.env.CANDIDATE_TIMEOUT) || 20000,
       retryAttempts: parseInt(process.env.CANDIDATE_RETRY_ATTEMPTS) || 2,
       retryDelay: parseInt(process.env.CANDIDATE_RETRY_DELAY) || 1000,
-      myNetaBaseUrl: 'https://www.myneta.info'
+      myNetaBaseUrl: 'https://www.myneta.info',
+      functionId: process.env.APPWRITE_FUNCTION_ID // Specific function ID for candidates if different
     };
 
     this.metrics = new CandidateMetrics();
     this.deduplicator = new RequestDeduplicator();
-    
-    this._validateConfig();
-    this._initialize();
-  }
 
-  _validateConfig() {
-    const { projectId, functionId } = this.config;
-
-    if (!projectId || !functionId) {
-      logger.warn('CONFIG', 'Missing PROJECT_ID or FUNCTION_ID - service disabled');
-      this.enabled = false;
-      return;
-    }
-
-    this.enabled = true;
-  }
-
-  _initialize() {
-    if (!this.enabled) return;
-
-    const { endpoint, functionId } = this.config;
-    this.functionUrl = `${endpoint}/functions/${functionId}/executions`;
-
-    logger.info('INIT', 'Candidate service initialized', {
-      endpoint: this.functionUrl,
-      timeout: this.config.timeout,
-      cacheTime: cache.options.stdTTL
-    });
+    this.enabled = appwriteService.enabled;
   }
 
   // ========================================================================
@@ -368,14 +339,29 @@ class CandidateService {
         party: params.party || 'N/A'
       });
 
-      const data = await this._executeFetch(requestId, params);
+      // Use AppwriteService to execute function
+      // Pass the payload directly. AppwriteService handles JSON.stringify.
+      const payload = {
+        test: 'search',
+        name: params.name,
+        constituency: params.constituency,
+        party: params.party,
+        meow: params.meow,
+        bhaw: params.bhaw
+      };
+
+      // Pass functionId if specific one is needed, otherwise AppwriteService uses default
+      const result = await appwriteService.executeFunction(payload, requestId, this.config.functionId);
+
+      // Parse the result structure from AppwriteService
+      const data = await this._parseResponse(requestId, result, params.name);
       const duration = Date.now() - startTime;
 
       this.metrics.recordSuccess(duration);
       logger.success(requestId, `Data fetched in ${duration}ms`, {
         name: params.name,
-        hasAssets: !!data.data?.assets,
-        hasCriminalCases: !!data.data?.criminalCases
+        hasAssets: !!data.assets, // Changed from data.data.assets
+        hasCriminalCases: !!data.criminalCases // Changed from data.data.criminalCases
       });
 
       // Cache successful result
@@ -388,10 +374,10 @@ class CandidateService {
       const duration = Date.now() - startTime;
 
       // Don't retry on certain errors
-      if (error instanceof CandidateTimeoutError || 
-          error instanceof CandidateNotFoundError ||
-          attempt > this.config.retryAttempts) {
-        
+      if (error instanceof CandidateTimeoutError ||
+        error instanceof CandidateNotFoundError ||
+        attempt > this.config.retryAttempts) {
+
         this.metrics.recordFailure(error);
         logger.error(requestId, `Failed after ${attempt} attempt(s)`, {
           duration,
@@ -414,108 +400,30 @@ class CandidateService {
   }
 
   // ========================================================================
-  // CORE FETCH LOGIC
-  // ========================================================================
-
-  async _executeFetch(requestId, params) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, this.config.timeout);
-
-    try {
-      const requestBody = {
-        async: false,
-        body: JSON.stringify({
-          test: 'search',
-          name: params.name,
-          constituency: params.constituency,
-          party: params.party,
-          meow: params.meow,
-          bhaw: params.bhaw
-        })
-      };
-
-      logger.debug(requestId, 'Sending request to Appwrite', {
-        name: params.name,
-        hasConstituency: !!params.constituency,
-        hasParty: !!params.party
-      });
-
-      const response = await fetch(this.functionUrl, {
-        method: 'POST',
-        headers: this._getHeaders(),
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeout);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new CandidateServiceError(
-          `HTTP ${response.status}: ${errorText}`,
-          'HTTP_ERROR',
-          response.status
-        );
-      }
-
-      const result = await response.json();
-      return await this._parseResponse(requestId, result, params.name);
-
-    } catch (error) {
-      clearTimeout(timeout);
-
-      if (error.name === 'AbortError') {
-        throw new CandidateTimeoutError(this.config.timeout);
-      }
-
-      throw error;
-    }
-  }
-
-  // ========================================================================
   // RESPONSE PARSING
   // ========================================================================
 
   async _parseResponse(requestId, result, name) {
-    logger.debug(requestId, 'Parsing response', {
-      status: result.status,
-      duration: result.duration,
-      hasResponseBody: !!result.responseBody
-    });
+    // result is the object returned by AppwriteService.executeFunction
+    // it contains { success: true, data: { ... }, execution: { ... } }
 
-    let parsedResponse;
-    try {
-      parsedResponse = typeof result.responseBody === 'string'
-        ? JSON.parse(result.responseBody)
-        : result.responseBody;
-    } catch (error) {
-      logger.error(requestId, 'Failed to parse response body', error);
-      parsedResponse = result.responseBody;
-    }
+    const responseData = result.data; // This is the parsed JSON body from the function
 
-    const success = parsedResponse?.success !== false && result.status === 'completed';
-
-    if (!success) {
-      if (result.stderr) {
-        logger.error(requestId, 'Appwrite function error', { stderr: result.stderr });
-      }
-
-      if (parsedResponse?.error?.includes('not found') ||
-          parsedResponse?.data?.error?.includes('not found')) {
+    if (!responseData || responseData.success === false) {
+      if (responseData?.error?.includes('not found') ||
+        responseData?.data?.error?.includes('not found')) {
         throw new CandidateNotFoundError(name);
       }
 
       throw new CandidateServiceError(
-        parsedResponse?.error || 'Failed to fetch data from Appwrite',
+        responseData?.error || 'Failed to fetch data from Appwrite',
         'EXECUTION_FAILED',
         500
       );
     }
 
     const searchUrl = this._getSearchUrl(name);
-    const candidateData = parsedResponse.data || {};
+    const candidateData = responseData.data || {};
 
     // Extract meow and bhaw from assetLink if present
     let meow = '';
@@ -546,15 +454,14 @@ class CandidateService {
     // Remove assetLink from candidateData before returning
     delete candidateData.assetLink;
 
+    // RETURN UNWRAPPED DATA
     return {
-      data: {
-        ...candidateData,
-        meow: encryptedMeow,
-        bhaw: encryptedBhaw,
-        searchUrl: searchUrl,
-        source: 'appwrite',
-        timestamp: new Date().toISOString()
-      }
+      ...candidateData,
+      meow: encryptedMeow,
+      bhaw: encryptedBhaw,
+      searchUrl: searchUrl,
+      source: 'appwrite',
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -582,12 +489,12 @@ class CandidateService {
       constituency?.toLowerCase().trim() || '',
       party?.toLowerCase().trim() || ''
     ];
-    
+
     const keyString = parts.filter(Boolean).join(':');
     if (keyString.length > 100) {
       return 'candidate:' + crypto.createHash('md5').update(keyString).digest('hex');
     }
-    
+
     return keyString;
   }
 
@@ -601,14 +508,13 @@ class CandidateService {
 
   _getErrorResponse(errorMessage, name = '') {
     const searchUrl = name ? this._getSearchUrl(name) : null;
-    
+
+    // Also unwrap error response
     return {
-      data: {
-        assetLink: searchUrl,
-        content: null,
-        error: errorMessage,
-        timestamp: new Date().toISOString()
-      }
+      assetLink: searchUrl,
+      content: null,
+      error: errorMessage,
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -642,8 +548,6 @@ class CandidateService {
       metrics: this.metrics.getStats(),
       deduplicator: this.deduplicator.getStats(),
       config: {
-        endpoint: this.functionUrl,
-        projectId: this.config.projectId ? `${this.config.projectId.slice(0, 8)}...` : 'not set',
         timeout: this.config.timeout,
         retryAttempts: this.config.retryAttempts,
         cacheTime: cache.options.stdTTL
@@ -662,13 +566,12 @@ class CandidateService {
 
     try {
       const startTime = Date.now();
-      await this._executeFetch('health-check', {
-        name: 'Health Check',
-        constituency: '',
-        party: '',
-        meow: '',
-        bhaw: ''
-      });
+      // Simple health check payload
+      await appwriteService.executeFunction({
+        test: 'health',
+        name: 'Health Check'
+      }, 'health-check');
+
       const duration = Date.now() - startTime;
 
       return {
@@ -692,7 +595,7 @@ class CandidateService {
   }
 
   // ========================================================================
-  // BATCH OPERATIONS (BONUS!)
+  // BATCH OPERATIONS
   // ========================================================================
 
   async getCandidatesDataBatch(candidates) {
@@ -703,12 +606,12 @@ class CandidateService {
     logger.info('BATCH', `Processing ${candidates.length} candidates`);
 
     const results = await Promise.allSettled(
-      candidates.map(c => 
+      candidates.map(c =>
         this.getCandidateData(
-          c.name, 
-          c.constituency, 
-          c.party, 
-          c.meow, 
+          c.name,
+          c.constituency,
+          c.party,
+          c.meow,
           c.bhaw
         )
       )

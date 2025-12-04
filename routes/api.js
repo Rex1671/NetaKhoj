@@ -6,11 +6,11 @@ import { fileURLToPath } from 'url';
 
 import { memberQueryValidator, candidateQueryValidator } from '../middleware/validator.js';
 import { scraperLimiter } from '../middleware/rateLimiter.js';
-import { 
-  fetchFromAppwrite, 
+import {
+  fetchFromAppwrite,
   getMemberData as fetchMemberFromAppwrite,
   getCandidateData as fetchCandidateFromAppwrite,
-  getStats as getAppwriteStats 
+  getStats as getAppwriteStats
 } from '../services/appwriteDataFetcher.js';
 import candidateService from '../services/candidateService.js';
 import prsService from '../services/prsService.js';
@@ -36,10 +36,10 @@ function logAppwriteResponse(functionName, params, response) {
     response,
     responseSize: JSON.stringify(response).length
   };
-  
+
   const logPath = path.join(__dirname, '..', 'appwriteresponse.txt');
   const logLine = `\n${'='.repeat(80)}\n${JSON.stringify(logEntry, null, 2)}\n`;
-  
+
   fs.appendFileSync(logPath, logLine, 'utf8');
   console.log(`[APPWRITE] ${functionName} - Response logged to appwriteresponse.txt`);
 }
@@ -71,13 +71,13 @@ const CONFIG = {
 const generateRequestId = () => crypto.randomBytes(8).toString('hex');
 
 const loadStaticFile = (filename) => {
-  const filepath = path.join(__dirname, '..', 'data', 
+  const filepath = path.join(__dirname, '..', 'data',
     filename.includes('geojson') ? 'geojson' : '', filename);
-  
+
   if (!fs.existsSync(filepath)) {
     throw new Error(`File not found: ${filename}`);
   }
-  
+
   return JSON.parse(fs.readFileSync(filepath, 'utf8'));
 };
 
@@ -90,8 +90,8 @@ const withCache = async (cacheType, cacheKey, loader) => {
   return data;
 };
 
-const createTimeoutPromise = (ms, errorMsg) => 
-  new Promise((_, reject) => 
+const createTimeoutPromise = (ms, errorMsg) =>
+  new Promise((_, reject) =>
     setTimeout(() => reject(new Error(errorMsg)), ms)
   );
 
@@ -100,19 +100,19 @@ const createTimeoutPromise = (ms, errorMsg) =>
 // ============================================================================
 
 function needsUpdate(value) {
-  return !value || 
-         value === 'N/A' || 
-         value === 'Unknown' || 
-         value === 'null' || 
-         value === 'undefined' ||
-         value === '' ||
-         String(value).trim() === '';
+  return !value ||
+    value === 'N/A' ||
+    value === 'Unknown' ||
+    value === 'null' ||
+    value === 'undefined' ||
+    value === '' ||
+    String(value).trim() === '';
 }
 
 function smartMergeField(target, source, field, targetLocation = null) {
   let currentValue;
   let targetObj = target;
-  
+
   if (targetLocation === 'personal') {
     if (!target.personal) target.personal = {};
     currentValue = target.personal[field];
@@ -124,14 +124,14 @@ function smartMergeField(target, source, field, targetLocation = null) {
   } else {
     currentValue = target[field];
   }
-  
+
   const sourceValue = source[field];
-  
+
   if (needsUpdate(currentValue) && !needsUpdate(sourceValue)) {
     targetObj[field] = sourceValue;
     return true;
   }
-  
+
   return false;
 }
 
@@ -161,7 +161,7 @@ function mergeAppwritePrs(target, data) {
   if (data.state) target.state = data.state;
   if (data.constituency) target.constituency = data.constituency;
   if (data.party) target.party = data.party;
-  
+
   if (!target.personal) target.personal = {};
   const personalFields = ['age', 'gender', 'education', 'termStart', 'termEnd', 'noOfTerm', 'membership'];
   personalFields.forEach(field => {
@@ -169,7 +169,7 @@ function mergeAppwritePrs(target, data) {
       target.personal[field] = data[field];
     }
   });
-  
+
   if (!target.performance) target.performance = {};
   const performanceFields = [
     'attendance', 'natAttendance', 'stateAttendance',
@@ -182,7 +182,7 @@ function mergeAppwritePrs(target, data) {
       target.performance[field] = data[field];
     }
   });
-  
+
   if (data.attendanceTable) target.attendanceTable = data.attendanceTable;
   if (data.debatesTable) target.debatesTable = data.debatesTable;
   if (data.questionsTable) target.questionsTable = data.questionsTable;
@@ -196,11 +196,11 @@ function mergeLocalPrs(target, data) {
     constituency: data.constituency || target.constituency || 'Unknown',
     party: data.party || target.party || 'Unknown',
   });
-  
+
   if (data.performance) {
     target.performance = { ...target.performance, ...data.performance };
   }
-  
+
   if (data.personal) {
     target.personal = { ...target.personal, ...data.personal };
   }
@@ -274,7 +274,7 @@ function mergeCandidate(target, data) {
 async function fetchAllData(params, requestId) {
   const { name, type, constituency, party, state, meow, bhaw } = params;
   const startTime = Date.now();
-  
+
   const results = {
     appwritePrimary: null,
     localPrs: null,
@@ -289,12 +289,12 @@ async function fetchAllData(params, requestId) {
   // ========================================
   // CHECK STORAGE FIRST
   // ========================================
-  
+
   try {
     const storedPrs = await fileStorage.getPrsData(name, type);
     if (storedPrs.found) {
       const age = Date.now() - new Date(storedPrs.data.timestamp).getTime();
-      
+
       if (age < CONFIG.STORAGE_MAX_AGE) {
         results.appwritePrimary = storedPrs.data.data;
         fromStorage.prs = true;
@@ -305,7 +305,7 @@ async function fetchAllData(params, requestId) {
     const storedCandidate = await fileStorage.getCandidateData(name);
     if (storedCandidate.found) {
       const age = Date.now() - new Date(storedCandidate.data.timestamp).getTime();
-      
+
       if (age < CONFIG.STORAGE_MAX_AGE) {
         results.candidate = storedCandidate.data.data;
         fromStorage.candidate = true;
@@ -332,13 +332,13 @@ async function fetchAllData(params, requestId) {
         .then(data => {
           // 📝 LOG APPWRITE RESPONSE
           logAppwriteResponse('fetchMemberFromAppwrite (PRIMARY)', { name, type, constituency, state }, data);
-          
+
           if (validateAppwritePrsData(data)) {
             results.appwritePrimary = data;
-            fileStorage.savePrsData(name, type, data, { 
-              constituency, 
-              state, 
-              source: 'appwrite-sdk' 
+            fileStorage.savePrsData(name, type, data, {
+              constituency,
+              state,
+              source: 'appwrite-sdk'
             });
             console.log(`[${requestId}] ✅ Appwrite SDK data fetched:`, {
               name: data.name,
@@ -364,10 +364,10 @@ async function fetchAllData(params, requestId) {
         .then(data => {
           if (validateLocalPrsData(data)) {
             results.localPrs = data;
-            fileStorage.savePrsData(name, type, data, { 
-              constituency, 
-              party, 
-              source: 'local-prs' 
+            fileStorage.savePrsData(name, type, data, {
+              constituency,
+              party,
+              source: 'local-prs'
             });
             console.log(`[${requestId}] ✅ Local PRS data fetched`);
           }
@@ -389,10 +389,10 @@ async function fetchAllData(params, requestId) {
           const data = result?.data || result;
           if (validateCandidateData(data)) {
             results.candidate = data;
-            fileStorage.saveCandidateData(name, data, { 
-              constituency, 
-              party, 
-              source: 'appwrite-candidate' 
+            fileStorage.saveCandidateData(name, data, {
+              constituency,
+              party,
+              source: 'appwrite-candidate'
             });
             console.log(`[${requestId}] ✅ Candidate data fetched`);
           }
@@ -422,9 +422,9 @@ async function fetchAllData(params, requestId) {
 
 async function fetchSecondaryData(params, currentData, requestId) {
   const { name, type, constituency, state } = params;
-  
+
   console.log(`[${requestId}] 🔄 Making secondary Appwrite SDK call to fill missing data`);
-  
+
   try {
     // 🔴 APPWRITE CALL #2: Secondary data fetch
     const secondaryData = await Promise.race([
@@ -453,14 +453,15 @@ async function fetchSecondaryData(params, currentData, requestId) {
     });
 
     const updates = {};
-    
+
     const personalFields = ['age', 'gender', 'education', 'termStart', 'termEnd', 'noOfTerm', 'membership'];
     personalFields.forEach(field => {
       if (smartMergeField(currentData, secondaryData, field, 'personal')) {
-        updates[`personal.${field}`] = secondaryData[field];
+        if (!updates.personal) updates.personal = {};
+        updates.personal[field] = secondaryData[field];
       }
     });
-    
+
     const performanceFields = [
       'attendance', 'natAttendance', 'stateAttendance',
       'debates', 'natDebates', 'stateDebates',
@@ -469,10 +470,11 @@ async function fetchSecondaryData(params, currentData, requestId) {
     ];
     performanceFields.forEach(field => {
       if (smartMergeField(currentData, secondaryData, field, 'performance')) {
-        updates[`performance.${field}`] = secondaryData[field];
+        if (!updates.performance) updates.performance = {};
+        updates.performance[field] = secondaryData[field];
       }
     });
-    
+
     const topLevelFields = ['imageUrl', 'state', 'constituency', 'party', 'attendanceTable', 'debatesTable', 'questionsTable'];
     topLevelFields.forEach(field => {
       if (smartMergeField(currentData, secondaryData, field)) {
@@ -482,33 +484,24 @@ async function fetchSecondaryData(params, currentData, requestId) {
 
     if (secondaryData.attendanceTable && !currentData.attendanceTable) {
       currentData.attendanceTable = secondaryData.attendanceTable;
-      updates.attendanceTable = 'Forced merge';
+      updates.attendanceTable = secondaryData.attendanceTable;
     }
     if (secondaryData.debatesTable && !currentData.debatesTable) {
       currentData.debatesTable = secondaryData.debatesTable;
-      updates.debatesTable = 'Forced merge';
+      updates.debatesTable = secondaryData.debatesTable;
     }
     if (secondaryData.questionsTable && !currentData.questionsTable) {
       currentData.questionsTable = secondaryData.questionsTable;
-      updates.questionsTable = 'Forced merge';
+      updates.questionsTable = secondaryData.questionsTable;
     }
 
     if (Object.keys(updates).length > 0) {
-      console.log(`[${requestId}] ✅ Secondary call filled ${Object.keys(updates).length} missing fields:`, updates);
-      
-      console.log(`[${requestId}] Final table state:`, {
-        hasAttendanceTable: !!currentData.attendanceTable,
-        hasDebatesTable: !!currentData.debatesTable,
-        hasQuestionsTable: !!currentData.questionsTable,
-        attendanceTableLength: currentData.attendanceTable?.length || 0,
-        debatesTableLength: currentData.debatesTable?.length || 0,
-        questionsTableLength: currentData.questionsTable?.length || 0,
-      });
-      
-      return { 
-        updated: true, 
-        fields: Object.keys(updates), 
-        data: updates 
+      console.log(`[${requestId}] ✅ Secondary call filled missing fields:`, Object.keys(updates));
+
+      return {
+        updated: true,
+        fields: Object.keys(updates),
+        data: updates
       };
     } else {
       console.log(`[${requestId}] Secondary call made but no new data needed`);
@@ -591,26 +584,26 @@ function buildResponse(results, fromStorage, req) {
 router.get('/image/:imageId', async (req, res) => {
   const { imageId } = req.params;
   const requestId = req.sessionId || generateRequestId();
-  
+
   try {
     const cached = await cacheService.get('image', imageId);
     if (cached) {
       console.log(`[${requestId}] Image served from cache: ${imageId}`);
-      
+
       res.set({
         'Content-Type': cached.contentType || 'image/jpeg',
-        'Cache-Control': 'public, max-age=26400', 
+        'Cache-Control': 'public, max-age=26400',
         'X-Source': 'cache',
-        'Access-Control-Allow-Origin': '*', 
-        'Access-Control-Allow-Methods': 'GET', 
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
         'Cross-Origin-Resource-Policy': 'cross-origin'
       });
-      
+
       return res.send(cached.buffer);
     }
 
     const actualUrl = imageProxy.getActualUrl(imageId);
-    
+
     if (!actualUrl) {
       console.warn(`[${requestId}] Invalid image ID: ${imageId}`);
       return res.status(404).json({ error: 'Image not found' });
@@ -669,13 +662,13 @@ router.get('/image/:imageId', async (req, res) => {
 router.get('/constituencies', async (req, res) => {
   try {
     const { type = 'assembly' } = req.query;
-    const filename = type === 'assembly' 
-      ? CONFIG.DATA_PATHS.ASSEMBLY 
+    const filename = type === 'assembly'
+      ? CONFIG.DATA_PATHS.ASSEMBLY
       : CONFIG.DATA_PATHS.PARLIAMENTARY;
-    
+
     const data = await withCache('geojson', type, () => loadStaticFile(filename));
     res.json(data);
-    
+
   } catch (error) {
     console.error('Constituencies error:', error);
     res.status(error.message.includes('not found') ? 404 : 500)
@@ -693,7 +686,7 @@ router.get('/image-proxy/stats', (req, res) => {
 
 router.get('/all-data', async (req, res) => {
   try {
-    const data = await withCache('geojson', 'all_data', 
+    const data = await withCache('geojson', 'all_data',
       () => loadStaticFile(CONFIG.DATA_PATHS.ALL_DATA));
     res.json(data);
   } catch (error) {
@@ -704,7 +697,7 @@ router.get('/all-data', async (req, res) => {
 
 router.get('/rajya-sabha', async (req, res) => {
   try {
-    const data = await withCache('geojson', 'rajya_sabha', 
+    const data = await withCache('geojson', 'rajya_sabha',
       () => loadStaticFile(CONFIG.DATA_PATHS.RAJYA_SABHA));
     res.json(data);
   } catch (error) {
@@ -722,7 +715,7 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
   const params = req.query;
   const { name, type } = params;
   const overallStartTime = Date.now();
-  
+
   try {
     const { results, errors, fromStorage, duration } = await fetchAllData(params, requestId);
 
@@ -730,9 +723,9 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
 
     if (!hasData) {
       console.warn(`[${requestId}] No data found from any source`, { name, type });
-      
+
       fileStorage.saveAnalytics('prs_request', {
-        name, 
+        name,
         type,
         duration,
         success: false,
@@ -758,13 +751,20 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
       performanceFields: Object.keys(responseData.performance || {}),
     });
 
-    const secondaryResult = await fetchSecondaryData(params, responseData, requestId);
-    
-    if (secondaryResult?.updated) {
-      responseData.secondaryDataMerged = true;
-      responseData.mergedFields = secondaryResult.fields;
-      responseData.secondaryData = secondaryResult.data;
-    }
+    // ASYNC SECONDARY FETCH - Fire and forget
+    fetchSecondaryData(params, responseData, requestId)
+      .then(secondaryResult => {
+        if (secondaryResult?.updated) {
+          console.log(`[${requestId}] 🔄 Background update completed`);
+          // Store result in cache for polling
+          cacheService.set('poll', requestId, {
+            secondaryDataMerged: true,
+            mergedFields: secondaryResult.fields,
+            ...secondaryResult.data // Spread the nested updates (personal, performance, etc.)
+          }, 5 * 60 * 1000); // 5 minutes TTL
+        }
+      })
+      .catch(err => console.error(`[${requestId}] Background fetch failed:`, err));
 
     const totalDuration = Date.now() - overallStartTime;
 
@@ -773,34 +773,33 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
       type,
       sources: responseData.sources,
       fromStorage,
-      secondaryCallMade: !!secondaryResult,
-      secondaryFieldsUpdated: secondaryResult?.fields?.length || 0,
+      secondaryCallMade: true, // It's always attempted now
       duration: totalDuration,
       success: true,
     });
 
-    console.log(`[${requestId}] ✅ PRS request completed successfully:`, {
+    console.log(`[${requestId}] ✅ PRS initial response sent (secondary fetch in background):`, {
       name,
       sources: responseData.sources,
-      secondaryCall: secondaryResult?.updated ? 'Updated data' : 'No updates needed',
       totalDuration: `${totalDuration}ms`,
-      fieldsUpdated: secondaryResult?.fields?.length || 0,
     });
 
     return res.json({
       ...responseData,
-      timing: { 
+      bothComplete: false, // Signal that more data might come
+      requestId, // Crucial for polling
+      timing: {
         total: totalDuration,
         primary: duration,
-        secondary: secondaryResult ? (totalDuration - duration) : 0,
+        secondary: 0 // Async
       },
       timestamp: new Date().toISOString(),
     });
 
   } catch (error) {
     console.error(`[${requestId}] ❌ Unexpected error in PRS endpoint:`, error);
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: 'Internal server error',
       message: error.message,
       timestamp: new Date().toISOString(),
@@ -814,30 +813,30 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
 
 router.get('/candidate', scraperLimiter, candidateQueryValidator, async (req, res) => {
   const requestId = req.sessionId || generateRequestId();
-  
+
   try {
     const { name, constituency, party, meow, bhaw } = req.query;
-    
+
     console.log(`[${requestId}] Candidate request:`, { name });
 
     const result = await candidateService.getCandidateData(
-      name, 
-      constituency, 
-      party, 
-      meow, 
+      name,
+      constituency,
+      party,
+      meow,
       bhaw
     );
 
     console.log(`[${requestId}] Result is:`, result);
-    
+
     res.json({
       data: result.data || result,
       timestamp: new Date().toISOString(),
     });
-    
+
   } catch (error) {
     console.error(`[${requestId}] ❌ Candidate fetch error:`, error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch candidate data',
       timestamp: new Date().toISOString(),
     });
@@ -852,17 +851,17 @@ router.get('/test-appwrite-sdk', async (req, res) => {
   try {
     const { name = 'ANITA SUBHADARSHINI', type = 'MP' } = req.query;
     const requestId = generateRequestId();
-    
+
     console.log(`[${requestId}] Testing Appwrite SDK:`, { name, type });
-    
+
     // 🔴 APPWRITE CALL #3: Test endpoint
     const result = await fetchMemberFromAppwrite(name, type);
-    
+
     // 📝 LOG APPWRITE RESPONSE
     logAppwriteResponse('fetchMemberFromAppwrite (TEST)', { name, type }, result);
-    
+
     console.log("Result:", result);
-    
+
     res.json({
       success: true,
       result,
@@ -881,36 +880,36 @@ router.get('/test-appwrite-sdk', async (req, res) => {
 
 router.get('/debug-full-flow', async (req, res) => {
   const { name, type } = req.query;
-  
+
   if (!name || !type) {
     return res.status(400).json({ error: 'name and type are required' });
   }
-  
+
   try {
     const requestId = generateRequestId();
-    
+
     // 🔴 APPWRITE CALL #4: Debug primary
     const primary = await fetchMemberFromAppwrite(name, type);
     logAppwriteResponse('fetchMemberFromAppwrite (DEBUG-PRIMARY)', { name, type }, primary);
-    
-    const mockResponse = { 
-      name, 
-      type, 
-      personal: {}, 
-      performance: {} 
+
+    const mockResponse = {
+      name,
+      type,
+      personal: {},
+      performance: {}
     };
     mergeAppwritePrs(mockResponse, primary);
-    
+
     const secondary = await fetchMemberFromAppwrite(name, type);
     logAppwriteResponse('fetchMemberFromAppwrite (DEBUG-SECONDARY)', { name, type }, secondary);
-    
+
     const beforeMerge = JSON.parse(JSON.stringify(mockResponse));
     const secondaryResult = await fetchSecondaryData(
-      { name, type }, 
-      mockResponse, 
+      { name, type },
+      mockResponse,
       requestId
     );
-    
+
     res.json({
       primary,
       secondary,
@@ -920,16 +919,16 @@ router.get('/debug-full-flow', async (req, res) => {
       fieldsUpdated: secondaryResult?.fields || [],
     });
   } catch (error) {
-    res.status(500).json({ 
-      error: error.message, 
-      stack: error.stack 
+    res.status(500).json({
+      error: error.message,
+      stack: error.stack
     });
   }
 });
 
 router.get('/health', (req, res) => {
   const memUsage = process.memoryUsage();
-  
+
   res.status(200).json({
     status: 'healthy',
     uptime: process.uptime(),
@@ -951,13 +950,13 @@ router.get('/health', (req, res) => {
 
 router.post('/cache/clear', (req, res) => {
   const { type } = req.query;
-  
+
   cacheService.flush(type);
   candidateService.clearCache();
-  
+
   console.log('Cache cleared:', { type: type || 'all' });
-  
-  res.json({ 
+
+  res.json({
     message: `Cache cleared: ${type || 'all'}`,
     timestamp: new Date().toISOString(),
   });
@@ -982,5 +981,20 @@ router.get('/welcome', (req, res) => {
 });
 
 console.log('✅ API routes initialized with Appwrite SDK dual-call support');
+
+// ============================================================================
+// POLLING ENDPOINT
+// ============================================================================
+
+router.get('/prs/poll/:requestId', async (req, res) => {
+  const { requestId } = req.params;
+  const data = await cacheService.get('poll', requestId);
+
+  if (data) {
+    res.json({ ready: true, data });
+  } else {
+    res.json({ ready: false });
+  }
+});
 
 export default router;

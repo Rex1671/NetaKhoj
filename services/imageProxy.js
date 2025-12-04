@@ -128,8 +128,36 @@ class ImageProxyService {
       return originalUrl; // Return original URL as fallback
     }
 
-    // For Railway deployment, use the full Railway URL
-    const railwayUrl = process.env.RAILWAY_STATIC_URL || baseUrl;
+    // Determine base URL based on environment
+    let railwayUrl;
+
+    // Robust environment check
+    const env = (process.env.NODE_ENV || '').trim().toLowerCase();
+    const isDev = env === 'development' || env === 'dev';
+
+    if (isDev) {
+      // In development, prefer the local base URL
+      railwayUrl = baseUrl || 'http://localhost:3000';
+      logger.info('PROXY-ENV', 'Using local base URL for development', {
+        env: process.env.NODE_ENV,
+        parsedEnv: env,
+        railwayUrl
+      });
+    } else {
+      // In production, prefer the Railway URL
+      railwayUrl = process.env.RAILWAY_STATIC_URL || baseUrl;
+      logger.info('PROXY-ENV', 'Using production URL', {
+        env: process.env.NODE_ENV,
+        parsedEnv: env,
+        railwayUrl
+      });
+    }
+
+    // Remove trailing slash if present to prevent double slashes
+    if (railwayUrl.endsWith('/')) {
+      railwayUrl = railwayUrl.slice(0, -1);
+    }
+
     const proxyUrl = `${railwayUrl}/api/image/${imageId}`;
 
     logger.success('PROXY-CREATED', `Proxy URL created`, {

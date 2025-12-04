@@ -1,11 +1,12 @@
 // server.js - PRODUCTION-HARDENED VERSION WITH SECURITY
+import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import { WebSocketServer } from 'ws';
 import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
-import { fileURLToPath } from 'url';  
+import { fileURLToPath } from 'url';
 import compression from 'compression';
 import crypto from 'crypto';
 import fs from 'fs';
@@ -20,6 +21,17 @@ import fileStorage from './utils/fileStorage.js';
 import imageProxy from './services/imageProxy.js';
 
 // ============================================================================
+// ENVIRONMENT DETECTION
+// ============================================================================
+
+const IS_RAILWAY = !!process.env.RAILWAY_PROJECT_ID;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const env = (process.env.NODE_ENV || '').trim().toLowerCase();
+const IS_DEVELOPMENT = env === 'development' || env === 'dev';
+
+process.env.LOG_TO_FILE = IS_PRODUCTION ? 'true' : (process.env.LOG_TO_FILE || 'false');
+
+// ============================================================================
 // SECURITY MIDDLEWARE & UTILITIES
 // ============================================================================
 
@@ -30,7 +42,7 @@ class SecurityManager {
     this.suspiciousActivity = new Map(); // IP -> { count, firstSeen, lastSeen }
     this.failedAttempts = new Map(); // IP -> { count, lastAttempt }
     this.rateLimitStore = new Map(); // IP -> { requests: [], blocked: false }
-    
+
     // Threat detection thresholds
     this.THRESHOLDS = {
       MAX_FAILED_ATTEMPTS: 5,
@@ -64,7 +76,7 @@ class SecurityManager {
   blockIP(ip, reason, duration = this.THRESHOLDS.BLOCK_DURATION) {
     this.blockedIPs.add(ip);
     this.logger.warn('BLOCK', `IP blocked: ${ip}`, { reason, duration });
-    
+
     fileStorage.saveAnalytics('ip_blocked', {
       ip,
       reason,
@@ -88,19 +100,19 @@ class SecurityManager {
   recordFailedAttempt(ip, reason) {
     const now = Date.now();
     const record = this.failedAttempts.get(ip) || { count: 0, lastAttempt: now };
-    
+
     // Reset if outside window
     if (now - record.lastAttempt > this.THRESHOLDS.FAILED_ATTEMPT_WINDOW) {
       record.count = 0;
     }
-    
+
     record.count++;
     record.lastAttempt = now;
     this.failedAttempts.set(ip, record);
 
-    this.logger.warn('FAILED_ATTEMPT', `Failed attempt from ${ip}`, { 
-      reason, 
-      count: record.count 
+    this.logger.warn('FAILED_ATTEMPT', `Failed attempt from ${ip}`, {
+      reason,
+      count: record.count
     });
 
     // Block if threshold exceeded
@@ -115,29 +127,29 @@ class SecurityManager {
   // Record suspicious activity
   recordSuspiciousActivity(ip, activity, score = 1) {
     const now = Date.now();
-    const record = this.suspiciousActivity.get(ip) || { 
-      count: 0, 
+    const record = this.suspiciousActivity.get(ip) || {
+      count: 0,
       score: 0,
-      firstSeen: now, 
+      firstSeen: now,
       lastSeen: now,
       activities: []
     };
-    
+
     record.count++;
     record.score += score;
     record.lastSeen = now;
     record.activities.push({ activity, score, timestamp: now });
-    
+
     // Keep only last 50 activities
     if (record.activities.length > 50) {
       record.activities = record.activities.slice(-50);
     }
-    
+
     this.suspiciousActivity.set(ip, record);
 
-    this.logger.warn('SUSPICIOUS', `Suspicious activity from ${ip}`, { 
-      activity, 
-      score: record.score 
+    this.logger.warn('SUSPICIOUS', `Suspicious activity from ${ip}`, {
+      activity,
+      score: record.score
     });
 
     fileStorage.saveAnalytics('suspicious_activity', {
@@ -160,7 +172,7 @@ class SecurityManager {
   scanForThreats(input) {
     const threats = [];
     const inputStr = typeof input === 'object' ? JSON.stringify(input) : String(input);
-    
+
     for (const pattern of this.MALICIOUS_PATTERNS) {
       const matches = inputStr.match(pattern);
       if (matches) {
@@ -170,14 +182,14 @@ class SecurityManager {
         });
       }
     }
-    
+
     return threats;
   }
 
   // Validate input
   validateInput(input, maxLength = 1000) {
     if (typeof input !== 'string') return true;
-    
+
     // Check length
     if (input.length > maxLength) {
       return false;
@@ -192,14 +204,14 @@ class SecurityManager {
   checkRateLimit(ip) {
     const now = Date.now();
     const record = this.rateLimitStore.get(ip) || { requests: [], blocked: false };
-    
+
     // Remove old requests (older than 1 minute)
     record.requests = record.requests.filter(time => now - time < 60000);
-    
+
     // Add current request
     record.requests.push(now);
     this.rateLimitStore.set(ip, record);
-    
+
     // Check if exceeded
     if (record.requests.length > this.THRESHOLDS.MAX_REQUESTS_PER_MINUTE) {
       if (!record.blocked) {
@@ -208,7 +220,7 @@ class SecurityManager {
       }
       return false;
     }
-    
+
     record.blocked = false;
     return true;
   }
@@ -216,7 +228,7 @@ class SecurityManager {
   // Sanitize input
   sanitize(input) {
     if (typeof input !== 'string') return input;
-    
+
     return input
       .replace(/[<>]/g, '') // Remove angle brackets
       .replace(/javascript:/gi, '')
@@ -318,71 +330,71 @@ const validators = {
 // IP blocking middleware
 const ipBlocker = (req, res, next) => {
   const ip = getClientIP(req);
-  
+
   if (security.isBlocked(ip)) {
-    logger.warn(req.sessionId, 'Blocked IP attempted access', { ip });
-    return res.status(403).json({ 
+    this.logger.warn(req.sessionId, 'Blocked IP attempted access', { ip });
+    return res.status(403).json({
       error: 'Access denied',
       code: 'IP_BLOCKED'
     });
   }
-  
+
   next();
 };
 
 // Rate limiting middleware (additional layer)
 const advancedRateLimit = (req, res, next) => {
   const ip = getClientIP(req);
-  
+
   if (!security.checkRateLimit(ip)) {
-    logger.warn(req.sessionId, 'Rate limit exceeded', { ip });
-    return res.status(429).json({ 
+    this.logger.warn(req.sessionId, 'Rate limit exceeded', { ip });
+    return res.status(429).json({
       error: 'Too many requests',
       code: 'RATE_LIMIT_EXCEEDED',
       retryAfter: 60
     });
   }
-  
+
   next();
 };
 
 // Input validation middleware
 const validateRequest = (req, res, next) => {
   const ip = getClientIP(req);
-  
+
   // Scan query parameters
   for (const [key, value] of Object.entries(req.query)) {
     const threats = security.scanForThreats(value);
     if (threats.length > 0) {
       security.recordSuspiciousActivity(ip, `Malicious query parameter: ${key}`, 5);
-      logger.warn(req.sessionId, 'Malicious input detected in query', { 
-        ip, 
-        key, 
-        threats 
+      this.logger.warn(req.sessionId, 'Malicious input detected in query', {
+        ip,
+        key,
+        threats
       });
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid request',
         code: 'INVALID_INPUT'
       });
     }
   }
-  
+
   // Scan request body
   if (req.body && typeof req.body === 'object') {
     const threats = security.scanForThreats(req.body);
     if (threats.length > 0) {
       security.recordSuspiciousActivity(ip, 'Malicious request body', 5);
-      logger.warn(req.sessionId, 'Malicious input detected in body', { 
-        ip, 
-        threats 
+      this.logger.warn(req.sessionId, 'Malicious input detected in body', {
+        ip,
+        threats
       });
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid request',
         code: 'INVALID_INPUT'
       });
     }
   }
-  
+
   next();
 };
 
@@ -390,16 +402,16 @@ const validateRequest = (req, res, next) => {
 const pathTraversalProtection = (req, res, next) => {
   const ip = getClientIP(req);
   const url = req.originalUrl || req.url;
-  
+
   if (url.includes('..') || url.includes('%2e%2e')) {
     security.recordSuspiciousActivity(ip, 'Path traversal attempt', 8);
-    logger.warn(req.sessionId, 'Path traversal attempt', { ip, url });
-    return res.status(400).json({ 
+    this.logger.warn(req.sessionId, 'Path traversal attempt', { ip, url });
+    return res.status(400).json({
       error: 'Invalid request',
       code: 'INVALID_PATH'
     });
   }
-  
+
   next();
 };
 
@@ -499,16 +511,6 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 // ============================================================================
-// ENVIRONMENT DETECTION
-// ============================================================================
-
-const IS_RAILWAY = !!process.env.RAILWAY_PROJECT_ID;
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-
-process.env.LOG_TO_FILE = IS_PRODUCTION ? 'true' : (process.env.LOG_TO_FILE || 'false');
-
-// ============================================================================
 // LOGGER INITIALIZATION
 // ============================================================================
 
@@ -563,7 +565,7 @@ class MemoryMonitor {
   record() {
     const memUsage = process.memoryUsage();
     const cpuUsage = process.cpuUsage();
-    
+
     const record = {
       timestamp: new Date().toISOString(),
       uptime: Math.round(process.uptime()),
@@ -585,7 +587,7 @@ class MemoryMonitor {
     };
 
     this.records.push(record);
-    
+
     if (this.records.length > MAX_MEMORY_RECORDS) {
       this.records = this.records.slice(-MAX_MEMORY_RECORDS);
     }
@@ -597,7 +599,7 @@ class MemoryMonitor {
           threshold: '450 MB'
         });
         this.highMemoryAlerted = true;
-        
+
         fileStorage.saveAnalytics('memory_alert', {
           memory: record.memory,
           uptime: record.uptime,
@@ -629,7 +631,7 @@ class MemoryMonitor {
 
   getStats() {
     const recent = this.records.slice(-100);
-    
+
     if (recent.length === 0) {
       return {
         current: this.record(),
@@ -661,10 +663,10 @@ class MemoryMonitor {
 
   exportCSV() {
     const headers = 'timestamp,uptime,rss,heapTotal,heapUsed,external,websocket_connections\n';
-    const rows = this.records.map(r => 
+    const rows = this.records.map(r =>
       `${r.timestamp},${r.uptime},${r.memory.rss},${r.memory.heapTotal},${r.memory.heapUsed},${r.memory.external},${r.connections?.websocket || 0}`
     ).join('\n');
-    
+
     return headers + rows;
   }
 }
@@ -678,10 +680,10 @@ const memoryMonitor = new MemoryMonitor();
 const getClientIP = (req) => {
   if (IS_RAILWAY) {
     return req.headers['x-forwarded-for']?.split(',')[0].trim() ||
-           req.headers['x-real-ip'] ||
-           req.headers['cf-connecting-ip'] ||
-           req.connection?.remoteAddress?.replace('::ffff:', '') ||
-           'unknown';
+      req.headers['x-real-ip'] ||
+      req.headers['cf-connecting-ip'] ||
+      req.connection?.remoteAddress?.replace('::ffff:', '') ||
+      'unknown';
   }
 
   const forwarded = req.headers['x-forwarded-for'];
@@ -695,15 +697,15 @@ const getClientIP = (req) => {
   }
 
   return req.connection?.remoteAddress?.replace('::ffff:', '') ||
-         req.socket?.remoteAddress?.replace('::ffff:', '') ||
-         'unknown';
+    req.socket?.remoteAddress?.replace('::ffff:', '') ||
+    'unknown';
 };
 
 const generateSessionId = () => {
   return `sess_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
 };
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
+  res.status(200).json({
     status: 'healthy',
     timestamp: new Date().toISOString()
   });
@@ -719,7 +721,7 @@ app.get('/health/detailed', (req, res) => {
   }
 
   const memStats = memoryMonitor.getStats();
-  res.json({ 
+  res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
@@ -795,7 +797,7 @@ app.get('/api/memory/export', (req, res) => {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="memory-stats-${Date.now()}.csv"`);
     res.send(csv);
-    
+
     logger.success(req.sessionId, 'Memory stats exported');
   } catch (error) {
     memLogger.error('EXPORT', 'Failed to export', error);
@@ -807,11 +809,11 @@ app.get('/api/search-proxy', async (req, res) => {
   const startTime = Date.now();
   const { q } = req.query;
   const ip = req.clientIP;
-  
+
   try {
     if (!validators.searchQuery(q)) {
       security.recordSuspiciousActivity(ip, 'Invalid search query format', 2);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid search query',
         suggestions: [],
         count: 0
@@ -821,7 +823,7 @@ app.get('/api/search-proxy', async (req, res) => {
     const sanitizedQuery = security.sanitize(q);
 
     const externalAPI = `https://lok-tantra-10qg0fa2f-rex1671s-projects.vercel.app/api/search?q=${encodeURIComponent(sanitizedQuery)}`;
-    
+
     logger.info(req.sessionId, `Search: "${sanitizedQuery}"`, { ip });
 
     const controller = new AbortController();
@@ -850,7 +852,11 @@ app.get('/api/search-proxy', async (req, res) => {
     if (host.includes('0.0.0.0')) {
       host = host.replace('0.0.0.0', 'localhost');
     }
-    const baseUrl = process.env.BASE_URL || `${req.protocol}://${host}`;
+
+    // In development, ignore BASE_URL env var to ensure we use localhost
+    const baseUrl = IS_DEVELOPMENT
+      ? `${req.protocol}://${host}`
+      : (process.env.BASE_URL || `${req.protocol}://${host}`);
 
     // ✅ PROCESS EACH SUGGESTION - PROXY IMAGES & REMOVE SENSITIVE DATA
     const processedSuggestions = (data.suggestions || []).map(suggestion => {
@@ -883,11 +889,11 @@ app.get('/api/search-proxy', async (req, res) => {
       // ✅ PROXY THE IMAGE
       if (processed.image) {
         const proxyUrl = imageProxy.createProxyUrl(processed.image, baseUrl);
-        
+
         if (proxyUrl) {
           processed.imageUrl = proxyUrl;
           processed._imageProxied = true;
-          
+
           logger.info(req.sessionId, 'Image proxied for search result', {
             name: processed.name,
             original: processed.image.substring(0, 50) + '...',
@@ -929,17 +935,17 @@ app.get('/api/search-proxy', async (req, res) => {
       responseTime: duration,
       timestamp: new Date().toISOString()
     });
-    
+
   } catch (error) {
     const duration = Date.now() - startTime;
-    
+
     if (error.name === 'AbortError' || error.name === 'TimeoutError') {
       logger.warn(req.sessionId, 'Search timeout', { duration, query: q });
     } else {
       logger.error(req.sessionId, 'Search failed', error);
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       suggestions: [],
       count: 0,
       error: 'Search temporarily unavailable',
@@ -952,7 +958,7 @@ app.get('/api/search-proxy', async (req, res) => {
 app.get('/api/analytics', async (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
-  
+
   if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
     security.recordFailedAttempt(ip, 'Unauthorized analytics access');
     return res.status(401).json({ error: 'Unauthorized' });
@@ -960,13 +966,13 @@ app.get('/api/analytics', async (req, res) => {
 
   try {
     const { days = 7 } = req.query;
-    
+
     if (!validators.numericParam(days, 1, 365)) {
       return res.status(400).json({ error: 'Invalid days parameter' });
     }
 
     const summary = fileStorage.getAnalyticsSummary(parseInt(days));
-    
+
     res.json({
       period: `Last ${days} days`,
       ...summary,
@@ -983,7 +989,7 @@ app.get('/api/analytics', async (req, res) => {
 app.get('/api/security/stats', (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
-  
+
   if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
     security.recordFailedAttempt(ip, 'Unauthorized security stats access');
     return res.status(401).json({ error: 'Unauthorized' });
@@ -999,21 +1005,21 @@ app.get('/api/security/stats', (req, res) => {
 // Manual IP block - authenticated
 app.post('/api/security/block', (req, res) => {
   const authToken = req.headers['authorization'];
-  
+
   if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
   const { ip, reason, duration } = req.body;
-  
+
   if (!ip || typeof ip !== 'string') {
     return res.status(400).json({ error: 'Invalid IP address' });
   }
 
   security.blockIP(ip, reason || 'Manual block', duration);
-  
-  res.json({ 
-    success: true, 
+
+  res.json({
+    success: true,
     message: `IP ${ip} blocked`,
     timestamp: new Date().toISOString()
   });
@@ -1022,16 +1028,16 @@ app.post('/api/security/block', (req, res) => {
 // Storage search - validated
 app.get('/api/storage/search', (req, res) => {
   const { q } = req.query;
-  
+
   if (!q || typeof q !== 'string' || q.length < 3 || q.length > 200) {
     return res.status(400).json({ error: 'Query must be between 3-200 characters' });
   }
 
   const sanitizedQuery = security.sanitize(q);
   const results = fileStorage.searchCandidates(sanitizedQuery);
-  
+
   logger.info(req.sessionId, `Storage search: "${sanitizedQuery}"`, { results: results.length });
-  
+
   res.json({
     query: sanitizedQuery,
     results,
@@ -1044,7 +1050,7 @@ app.get('/api/storage/search', (req, res) => {
 app.post('/api/storage/backup', async (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
-  
+
   if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
     security.recordFailedAttempt(ip, 'Unauthorized backup access');
     return res.status(401).json({ error: 'Unauthorized' });
@@ -1053,12 +1059,66 @@ app.post('/api/storage/backup', async (req, res) => {
   try {
     logger.info(req.sessionId, 'Backup initiated');
     const result = await fileStorage.createBackup();
-    
+
     logger.success(req.sessionId, 'Backup completed', { filepath: result.filepath });
     res.json(result);
   } catch (error) {
     logger.error(req.sessionId, 'Backup failed', error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Storage stats - authenticated
+app.get('/api/storage/stats', (req, res) => {
+  const ip = getClientIP(req);
+  const authToken = req.headers['authorization'];
+
+  if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
+    security.recordFailedAttempt(ip, 'Unauthorized storage stats access');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const stats = fileStorage.getStats();
+    res.json({
+      success: true,
+      data: stats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error(req.sessionId, 'Storage stats failed', error);
+    res.status(500).json({ error: 'Failed to retrieve storage stats' });
+  }
+});
+
+// Manual cleanup - authenticated
+app.post('/api/storage/cleanup', async (req, res) => {
+  const ip = getClientIP(req);
+  const authToken = req.headers['authorization'];
+
+  if (!authToken || authToken !== `Bearer ${process.env.ADMIN_TOKEN}`) {
+    security.recordFailedAttempt(ip, 'Unauthorized cleanup access');
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    logger.info(req.sessionId, 'Manual cleanup initiated', { ip });
+
+    const logResult = await cleanupScheduler.runLogCleanup();
+    const storageResult = await cleanupScheduler.runStorageCleanup();
+
+    res.json({
+      success: true,
+      message: 'Cleanup completed',
+      results: {
+        logs: logResult,
+        storage: storageResult
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error(req.sessionId, 'Manual cleanup failed', error);
+    res.status(500).json({ error: 'Cleanup failed' });
   }
 });
 
@@ -1070,9 +1130,9 @@ app.use('/api/', (req, res, next) => {
         ip: req.clientIP,
         path: req.path
       });
-      
+
       security.recordSuspiciousActivity(req.clientIP, 'API rate limit exceeded', 2);
-      
+
       fileStorage.saveAnalytics('rate_limit', {
         type: 'api',
         ip: req.clientIP,
@@ -1110,7 +1170,7 @@ app.use(express.static('public', {
 }));
 
 app.use('/api', apiRoutes);
-app.use('/member', memberRoutes); 
+app.use('/member', memberRoutes);
 
 // Serve index with environment injection
 app.get('/', (req, res) => {
@@ -1137,7 +1197,7 @@ wss.on('connection', (ws, req) => {
   const clientIp = getClientIP(req);
   const sessionId = 'ws_' + crypto.randomBytes(8).toString('hex');
   const userAgent = req.headers['user-agent'] || 'unknown';
-  
+
   // Check if IP is blocked
   if (security.isBlocked(clientIp)) {
     wsLogger.warn(sessionId, 'Blocked IP attempted WebSocket connection', { ip: clientIp });
@@ -1148,7 +1208,7 @@ wss.on('connection', (ws, req) => {
   // Limit connections per IP
   const currentConnections = wsConnectionLimiter.get(clientIp) || 0;
   if (currentConnections >= security.THRESHOLDS.MAX_WS_CONNECTIONS_PER_IP) {
-    wsLogger.warn(sessionId, 'Too many WebSocket connections from IP', { 
+    wsLogger.warn(sessionId, 'Too many WebSocket connections from IP', {
       ip: clientIp,
       current: currentConnections,
       max: security.THRESHOLDS.MAX_WS_CONNECTIONS_PER_IP
@@ -1159,14 +1219,14 @@ wss.on('connection', (ws, req) => {
   }
 
   wsConnectionLimiter.set(clientIp, currentConnections + 1);
-  
+
   ws.sessionId = sessionId;
   ws.clientIp = clientIp;
   ws.lastActivity = Date.now();
   ws.tempIds = new Set();
   ws.connectionTime = new Date();
   ws.messageCount = 0;
-  
+
   wsConnections.set(sessionId, {
     ip: clientIp,
     userAgent,
@@ -1190,7 +1250,7 @@ wss.on('connection', (ws, req) => {
     try {
       // Check message size
       if (message.length > MAX_MESSAGE_SIZE) {
-        wsLogger.warn(sessionId, 'Message too large', { 
+        wsLogger.warn(sessionId, 'Message too large', {
           size: message.length,
           max: MAX_MESSAGE_SIZE
         });
@@ -1209,7 +1269,7 @@ wss.on('connection', (ws, req) => {
       }
 
       const data = JSON.parse(message);
-      
+
       // Validate message structure
       if (!data.type || typeof data.type !== 'string') {
         wsLogger.warn(sessionId, 'Invalid message format');
@@ -1234,12 +1294,12 @@ wss.on('connection', (ws, req) => {
 
         ws.tempIds.add(data.tempId);
         ws.lastActivity = Date.now();
-        
+
         const connInfo = wsConnections.get(sessionId);
         if (connInfo) {
           connInfo.subscriptions.push(data.tempId);
         }
-        
+
         wsLogger.info(sessionId, `Subscribed to ${data.tempId}`);
       }
     } catch (err) {
@@ -1250,18 +1310,18 @@ wss.on('connection', (ws, req) => {
 
   ws.on('close', (code, reason) => {
     const duration = Date.now() - ws.connectionTime.getTime();
-    
+
     // Decrement connection counter
     const currentCount = wsConnectionLimiter.get(clientIp) || 1;
     wsConnectionLimiter.set(clientIp, currentCount - 1);
     if (currentCount <= 1) {
       wsConnectionLimiter.delete(clientIp);
     }
-    
+
     wsConnections.delete(sessionId);
-    
+
     wsLogger.info(sessionId, 'Client disconnected', {
-      duration: `${Math.round(duration/1000)}s`,
+      duration: `${Math.round(duration / 1000)}s`,
       code,
       remaining: wss.clients.size
     });
@@ -1278,7 +1338,7 @@ wss.on('connection', (ws, req) => {
   ws.on('error', (error) => {
     wsLogger.error(sessionId, 'WebSocket error', error);
   });
-  
+
   // Ping interval with cleanup
   const pingInterval = setInterval(() => {
     if (ws.readyState === ws.OPEN) {
@@ -1297,14 +1357,14 @@ wss.on('connection', (ws, req) => {
 setInterval(() => {
   const now = Date.now();
   let cleaned = 0;
-  
+
   wss.clients.forEach((ws) => {
     if (now - ws.lastActivity > CLIENT_TIMEOUT) {
       ws.close(1000, 'Idle timeout');
       cleaned++;
     }
   });
-  
+
   if (cleaned > 0) {
     wsLogger.info('CLEANUP', `Cleaned ${cleaned} inactive connections`, {
       active: wss.clients.size
@@ -1319,16 +1379,16 @@ setInterval(() => {
 app.use((err, req, res, next) => {
   // Don't log expected errors
   if (err.statusCode && err.statusCode < 500) {
-    logger.warn(req.sessionId, 'Client error', { 
+    logger.warn(req.sessionId, 'Client error', {
       error: err.message,
-      status: err.statusCode 
+      status: err.statusCode
     });
   } else {
     logger.error(req.sessionId, 'Server error', err);
   }
 
   const statusCode = err.statusCode || err.status || 500;
-  
+
   // Never expose error details in production
   const errorResponse = {
     error: statusCode === 500 ? 'Internal server error' : err.message,
@@ -1346,7 +1406,7 @@ app.use((err, req, res, next) => {
 // 404 handler
 app.use((req, res) => {
   const ip = getClientIP(req);
-  
+
   logger.warn(req.sessionId, `404 Not Found: ${req.path}`, {
     method: req.method,
     ip
@@ -1355,12 +1415,12 @@ app.use((req, res) => {
   // Track excessive 404s as suspicious
   const key = `404_${ip}`;
   const count = (security.suspiciousActivity.get(key)?.count || 0) + 1;
-  
+
   if (count > 20) {
     security.recordSuspiciousActivity(ip, 'Excessive 404 requests', 2);
   }
-  
-  res.status(404).json({ 
+
+  res.status(404).json({
     error: 'Not found',
     path: req.path
   });
@@ -1372,11 +1432,11 @@ app.use((req, res) => {
 
 const shutdown = async (signal) => {
   logger.warn('SHUTDOWN', `Shutting down gracefully... (${signal})`);
-  
+
   // Save final memory stats
   memoryMonitor.saveToStorage();
   memLogger.success('SHUTDOWN', 'Memory stats saved');
-  
+
   // Create backup
   try {
     await fileStorage.createBackup();
@@ -1384,7 +1444,7 @@ const shutdown = async (signal) => {
   } catch (error) {
     logger.error('SHUTDOWN', 'Backup failed', error);
   }
-  
+
   // Close WebSocket connections
   let wsCount = 0;
   wss.clients.forEach(client => {
@@ -1392,16 +1452,16 @@ const shutdown = async (signal) => {
     wsCount++;
   });
   logger.info('SHUTDOWN', `Closed ${wsCount} WebSocket connections`);
-  
+
   // Stop cleanup scheduler
   cleanupScheduler.stop();
-  
+
   // Close server
   server.close(() => {
     logger.success('SHUTDOWN', 'Server closed successfully');
     process.exit(0);
   });
-  
+
   // Force shutdown after timeout
   setTimeout(() => {
     logger.error('SHUTDOWN', 'Forced shutdown after timeout');
@@ -1431,7 +1491,7 @@ const monitoringInterval = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 
 setInterval(() => {
   const record = memoryMonitor.record();
-  
+
   if (record.memory.heapUsed > 400 || IS_DEVELOPMENT) {
     memLogger.info('MONITOR', 'Health check', {
       memory: `${record.memory.heapUsed}MB / ${record.memory.heapTotal}MB`,
@@ -1487,14 +1547,14 @@ server.listen(PORT, HOST, () => {
   });
 
   cleanupScheduler.start();
-  
+
   // Image proxy cleanup
   const imageCleanupInterval = 2 * 60 * 60 * 1000;
   setInterval(() => {
     imageProxy.cleanup();
     logger.info('IMAGE-CLEANUP', 'Old image mappings cleaned');
   }, imageCleanupInterval);
-  
+
   logger.info('STARTUP', 'Image proxy cleanup scheduled', {
     interval: '2 hours'
   });

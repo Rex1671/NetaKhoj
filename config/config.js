@@ -32,9 +32,9 @@ export default {
     enabled: true,
     retention: {
       logs: 30, // days
-      candidates: 24, // hours
-      prs: 24, // hours
-      analytics: 24, // hours
+      candidates: 1, // hours
+      prs: 1, // hours
+      analytics: 1, // hours
       cache: 1 // hours
     }
   },

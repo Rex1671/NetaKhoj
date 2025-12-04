@@ -1,30 +1,11 @@
-import * as sdk from 'node-appwrite';
+
 import { createLogger } from '../utils/logger.js';
 import dotenv from 'dotenv';
+import appwriteService from './AppwriteService.js';
 
 dotenv.config();
 
 const logger = createLogger('AppwriteDataFetcher');
-
-// ============================================================================
-// CONFIGURATION
-// ============================================================================
-
-const APPWRITE_ENDPOINT = process.env.APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
-const PROJECT_ID = process.env.APPWRITE_PROJECT_ID || '65c4e9c5c54471be7a7f';
-const API_KEY = process.env.APPWRITE_API_KEY;
-const FUNCTION_ID = process.env.APPWRITE_FUNCTION_ID_PRS || '68ffcb25003df2ce3663';
-
-// ============================================================================
-// INITIALIZE APPWRITE CLIENT
-// ============================================================================
-
-const client = new sdk.Client()
-  .setEndpoint(APPWRITE_ENDPOINT)
-  .setProject(PROJECT_ID)
-  .setKey(API_KEY);
-
-const functions = new sdk.Functions(client);
 
 // ============================================================================
 // MAIN FETCH FUNCTION
@@ -36,60 +17,24 @@ const functions = new sdk.Functions(client);
  * @returns {Promise<Object>} 
  */
 export async function fetchFromAppwrite(payload, requestId = 'default') {
-  const startTime = Date.now();
-  
   try {
-    logger.info(requestId, 'Making Appwrite SDK request', payload);
-
-    const execution = await functions.createExecution(
-      FUNCTION_ID,
-      JSON.stringify(payload),
-      false,
-      '/', 
-      'POST', 
-      {}
-    );
-
-    const duration = Date.now() - startTime;
-
-    logger.success(requestId, `Appwrite completed in ${duration}ms`, {
-      executionId: execution.$id,
-      status: execution.status
-    });
-
-    let responseData;
-    try {
-      responseData = JSON.parse(execution.responseBody);
-    } catch (parseError) {
-      logger.error(requestId, 'Failed to parse response body', parseError);
-      throw new Error('Invalid JSON response from Appwrite function');
-    }
-
-    if (responseData.success === false) {
-      throw new Error(responseData.error || 'Appwrite function returned error');
-    }
+    const result = await appwriteService.executeFunction(payload, requestId);
 
     return {
       success: true,
-      data: responseData.data || responseData,
-      meta: responseData.meta,
-      timing: responseData.timing,
-      duration,
-      executionId: execution.$id,
-      status: execution.status,
+      data: result.data.data || result.data,
+      meta: result.data.meta,
+      timing: result.data.timing,
+      duration: result.timing.total,
+      executionId: result.execution.id,
+      status: result.execution.status,
     };
 
   } catch (error) {
-    const duration = Date.now() - startTime;
-    logger.error(requestId, 'Appwrite request failed', { 
-      duration, 
-      error: error.message 
-    });
-
     return {
       success: false,
       error: error.message,
-      duration,
+      duration: 0,
     };
   }
 }
@@ -124,7 +69,7 @@ export async function getMemberData(name, type, constituency = null, state = nul
       _timing: result.timing,
     };
   }
-  
+
   throw new Error(result.error || 'Failed to fetch member data');
 }
 
@@ -147,7 +92,7 @@ export async function getCandidateData(name, constituency, party) {
   if (result.success) {
     return result.data;
   }
-  
+
   throw new Error(result.error || 'Failed to fetch candidate data');
 }
 
@@ -163,21 +108,18 @@ export async function executeFunction(data, requestId) {
 
 export function getStats() {
   return {
-    endpoint: APPWRITE_ENDPOINT,
-    projectId: PROJECT_ID,
-    functionId: FUNCTION_ID,
-    configured: !!(PROJECT_ID && API_KEY && FUNCTION_ID),
+    ...appwriteService.getStats(),
     sdkVersion: 'node-appwrite',
   };
 }
 
 export async function testConnection() {
   try {
-    const result = await fetchFromAppwrite({ 
-      name: 'TEST', 
-      type: 'MP' 
+    const result = await fetchFromAppwrite({
+      name: 'TEST',
+      type: 'MP'
     }, 'health-check');
-    
+
     return {
       healthy: result.success,
       message: result.success ? 'Connected to Appwrite' : result.error,
