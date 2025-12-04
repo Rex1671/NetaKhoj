@@ -13,7 +13,7 @@
 
 *Discover Your Representatives - Interactive Electoral Intelligence & Constituency Analytics*
 
-[🌐 Live Demo](https://fixkaro-web-production.up.railway.app/) • [📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start)
+[🌐 Live Demo](https://netakhoj-web-production.up.railway.app//) 
 
 > **⚠️ Development Notice**: Netakhoj is currently in active development. You may experience some bugs or temporary service interruptions as we continuously improve the platform.
 
