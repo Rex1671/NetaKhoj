@@ -1,4 +1,3 @@
-// utils/logger.js - PRODUCTION LOGGER
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -19,12 +18,12 @@ class Logger {
     };
 
     this.colors = {
-      INFO: '\x1b[36m',     // Cyan
-      ERROR: '\x1b[31m',    // Red
-      WARN: '\x1b[33m',     // Yellow
-      DEBUG: '\x1b[35m',    // Magenta
-      SUCCESS: '\x1b[32m',  // Green
-      REQUEST: '\x1b[34m',  // Blue
+      INFO: '\x1b[36m',     
+      ERROR: '\x1b[31m',    
+      WARN: '\x1b[33m',   
+      DEBUG: '\x1b[35m',    
+      SUCCESS: '\x1b[32m', 
+      REQUEST: '\x1b[34m', 
       RESET: '\x1b[0m',
     };
 
@@ -50,7 +49,7 @@ class Logger {
   }
 
   _getLogFilePath(level) {
-    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const date = new Date().toISOString().split('T')[0];
     const filename = level === 'REQUEST' ? 'requests' : level === 'ERROR' ? 'error' : 'combined';
     return path.join(this.options.logDir, `${date}-${filename}.log`);
   }
@@ -121,14 +120,12 @@ class Logger {
       memory: process.memoryUsage().heapUsed
     };
 
-    // Console output
     if (this.options.consoleOutput) {
       const consoleMsg = this._formatConsoleMessage(level, requestId, message, data);
       const logMethod = level === 'ERROR' ? console.error : console.log;
       logMethod(consoleMsg);
     }
 
-    // File output
     this._writeToFile(level, logEntry);
   }
 
@@ -164,7 +161,6 @@ class Logger {
 
   request(requestId, message, params) {
     const sanitized = { ...params };
-    // Don't log sensitive data
     if (sanitized.meow) sanitized.meow = '***';
     if (sanitized.bhaw) sanitized.bhaw = '***';
     if (sanitized.apiKey) sanitized.apiKey = '***';
@@ -172,7 +168,6 @@ class Logger {
     this._log('REQUEST', requestId, message, sanitized);
   }
 
-  // Store response data to file
   storeResponse(requestId, message, responseData) {
     if (!this.options.writeToFile) return;
 
@@ -197,7 +192,6 @@ class Logger {
     }
   }
 
-  // Cleanup old logs
   _cleanupOldLogs() {
     try {
       const files = fs.readdirSync(this.options.logDir);
