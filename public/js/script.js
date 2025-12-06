@@ -118,7 +118,6 @@
             return start <= today && today <= end;
         }
 
-        // ==================== MAP HELPER FUNCTIONS ====================
 
         function defaultStyle(feature) {
             return {
@@ -188,7 +187,6 @@
             }, 1600);
         }
 
-        // ==================== HIGHLIGHT MANAGEMENT ====================
 
         function highlightConstituencyOnMap(feature) {
             if (!geojsonLayer) return;
@@ -220,7 +218,6 @@
             highlightedLayers = [];
         }
 
-        // ==================== DATA LOADING ====================
 
         updateProgress(25, 'checkpoint1');
 
@@ -357,7 +354,6 @@
         }
 
        
-      // ==================== CONSTITUENCY DETAILS WITH API INTEGRATION ====================
 
 async function showConstituencyDetails(feature) {
     const constituencyName = getConstituencyName(feature.properties);
@@ -387,7 +383,6 @@ async function showConstituencyDetails(feature) {
     let html = '';
     const state = data?.MP?.state || stateName;
 
-    // ========== LOCAL MP DATA ==========
     html += `<div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-landmark"></i>
@@ -402,7 +397,6 @@ async function showConstituencyDetails(feature) {
     }
     html += '</div>';
 
-    // ========== LOCAL MLA DATA ==========
     html += `<div class="detail-section">
         <div class="detail-section-title">
             <i class="fas fa-users"></i>
@@ -426,7 +420,6 @@ async function showConstituencyDetails(feature) {
     }
     html += '</div>';
 
-    // ========== NATIONAL DATABASE SECTION (PLACEHOLDER) ==========
   html += `
     <div class="detail-section">
         <div class="detail-section-title">
@@ -447,7 +440,6 @@ async function showConstituencyDetails(feature) {
         </div>
     </div>
 `;
-    // ========== RAJYA SABHA LINK ==========
     if (state) {
         html += `
             <div class="state-link" onclick="event.stopPropagation(); showStateModal('${state}')">
@@ -459,13 +451,11 @@ async function showConstituencyDetails(feature) {
 
     detailBody.innerHTML = html;
 
-    // ========== FETCH NATIONAL DATABASE ==========
     fetchNationalDatabaseForConstituency(constituencyName);
 }
 
 
 
-// ==================== ROTATING LOADING MESSAGES ====================
 
 const loadingMessages = [
     { text: "Searching Electoral Commission Records", icon: "fa-landmark" },
@@ -614,7 +604,6 @@ async function fetchNationalDatabaseForConstituency(constituencyName) {
         `;
     }
 }
-// ==================== GENERATE REPRESENTATIVE CARD ====================
 
 function generateRepresentativeCard(member, type, constituency) {
     const memberName = member.name.replace(/'/g, "\\'");
@@ -668,7 +657,6 @@ function generateRepresentativeCard(member, type, constituency) {
     `;
 }
 
-// ==================== GENERATE NATIONAL DB CARD ====================
 
 function generateNationalDbCard(result) {
     const typeInfo = detectMemberType(result.type);
@@ -753,7 +741,6 @@ function generateNationalDbCard(result) {
     `;
 }
 
-// ==================== HANDLE NATIONAL DB CLICK ====================
 
 function handleNationalDbClick(cardElement) {
     const name = cardElement.getAttribute('data-member-name');
@@ -771,7 +758,6 @@ function handleNationalDbClick(cardElement) {
         console.error('❌ Missing name or type in national DB card');
     }
 }
-        // ==================== NAVIGATION ====================
 
         function handleCardClick(cardElement) {
             const name = cardElement.getAttribute('data-member-name');
@@ -830,7 +816,6 @@ function handleNationalDbClick(cardElement) {
 
         setTimeout(testMemberRoute, 2000);
 
-        // ==================== STATE MODAL ====================
 
         function showStateModal(stateName) {
             const modal = document.getElementById('stateModal');
@@ -945,7 +930,6 @@ function handleNationalDbClick(cardElement) {
             }
         }
 
-       // ==================== OPTIMIZED SEARCH CONFIGURATION ====================
  const searchBox = document.getElementById('searchBox');
         const suggestionsBox = document.getElementById('searchSuggestions');
         
@@ -964,7 +948,6 @@ let lastAPICallTime = 0;
 let pendingSearchTerm = null;
 let isSearching = false;
 
-// ==================== CACHE MANAGEMENT ====================
 
 function getCachedResult(searchTerm) {
     const cached = apiCache.get(searchTerm.toLowerCase());
@@ -1014,7 +997,6 @@ function clearExpiredCache() {
 
 setInterval(clearExpiredCache, 120000);
 
-// ==================== OPTIMIZED SEARCH INPUT HANDLER ====================
 
 searchBox.addEventListener('input', function (e) {
     const searchTerm = e.target.value.trim();
@@ -1055,7 +1037,6 @@ function showSearchLoading() {
     }, 100);
 }
 
-// ==================== OPTIMIZED SEARCH FUNCTION ====================
 
 async function performOptimizedSearch(searchTerm) {
     if (isSearching) {
@@ -1119,7 +1100,6 @@ function checkPendingSearch() {
     }
 }
 
-// ==================== OPTIMIZED API FETCH ====================
 
 async function fetchAPIResultsOptimized(query) {
     if (abortController) {
@@ -1165,7 +1145,6 @@ async function fetchAPIResultsOptimized(query) {
     }
 }
 
-// ==================== KEEP EXISTING FUNCTIONS ====================
 
 function performLocalSearch(searchTerm) {
     const results = [];
@@ -1529,7 +1508,6 @@ console.log("typeInfo",typeInfo)
             });
         }
 
-        // ==================== EVENT LISTENERS ====================
 
         searchBox.addEventListener('keydown', function (e) {
             const items = document.querySelectorAll('.suggestion-item');
@@ -1587,7 +1565,6 @@ console.log("typeInfo",typeInfo)
             }
         }, 300000);
 
-        // ==================== PRODUCTION SECURITY MEASURES ====================
 
         if (window.IS_PRODUCTION) {
             document.addEventListener('contextmenu', function(e) {
