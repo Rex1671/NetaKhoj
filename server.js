@@ -1,4 +1,3 @@
-// server.js - PRODUCTION-HARDENED VERSION WITH SECURITY
 import 'dotenv/config';
 import express from 'express';
 import http from 'http';
@@ -20,9 +19,6 @@ import { createLogger } from './utils/logger.js';
 import fileStorage from './utils/fileStorage.js';
 import imageProxy from './services/imageProxy.js';
 
-// ============================================================================
-// ENVIRONMENT DETECTION
-// ============================================================================
 
 const IS_RAILWAY = !!process.env.RAILWAY_PROJECT_ID;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
@@ -31,48 +27,31 @@ const IS_DEVELOPMENT = env === 'development' || env === 'dev';
 
 process.env.LOG_TO_FILE = IS_PRODUCTION ? 'true' : (process.env.LOG_TO_FILE || 'false');
 
-// ============================================================================
-// SECURITY MIDDLEWARE & UTILITIES
-// ============================================================================
+
 
 class SecurityManager {
   constructor() {
     this.logger = createLogger('SECURITY');
     this.blockedIPs = new Set();
-    this.suspiciousActivity = new Map(); // IP -> { count, firstSeen, lastSeen }
-    this.failedAttempts = new Map(); // IP -> { count, lastAttempt }
-    this.rateLimitStore = new Map(); // IP -> { requests: [], blocked: false }
+    this.suspiciousActivity = new Map();
+    this.failedAttempts = new Map(); 
+    this.rateLimitStore = new Map(); 
 
-    // Threat detection thresholds
     this.THRESHOLDS = {
       MAX_FAILED_ATTEMPTS: 5,
-      FAILED_ATTEMPT_WINDOW: 15 * 60 * 1000, // 15 minutes
+      FAILED_ATTEMPT_WINDOW: 15 * 60 * 1000,
       SUSPICIOUS_SCORE_LIMIT: 10,
       MAX_REQUESTS_PER_MINUTE: 60,
       MAX_WS_CONNECTIONS_PER_IP: 5,
-      BLOCK_DURATION: 60 * 60 * 1000, // 1 hour
-      AUTO_UNBLOCK_CHECK: 10 * 60 * 1000 // 10 minutes
+      BLOCK_DURATION: 60 * 60 * 1000,
+      AUTO_UNBLOCK_CHECK: 10 * 60 * 1000
     };
 
-    // Malicious patterns
-    this.MALICIOUS_PATTERNS = [
-      /(\.\.|\/\.\.)/g,                    // Path traversal
-      /<script[^>]*>.*?<\/script>/gi,      // XSS
-      /javascript:/gi,                      // XSS
-      /on\w+\s*=/gi,                       // Event handlers
-      /(\bor\b|\band\b).*?(\=|like)/gi,    // SQL injection
-      /union.*select/gi,                    // SQL injection
-      /exec\s*\(/gi,                        // Code execution
-      /eval\s*\(/gi,                        // Code execution
-      /(rm|wget|curl)\s+-/gi,              // Shell commands
-      /\$\{.*\}/g,                         // Template injection
-      /__proto__|constructor|prototype/gi   // Prototype pollution
-    ];
+    
 
     this.startCleanupInterval();
   }
 
-  // Block IP address
   blockIP(ip, reason, duration = this.THRESHOLDS.BLOCK_DURATION) {
     this.blockedIPs.add(ip);
     this.logger.warn('BLOCK', `IP blocked: ${ip}`, { reason, duration });
@@ -84,24 +63,20 @@ class SecurityManager {
       timestamp: new Date().toISOString()
     });
 
-    // Auto-unblock after duration
     setTimeout(() => {
       this.blockedIPs.delete(ip);
       this.logger.info('UNBLOCK', `IP unblocked: ${ip}`);
     }, duration);
   }
 
-  // Check if IP is blocked
   isBlocked(ip) {
     return this.blockedIPs.has(ip);
   }
 
-  // Record failed attempt
   recordFailedAttempt(ip, reason) {
     const now = Date.now();
     const record = this.failedAttempts.get(ip) || { count: 0, lastAttempt: now };
 
-    // Reset if outside window
     if (now - record.lastAttempt > this.THRESHOLDS.FAILED_ATTEMPT_WINDOW) {
       record.count = 0;
     }
@@ -115,7 +90,6 @@ class SecurityManager {
       count: record.count
     });
 
-    // Block if threshold exceeded
     if (record.count >= this.THRESHOLDS.MAX_FAILED_ATTEMPTS) {
       this.blockIP(ip, `Too many failed attempts: ${reason}`);
       return true;
@@ -124,7 +98,6 @@ class SecurityManager {
     return false;
   }
 
-  // Record suspicious activity
   recordSuspiciousActivity(ip, activity, score = 1) {
     const now = Date.now();
     const record = this.suspiciousActivity.get(ip) || {
@@ -140,7 +113,6 @@ class SecurityManager {
     record.lastSeen = now;
     record.activities.push({ activity, score, timestamp: now });
 
-    // Keep only last 50 activities
     if (record.activities.length > 50) {
       record.activities = record.activities.slice(-50);
     }
@@ -159,7 +131,6 @@ class SecurityManager {
       timestamp: new Date().toISOString()
     });
 
-    // Block if score too high
     if (record.score >= this.THRESHOLDS.SUSPICIOUS_SCORE_LIMIT) {
       this.blockIP(ip, `Suspicious activity score: ${record.score}`);
       return true;
@@ -168,7 +139,6 @@ class SecurityManager {
     return false;
   }
 
-  // Scan for malicious input
   scanForThreats(input) {
     const threats = [];
     const inputStr = typeof input === 'object' ? JSON.stringify(input) : String(input);
@@ -178,7 +148,7 @@ class SecurityManager {
       if (matches) {
         threats.push({
           pattern: pattern.source,
-          matches: matches.slice(0, 3) // Limit to first 3 matches
+          matches: matches.slice(0, 3)
         });
       }
     }
@@ -186,33 +156,26 @@ class SecurityManager {
     return threats;
   }
 
-  // Validate input
   validateInput(input, maxLength = 1000) {
     if (typeof input !== 'string') return true;
 
-    // Check length
     if (input.length > maxLength) {
       return false;
     }
 
-    // Scan for threats
     const threats = this.scanForThreats(input);
     return threats.length === 0;
   }
 
-  // Rate limiting check
   checkRateLimit(ip) {
     const now = Date.now();
     const record = this.rateLimitStore.get(ip) || { requests: [], blocked: false };
 
-    // Remove old requests (older than 1 minute)
     record.requests = record.requests.filter(time => now - time < 60000);
 
-    // Add current request
     record.requests.push(now);
     this.rateLimitStore.set(ip, record);
 
-    // Check if exceeded
     if (record.requests.length > this.THRESHOLDS.MAX_REQUESTS_PER_MINUTE) {
       if (!record.blocked) {
         this.recordSuspiciousActivity(ip, 'Rate limit exceeded', 3);
@@ -225,25 +188,22 @@ class SecurityManager {
     return true;
   }
 
-  // Sanitize input
   sanitize(input) {
     if (typeof input !== 'string') return input;
 
     return input
-      .replace(/[<>]/g, '') // Remove angle brackets
+      .replace(/[<>]/g, '') 
       .replace(/javascript:/gi, '')
       .replace(/on\w+\s*=/gi, '')
       .trim()
-      .slice(0, 1000); // Max length
+      .slice(0, 1000); 
   }
 
-  // Cleanup old records
   startCleanupInterval() {
     setInterval(() => {
       const now = Date.now();
       let cleaned = 0;
 
-      // Clean failed attempts
       for (const [ip, record] of this.failedAttempts.entries()) {
         if (now - record.lastAttempt > this.THRESHOLDS.FAILED_ATTEMPT_WINDOW) {
           this.failedAttempts.delete(ip);
@@ -251,15 +211,13 @@ class SecurityManager {
         }
       }
 
-      // Clean suspicious activity
       for (const [ip, record] of this.suspiciousActivity.entries()) {
-        if (now - record.lastSeen > 24 * 60 * 60 * 1000) { // 24 hours
+        if (now - record.lastSeen > 24 * 60 * 60 * 1000) { 
           this.suspiciousActivity.delete(ip);
           cleaned++;
         }
       }
 
-      // Clean rate limit store
       for (const [ip, record] of this.rateLimitStore.entries()) {
         if (record.requests.length === 0) {
           this.rateLimitStore.delete(ip);
@@ -273,7 +231,6 @@ class SecurityManager {
     }, this.THRESHOLDS.AUTO_UNBLOCK_CHECK);
   }
 
-  // Get security stats
   getStats() {
     return {
       blockedIPs: Array.from(this.blockedIPs),
@@ -294,9 +251,6 @@ class SecurityManager {
 
 const security = new SecurityManager();
 
-// ============================================================================
-// INPUT VALIDATION SCHEMAS
-// ============================================================================
 
 const validators = {
   searchQuery: (q) => {
@@ -318,16 +272,11 @@ const validators = {
 
   path: (p) => {
     if (!p || typeof p !== 'string') return false;
-    // Prevent path traversal
     return !p.includes('..') && !/[<>:"|?*]/.test(p);
   }
 };
 
-// ============================================================================
-// SECURITY MIDDLEWARE
-// ============================================================================
 
-// IP blocking middleware
 const ipBlocker = (req, res, next) => {
   const ip = getClientIP(req);
 
@@ -342,7 +291,6 @@ const ipBlocker = (req, res, next) => {
   next();
 };
 
-// Rate limiting middleware (additional layer)
 const advancedRateLimit = (req, res, next) => {
   const ip = getClientIP(req);
 
@@ -358,11 +306,9 @@ const advancedRateLimit = (req, res, next) => {
   next();
 };
 
-// Input validation middleware
 const validateRequest = (req, res, next) => {
   const ip = getClientIP(req);
 
-  // Scan query parameters
   for (const [key, value] of Object.entries(req.query)) {
     const threats = security.scanForThreats(value);
     if (threats.length > 0) {
@@ -379,7 +325,6 @@ const validateRequest = (req, res, next) => {
     }
   }
 
-  // Scan request body
   if (req.body && typeof req.body === 'object') {
     const threats = security.scanForThreats(req.body);
     if (threats.length > 0) {
@@ -398,7 +343,6 @@ const validateRequest = (req, res, next) => {
   next();
 };
 
-// Path traversal protection
 const pathTraversalProtection = (req, res, next) => {
   const ip = getClientIP(req);
   const url = req.originalUrl || req.url;
@@ -415,12 +359,8 @@ const pathTraversalProtection = (req, res, next) => {
   next();
 };
 
-// WebSocket connection limiter
-const wsConnectionLimiter = new Map(); // IP -> connection count
+const wsConnectionLimiter = new Map(); 
 
-// ============================================================================
-// CLEANUP SCHEDULER
-// ============================================================================
 
 const cleanupScheduler = {
   logger: createLogger('CLEANUP'),
@@ -510,9 +450,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-// ============================================================================
-// LOGGER INITIALIZATION
-// ============================================================================
+
 
 const logger = createLogger('SERVER', {
   writeToFile: process.env.LOG_TO_FILE === 'true',
@@ -522,9 +460,6 @@ const logger = createLogger('SERVER', {
 const wsLogger = createLogger('WEBSOCKET');
 const memLogger = createLogger('MEMORY');
 
-// ============================================================================
-// DIRECTORY SETUP
-// ============================================================================
 
 const ensureDirectories = () => {
   const dirs = [
@@ -543,9 +478,7 @@ const ensureDirectories = () => {
 
 ensureDirectories();
 
-// ============================================================================
-// MEMORY MONITORING
-// ============================================================================
+
 
 const MEMORY_CHECK_INTERVAL = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 const MAX_MEMORY_RECORDS = 1000;
@@ -673,9 +606,6 @@ class MemoryMonitor {
 
 const memoryMonitor = new MemoryMonitor();
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
 
 const getClientIP = (req) => {
   if (IS_RAILWAY) {
@@ -711,9 +641,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Detailed health (restricted)
 app.get('/health/detailed', (req, res) => {
-  // Only allow from localhost or specific IPs
   const ip = getClientIP(req);
   if (ip !== '127.0.0.1' && ip !== '::1' && !ip.startsWith('10.') && !ip.startsWith('192.168.')) {
     security.recordSuspiciousActivity(ip, 'Unauthorized health check access', 2);
@@ -739,7 +667,6 @@ app.get('/health/detailed', (req, res) => {
 
 });
 
-// Welcome endpoint
 app.get('/api/welcome', (req, res) => {
   logger.info(req.sessionId, 'Welcome endpoint accessed', {
     method: req.method,
@@ -758,11 +685,9 @@ app.get('/api/welcome', (req, res) => {
   });
 });
 
-// Memory stats - authenticated
 app.get('/api/memory/stats', (req, res) => {
   const ip = getClientIP(req);
 
-  // Basic authentication check (you should implement proper auth)
   const authToken = req.headers['authorization'];
   if (!authToken || authToken !== `Bearer ${config.adminToken}`) {
     security.recordFailedAttempt(ip, 'Unauthorized memory stats access');
@@ -782,7 +707,6 @@ app.get('/api/memory/stats', (req, res) => {
   }
 });
 
-// Export memory stats - authenticated
 app.get('/api/memory/export', (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -847,22 +771,18 @@ app.get('/api/search-proxy', async (req, res) => {
     const data = await response.json();
     const duration = Date.now() - startTime;
 
-    // ✅ GET BASE URL FOR PROXY
     let host = req.get('host');
     if (host.includes('0.0.0.0')) {
       host = host.replace('0.0.0.0', 'localhost');
     }
 
-    // In development, ignore BASE_URL env var to ensure we use localhost
     const baseUrl = IS_DEVELOPMENT
       ? `${req.protocol}://${host}`
       : (process.env.BASE_URL || `${req.protocol}://${host}`);
 
-    // ✅ PROCESS EACH SUGGESTION - PROXY IMAGES & REMOVE SENSITIVE DATA
     const processedSuggestions = (data.suggestions || []).map(suggestion => {
       const processed = { ...suggestion };
 
-      // Extract meow and bhaw from link before removing it
       let meow = '';
       let bhaw = '';
 
@@ -882,11 +802,9 @@ app.get('/api/search-proxy', async (req, res) => {
         }
       }
 
-      // Add extracted values
       if (meow) processed.meow = meow;
       if (bhaw) processed.bhaw = bhaw;
 
-      // ✅ PROXY THE IMAGE
       if (processed.image) {
         const proxyUrl = imageProxy.createProxyUrl(processed.image, baseUrl);
 
@@ -900,16 +818,13 @@ app.get('/api/search-proxy', async (req, res) => {
             proxied: proxyUrl
           });
         } else {
-          // Fallback to original if proxy fails
           processed.imageUrl = processed.image;
           processed._imageProxied = false;
         }
 
-        // ✅ REMOVE ORIGINAL IMAGE URL
         delete processed.image;
       }
 
-      // ✅ REMOVE SENSITIVE LINK
       delete processed.link;
 
       return processed;
@@ -954,7 +869,6 @@ app.get('/api/search-proxy', async (req, res) => {
   }
 });
 
-// Analytics - authenticated
 app.get('/api/analytics', async (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -985,7 +899,6 @@ app.get('/api/analytics', async (req, res) => {
   }
 });
 
-// Security stats - authenticated
 app.get('/api/security/stats', (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -1002,7 +915,6 @@ app.get('/api/security/stats', (req, res) => {
   });
 });
 
-// Manual IP block - authenticated
 app.post('/api/security/block', (req, res) => {
   const authToken = req.headers['authorization'];
 
@@ -1025,7 +937,6 @@ app.post('/api/security/block', (req, res) => {
   });
 });
 
-// Storage search - validated
 app.get('/api/storage/search', (req, res) => {
   const { q } = req.query;
 
@@ -1046,7 +957,6 @@ app.get('/api/storage/search', (req, res) => {
   });
 });
 
-// Backup - authenticated
 app.post('/api/storage/backup', async (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -1068,7 +978,6 @@ app.post('/api/storage/backup', async (req, res) => {
   }
 });
 
-// Storage stats - authenticated
 app.get('/api/storage/stats', (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -1091,7 +1000,6 @@ app.get('/api/storage/stats', (req, res) => {
   }
 });
 
-// Manual cleanup - authenticated
 app.post('/api/storage/cleanup', async (req, res) => {
   const ip = getClientIP(req);
   const authToken = req.headers['authorization'];
@@ -1122,7 +1030,6 @@ app.post('/api/storage/cleanup', async (req, res) => {
   }
 });
 
-// Apply rate limiters
 app.use('/api/', (req, res, next) => {
   apiLimiter(req, res, (err) => {
     if (err && err.statusCode === 429) {
@@ -1157,12 +1064,10 @@ app.use('/member/', (req, res, next) => {
   });
 });
 
-// Static files with security
 app.use(express.static('public', {
   dotfiles: 'deny',
   index: false,
   setHeaders: (res, path) => {
-    // Prevent caching of sensitive files
     if (path.endsWith('.html')) {
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
@@ -1172,7 +1077,6 @@ app.use(express.static('public', {
 app.use('/api', apiRoutes);
 app.use('/member', memberRoutes);
 
-// Serve index with environment injection
 app.get('/', (req, res) => {
   try {
     const htmlPath = path.join(__dirname, 'public', 'index.html');
@@ -1185,27 +1089,21 @@ app.get('/', (req, res) => {
   }
 });
 
-// ============================================================================
-// WEBSOCKET HANDLING - ENHANCED SECURITY
-// ============================================================================
-
 const wsConnections = new Map();
 const CLIENT_TIMEOUT = 5 * 60 * 1000;
-const MAX_MESSAGE_SIZE = 10 * 1024; // 10KB max message size
+const MAX_MESSAGE_SIZE = 10 * 1024; 
 
 wss.on('connection', (ws, req) => {
   const clientIp = getClientIP(req);
   const sessionId = 'ws_' + crypto.randomBytes(8).toString('hex');
   const userAgent = req.headers['user-agent'] || 'unknown';
 
-  // Check if IP is blocked
   if (security.isBlocked(clientIp)) {
     wsLogger.warn(sessionId, 'Blocked IP attempted WebSocket connection', { ip: clientIp });
     ws.close(1008, 'Access denied');
     return;
   }
 
-  // Limit connections per IP
   const currentConnections = wsConnectionLimiter.get(clientIp) || 0;
   if (currentConnections >= security.THRESHOLDS.MAX_WS_CONNECTIONS_PER_IP) {
     wsLogger.warn(sessionId, 'Too many WebSocket connections from IP', {
@@ -1248,7 +1146,6 @@ wss.on('connection', (ws, req) => {
 
   ws.on('message', (message) => {
     try {
-      // Check message size
       if (message.length > MAX_MESSAGE_SIZE) {
         wsLogger.warn(sessionId, 'Message too large', {
           size: message.length,
@@ -1259,9 +1156,8 @@ wss.on('connection', (ws, req) => {
         return;
       }
 
-      // Rate limit messages
       ws.messageCount++;
-      if (ws.messageCount > 100) { // Max 100 messages per connection
+      if (ws.messageCount > 100) {
         wsLogger.warn(sessionId, 'Too many messages', { count: ws.messageCount });
         security.recordSuspiciousActivity(clientIp, 'WebSocket message spam', 4);
         ws.close(1008, 'Too many messages');
@@ -1270,13 +1166,11 @@ wss.on('connection', (ws, req) => {
 
       const data = JSON.parse(message);
 
-      // Validate message structure
       if (!data.type || typeof data.type !== 'string') {
         wsLogger.warn(sessionId, 'Invalid message format');
         return;
       }
 
-      // Scan for threats
       const threats = security.scanForThreats(data);
       if (threats.length > 0) {
         wsLogger.warn(sessionId, 'Malicious WebSocket message', { threats });
@@ -1286,7 +1180,6 @@ wss.on('connection', (ws, req) => {
       }
 
       if (data.type === 'subscribe' && data.tempId) {
-        // Limit subscriptions
         if (ws.tempIds.size >= 50) {
           wsLogger.warn(sessionId, 'Too many subscriptions');
           return;
@@ -1311,7 +1204,6 @@ wss.on('connection', (ws, req) => {
   ws.on('close', (code, reason) => {
     const duration = Date.now() - ws.connectionTime.getTime();
 
-    // Decrement connection counter
     const currentCount = wsConnectionLimiter.get(clientIp) || 1;
     wsConnectionLimiter.set(clientIp, currentCount - 1);
     if (currentCount <= 1) {
@@ -1339,7 +1231,6 @@ wss.on('connection', (ws, req) => {
     wsLogger.error(sessionId, 'WebSocket error', error);
   });
 
-  // Ping interval with cleanup
   const pingInterval = setInterval(() => {
     if (ws.readyState === ws.OPEN) {
       ws.ping();
@@ -1353,7 +1244,6 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-// Cleanup idle connections
 setInterval(() => {
   const now = Date.now();
   let cleaned = 0;
@@ -1372,12 +1262,9 @@ setInterval(() => {
   }
 }, 60000);
 
-// ============================================================================
-// ERROR HANDLING - SECURE
-// ============================================================================
+
 
 app.use((err, req, res, next) => {
-  // Don't log expected errors
   if (err.statusCode && err.statusCode < 500) {
     logger.warn(req.sessionId, 'Client error', {
       error: err.message,
@@ -1389,13 +1276,11 @@ app.use((err, req, res, next) => {
 
   const statusCode = err.statusCode || err.status || 500;
 
-  // Never expose error details in production
   const errorResponse = {
     error: statusCode === 500 ? 'Internal server error' : err.message,
     requestId: req.sessionId
   };
 
-  // Add stack trace only in development
   if (IS_DEVELOPMENT && err.stack) {
     errorResponse.stack = err.stack;
   }
@@ -1403,7 +1288,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json(errorResponse);
 });
 
-// 404 handler
 app.use((req, res) => {
   const ip = getClientIP(req);
 
@@ -1412,7 +1296,6 @@ app.use((req, res) => {
     ip
   });
 
-  // Track excessive 404s as suspicious
   const key = `404_${ip}`;
   const count = (security.suspiciousActivity.get(key)?.count || 0) + 1;
 
@@ -1426,18 +1309,13 @@ app.use((req, res) => {
   });
 });
 
-// ============================================================================
-// GRACEFUL SHUTDOWN
-// ============================================================================
 
 const shutdown = async (signal) => {
   logger.warn('SHUTDOWN', `Shutting down gracefully... (${signal})`);
 
-  // Save final memory stats
   memoryMonitor.saveToStorage();
   memLogger.success('SHUTDOWN', 'Memory stats saved');
 
-  // Create backup
   try {
     await fileStorage.createBackup();
     logger.success('SHUTDOWN', 'Backup created');
@@ -1445,7 +1323,6 @@ const shutdown = async (signal) => {
     logger.error('SHUTDOWN', 'Backup failed', error);
   }
 
-  // Close WebSocket connections
   let wsCount = 0;
   wss.clients.forEach(client => {
     client.close(1001, 'Server shutting down');
@@ -1453,16 +1330,13 @@ const shutdown = async (signal) => {
   });
   logger.info('SHUTDOWN', `Closed ${wsCount} WebSocket connections`);
 
-  // Stop cleanup scheduler
   cleanupScheduler.stop();
 
-  // Close server
   server.close(() => {
     logger.success('SHUTDOWN', 'Server closed successfully');
     process.exit(0);
   });
 
-  // Force shutdown after timeout
   setTimeout(() => {
     logger.error('SHUTDOWN', 'Forced shutdown after timeout');
     process.exit(1);
@@ -1483,9 +1357,7 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error(reason);
 });
 
-// ============================================================================
-// HEALTH MONITORING
-// ============================================================================
+
 
 const monitoringInterval = IS_RAILWAY ? 15 * 60 * 1000 : 5 * 60 * 1000;
 
@@ -1505,9 +1377,6 @@ setInterval(() => {
   }
 }, monitoringInterval);
 
-// ============================================================================
-// START SERVER
-// ============================================================================
 
 const PORT = process.env.PORT || config.server.port || 3000;
 const HOST = '0.0.0.0';
@@ -1548,7 +1417,6 @@ server.listen(PORT, HOST, () => {
 
   cleanupScheduler.start();
 
-  // Image proxy cleanup
   const imageCleanupInterval = 2 * 60 * 60 * 1000;
   setInterval(() => {
     imageProxy.cleanup();
