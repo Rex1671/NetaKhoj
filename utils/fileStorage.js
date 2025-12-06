@@ -1,4 +1,3 @@
-// utils/fileStorage.js - RESULT STORAGE SYSTEM
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -31,9 +30,7 @@ class FileStorage {
     });
   }
 
-  // ========================================================================
-  // SAVE METHODS
-  // ========================================================================
+
 
   async saveFile(filename, data) {
     const filepath = path.join(this.storageDir, filename);
@@ -130,7 +127,6 @@ class FileStorage {
     try {
       fs.writeFileSync(filepath, JSON.stringify(record, null, 2), 'utf8');
 
-      // Also append to aggregated analytics
       this._appendToAnalyticsLog(record);
 
       return { success: true, filepath };
@@ -140,9 +136,6 @@ class FileStorage {
     }
   }
 
-  // ========================================================================
-  // READ METHODS
-  // ========================================================================
 
   async getCandidateData(name) {
     const filename = this._sanitizeFilename(name) + '.json';
@@ -182,9 +175,7 @@ class FileStorage {
     }
   }
 
-  // ========================================================================
-  // SEARCH & QUERY
-  // ========================================================================
+  
 
   searchCandidates(query) {
     try {
@@ -208,7 +199,6 @@ class FileStorage {
             });
           }
         } catch (err) {
-          // Skip invalid files
         }
       });
 
@@ -220,13 +210,11 @@ class FileStorage {
     }
   }
 
-  // ========================================================================
-  // DAILY LOGS (Append-only logs)
-  // ========================================================================
+
 
   _appendToDailyLog(category, record) {
     const date = new Date().toISOString().split('T')[0];
-    const filename = `${date}-${category}.jsonl`; // JSON Lines format
+    const filename = `${date}-${category}.jsonl`; 
     const filepath = path.join(this.categories[category], filename);
 
     try {
@@ -250,9 +238,7 @@ class FileStorage {
     }
   }
 
-  // ========================================================================
-  // ANALYTICS & REPORTING
-  // ========================================================================
+
 
   getAnalyticsSummary(days = 7) {
     try {
@@ -285,7 +271,6 @@ class FileStorage {
             summary.totalEvents++;
             summary.eventsByType[event.eventType] = (summary.eventsByType[event.eventType] || 0) + 1;
           } catch (err) {
-            // Skip invalid lines
           }
         });
       });
@@ -297,9 +282,7 @@ class FileStorage {
     }
   }
 
-  // ========================================================================
-  // UTILITIES
-  // ========================================================================
+
 
   _sanitizeFilename(name) {
     return name
@@ -357,7 +340,6 @@ class FileStorage {
     }
   }
 
-  // Export all data as backup
   async createBackup() {
     const backupDir = path.join(this.storageDir, 'backups');
     if (!fs.existsSync(backupDir)) {
@@ -367,7 +349,6 @@ class FileStorage {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const backupFile = path.join(backupDir, `backup-${timestamp}.tar`);
 
-    // For simplicity, create a JSON backup
     const backup = {
       timestamp: new Date().toISOString(),
       version: '1.0',
@@ -394,11 +375,6 @@ class FileStorage {
     return { success: true, filepath: backupPath };
   }
 
-  // ========================================================================
-  // CLEANUP METHODS
-  // ========================================================================
-
-  // Cleanup old files in storage categories based on retention policies
   cleanupOldFiles(retentionConfig = {}) {
     const results = {
       totalDeleted: 0,
@@ -407,14 +383,13 @@ class FileStorage {
 
     Object.entries(this.categories).forEach(([category, dir]) => {
       try {
-        const retentionValue = retentionConfig[category] || 30; // Default 30 days
+        const retentionValue = retentionConfig[category] || 30;
         let retentionMs;
 
-        // Check if retention is in hours (for storage) or days (for logs)
         if (category === 'logs') {
-          retentionMs = retentionValue * 24 * 60 * 60 * 1000; // days to ms
+          retentionMs = retentionValue * 24 * 60 * 60 * 1000;
         } else {
-          retentionMs = retentionValue * 60 * 60 * 1000; // hours to ms
+          retentionMs = retentionValue * 60 * 60 * 1000;
         }
 
         const cutoffDate = Date.now() - retentionMs;
@@ -452,7 +427,6 @@ class FileStorage {
     return results;
   }
 
-  // Get cleanup stats (preview what would be deleted)
   getCleanupStats(retentionConfig = {}) {
     const stats = {
       totalFiles: 0,
@@ -462,14 +436,13 @@ class FileStorage {
 
     Object.entries(this.categories).forEach(([category, dir]) => {
       try {
-        const retentionValue = retentionConfig[category] || 30; // Default 30 days
+        const retentionValue = retentionConfig[category] || 30; 
         let retentionMs;
 
-        // Check if retention is in hours (for storage) or days (for logs)
         if (category === 'logs') {
-          retentionMs = retentionValue * 24 * 60 * 60 * 1000; // days to ms
+          retentionMs = retentionValue * 24 * 60 * 60 * 1000;
         } else {
-          retentionMs = retentionValue * 60 * 60 * 1000; // hours to ms
+          retentionMs = retentionValue * 60 * 60 * 1000; 
         }
 
         const cutoffDate = Date.now() - retentionMs;
