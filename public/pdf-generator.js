@@ -1,22 +1,16 @@
-// PDF Generator for Member Detail Dashboard
-// Uses html2pdf.js library for client-side PDF generation
+
 
 class PDFGenerator {
   static async generate() {
     try {
-      // Show loading indicator
       this.showLoading('Generating PDF...');
-
-      // Load html2pdf.js if not already loaded
       await this.loadHtml2Pdf();
 
-      // Get the content to convert
       const content = document.getElementById('content');
       if (!content) {
         throw new Error('Content not found');
       }
 
-      // Configure PDF options
       const options = {
         margin: [10, 10, 10, 10],
         filename: `${this.getMemberName()}_profile.pdf`,
@@ -38,7 +32,6 @@ class PDFGenerator {
         }
       };
 
-      // Generate PDF
       await html2pdf().set(options).from(content).save();
 
       this.hideLoading();
@@ -53,13 +46,11 @@ class PDFGenerator {
 
   static async loadHtml2Pdf() {
     return new Promise((resolve, reject) => {
-      // Check if already loaded
       if (window.html2pdf) {
         resolve();
         return;
       }
 
-      // Load html2pdf.js from CDN
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
       script.onload = () => resolve();
@@ -91,7 +82,6 @@ class PDFGenerator {
 
     document.body.appendChild(notification);
 
-    // Add styles if not already present
     this.addNotificationStyles();
   }
 
@@ -111,7 +101,6 @@ class PDFGenerator {
     document.body.appendChild(notification);
     this.addNotificationStyles();
 
-    // Auto-hide after 3 seconds
     setTimeout(() => {
       notification.style.animation = 'slideOutRight 0.3s ease';
       setTimeout(() => notification.remove(), 300);
@@ -134,7 +123,6 @@ class PDFGenerator {
     document.body.appendChild(notification);
     this.addNotificationStyles();
 
-    // Auto-hide after 5 seconds for errors
     setTimeout(() => {
       notification.style.animation = 'slideOutRight 0.3s ease';
       setTimeout(() => notification.remove(), 300);
@@ -158,7 +146,7 @@ class PDFGenerator {
 
   static addNotificationStyles() {
     if (document.getElementById('pdf-notification-styles')) {
-      return; // Already added
+      return; 
     }
 
     const styles = document.createElement('style');
@@ -271,7 +259,6 @@ class PDFGenerator {
     document.head.appendChild(styles);
   }
 
-  // Utility method to generate PDF with custom options
   static async generateCustom(options = {}) {
     try {
       await this.loadHtml2Pdf();
