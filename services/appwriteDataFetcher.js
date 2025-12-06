@@ -7,15 +7,6 @@ dotenv.config();
 
 const logger = createLogger('AppwriteDataFetcher');
 
-// ============================================================================
-// MAIN FETCH FUNCTION
-// ============================================================================
-
-/**
- * @param {Object} payload
- * @param {string} requestId 
- * @returns {Promise<Object>} 
- */
 export async function fetchFromAppwrite(payload, requestId = 'default') {
   try {
     const result = await appwriteService.executeFunction(payload, requestId);
@@ -39,17 +30,7 @@ export async function fetchFromAppwrite(payload, requestId = 'default') {
   }
 }
 
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
 
-/**
- * @param {string} name
- * @param {string} type 
- * @param {string} constituency
- * @param {string} state 
- * @returns {Promise<Object>} 
- */
 export async function getMemberData(name, type, constituency = null, state = null) {
   const payload = {
     name,
@@ -73,12 +54,7 @@ export async function getMemberData(name, type, constituency = null, state = nul
   throw new Error(result.error || 'Failed to fetch member data');
 }
 
-/**
- * @param {string} name 
- * @param {string} constituency 
- * @param {string} party
- * @returns {Promise<Object>} 
- */
+
 export async function getCandidateData(name, constituency, party) {
   const payload = {
     action: 'getCandidateData',
@@ -96,11 +72,7 @@ export async function getCandidateData(name, constituency, party) {
   throw new Error(result.error || 'Failed to fetch candidate data');
 }
 
-/**
- * @param {Object} data
- * @param {string} requestId 
- * @returns {Promise<Object>}
- */
+
 export async function executeFunction(data, requestId) {
   const result = await fetchFromAppwrite(data, requestId);
   return result;
