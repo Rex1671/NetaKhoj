@@ -24,9 +24,7 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// ============================================================================
-// APPWRITE RESPONSE LOGGER
-// ============================================================================
+
 
 function logAppwriteResponse(functionName, params, response) {
   const logEntry = {
@@ -44,9 +42,7 @@ function logAppwriteResponse(functionName, params, response) {
   console.log(`[APPWRITE] ${functionName} - Response logged to appwriteresponse.txt`);
 }
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
+
 
 const CONFIG = {
   TIMEOUTS: {
@@ -64,9 +60,7 @@ const CONFIG = {
   STORAGE_MAX_AGE: 24 * 60 * 60 * 1000,
 };
 
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
+
 
 const generateRequestId = () => crypto.randomBytes(8).toString('hex');
 
@@ -95,9 +89,7 @@ const createTimeoutPromise = (ms, errorMsg) =>
     setTimeout(() => reject(new Error(errorMsg)), ms)
   );
 
-// ============================================================================
-// SMART DATA MERGER
-// ============================================================================
+
 
 function needsUpdate(value) {
   return !value ||
@@ -135,9 +127,7 @@ function smartMergeField(target, source, field, targetLocation = null) {
   return false;
 }
 
-// ============================================================================
-// DATA VALIDATION
-// ============================================================================
+
 
 function validateAppwritePrsData(data) {
   return data?.found || (data?.name && data?.party && data.party !== 'Unknown');
@@ -151,9 +141,7 @@ function validateCandidateData(data) {
   return data && !data.error && (data.candidate || data.movableAssets || data.criminalCases);
 }
 
-// ============================================================================
-// DATA MERGING FUNCTIONS
-// ============================================================================
+
 
 function mergeAppwritePrs(target, data) {
   if (data.name) target.name = data.name;
@@ -207,21 +195,17 @@ function mergeLocalPrs(target, data) {
 }
 
 function mergeCandidate(target, data) {
-  // Set encrypted meow and bhaw at top level
   if (data.meow) target.meow = data.meow;
   if (data.bhaw) target.bhaw = data.bhaw;
 
-  // Clean and proxy the candidate data
   const cleanedCandidateData = { ...data };
 
-  // Remove unwanted fields
   delete cleanedCandidateData.searchUrl;
   delete cleanedCandidateData.timestamp;
   delete cleanedCandidateData.fetchedAt;
   delete cleanedCandidateData.metadata;
   delete cleanedCandidateData.assetLink;
 
-  // Proxy image URLs in candidate data
   if (cleanedCandidateData.imageUrl) {
     const baseUrl = target._req ? `${target._req.protocol}://${target._req.get('host')}` : '';
     const proxyUrl = imageProxy.createProxyUrl(cleanedCandidateData.imageUrl, baseUrl);
@@ -231,7 +215,6 @@ function mergeCandidate(target, data) {
     }
   }
 
-  // Proxy image URL in nested candidate object
   if (cleanedCandidateData.candidate && cleanedCandidateData.candidate.imageUrl) {
     const baseUrl = target._req ? `${target._req.protocol}://${target._req.get('host')}` : '';
     const proxyUrl = imageProxy.createProxyUrl(cleanedCandidateData.candidate.imageUrl, baseUrl);
@@ -267,9 +250,7 @@ function mergeCandidate(target, data) {
   });
 }
 
-// ============================================================================
-// MAIN DATA FETCHER
-// ============================================================================
+
 
 async function fetchAllData(params, requestId) {
   const { name, type, constituency, party, state, meow, bhaw } = params;
@@ -286,9 +267,7 @@ async function fetchAllData(params, requestId) {
 
   console.log(`[${requestId}] Fetching all data sources`, { name, type });
 
-  // ========================================
-  // CHECK STORAGE FIRST
-  // ========================================
+  
 
   try {
     const storedPrs = await fileStorage.getPrsData(name, type);
@@ -316,13 +295,10 @@ async function fetchAllData(params, requestId) {
     console.error(`[${requestId}] Storage check failed:`, error);
   }
 
-  // ========================================
-  // FETCH FROM SOURCES (if not in storage)
-  // ========================================
+
 
   const fetchPromises = [];
 
-  // 🔴 APPWRITE CALL #1: Primary data fetch
   if (!results.appwritePrimary) {
     fetchPromises.push(
       Promise.race([
@@ -330,7 +306,6 @@ async function fetchAllData(params, requestId) {
         createTimeoutPromise(CONFIG.TIMEOUTS.APPWRITE_PRIMARY, 'Appwrite primary timeout')
       ])
         .then(data => {
-          // 📝 LOG APPWRITE RESPONSE
           logAppwriteResponse('fetchMemberFromAppwrite (PRIMARY)', { name, type, constituency, state }, data);
 
           if (validateAppwritePrsData(data)) {
@@ -416,9 +391,7 @@ async function fetchAllData(params, requestId) {
   return { results, errors, fromStorage, duration };
 }
 
-// ============================================================================
-// SECONDARY APPWRITE CALL
-// ============================================================================
+
 
 async function fetchSecondaryData(params, currentData, requestId) {
   const { name, type, constituency, state } = params;
@@ -426,7 +399,6 @@ async function fetchSecondaryData(params, currentData, requestId) {
   console.log(`[${requestId}] 🔄 Making secondary Appwrite SDK call to fill missing data`);
 
   try {
-    // 🔴 APPWRITE CALL #2: Secondary data fetch
     const secondaryData = await Promise.race([
       fetchMemberFromAppwrite(name, type, constituency, state),
       createTimeoutPromise(CONFIG.TIMEOUTS.APPWRITE_SECONDARY, 'Secondary Appwrite timeout')
@@ -514,9 +486,7 @@ async function fetchSecondaryData(params, currentData, requestId) {
   }
 }
 
-// ============================================================================
-// BUILD FINAL RESPONSE
-// ============================================================================
+
 
 function buildResponse(results, fromStorage, req) {
   const merged = {
@@ -541,7 +511,6 @@ function buildResponse(results, fromStorage, req) {
     mergeLocalPrs(merged, results.localPrs);
   }
 
-  // Proxy top-level imageUrl
   if (merged.imageUrl) {
     const baseUrl = req ? `${req.protocol}://${req.get('host')}` : '';
     const proxyUrl = imageProxy.createProxyUrl(merged.imageUrl, baseUrl);
@@ -552,7 +521,6 @@ function buildResponse(results, fromStorage, req) {
     }
   }
 
-  // Proxy imageUrl in candidateData
   if (merged.candidateData && merged.candidateData.imageUrl) {
     const baseUrl = req ? `${req.protocol}://${req.get('host')}` : '';
     const proxyUrl = imageProxy.createProxyUrl(merged.candidateData.imageUrl, baseUrl);
@@ -563,7 +531,6 @@ function buildResponse(results, fromStorage, req) {
     }
   }
 
-  // Proxy imageUrl in nested candidate object
   if (merged.candidateData && merged.candidateData.candidate && merged.candidateData.candidate.imageUrl) {
     const baseUrl = req ? `${req.protocol}://${req.get('host')}` : '';
     const proxyUrl = imageProxy.createProxyUrl(merged.candidateData.candidate.imageUrl, baseUrl);
@@ -577,9 +544,7 @@ function buildResponse(results, fromStorage, req) {
   return merged;
 }
 
-// ============================================================================
-// ROUTES
-// ============================================================================
+
 
 router.get('/image/:imageId', async (req, res) => {
   const { imageId } = req.params;
@@ -706,9 +671,7 @@ router.get('/rajya-sabha', async (req, res) => {
   }
 });
 
-// ============================================================================
-// MAIN PRS ENDPOINT
-// ============================================================================
+
 
 router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
   const requestId = req.sessionId || generateRequestId();
@@ -751,17 +714,15 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
       performanceFields: Object.keys(responseData.performance || {}),
     });
 
-    // ASYNC SECONDARY FETCH - Fire and forget
     fetchSecondaryData(params, responseData, requestId)
       .then(secondaryResult => {
         if (secondaryResult?.updated) {
           console.log(`[${requestId}] 🔄 Background update completed`);
-          // Store result in cache for polling
           cacheService.set('poll', requestId, {
             secondaryDataMerged: true,
             mergedFields: secondaryResult.fields,
-            ...secondaryResult.data // Spread the nested updates (personal, performance, etc.)
-          }, 5 * 60 * 1000); // 5 minutes TTL
+            ...secondaryResult.data 
+          }, 5 * 60 * 1000);
         }
       })
       .catch(err => console.error(`[${requestId}] Background fetch failed:`, err));
@@ -773,7 +734,7 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
       type,
       sources: responseData.sources,
       fromStorage,
-      secondaryCallMade: true, // It's always attempted now
+      secondaryCallMade: true, 
       duration: totalDuration,
       success: true,
     });
@@ -786,12 +747,12 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
 
     return res.json({
       ...responseData,
-      bothComplete: false, // Signal that more data might come
-      requestId, // Crucial for polling
+      bothComplete: false,
+      requestId, 
       timing: {
         total: totalDuration,
         primary: duration,
-        secondary: 0 // Async
+        secondary: 0 
       },
       timestamp: new Date().toISOString(),
     });
@@ -807,9 +768,7 @@ router.get('/prs', scraperLimiter, memberQueryValidator, async (req, res) => {
   }
 });
 
-// ============================================================================
-// CANDIDATE ENDPOINT
-// ============================================================================
+
 
 router.get('/candidate', scraperLimiter, candidateQueryValidator, async (req, res) => {
   const requestId = req.sessionId || generateRequestId();
@@ -843,88 +802,9 @@ router.get('/candidate', scraperLimiter, candidateQueryValidator, async (req, re
   }
 });
 
-// ============================================================================
-// DEBUG & ADMIN ENDPOINTS
-// ============================================================================
 
-router.get('/test-appwrite-sdk', async (req, res) => {
-  try {
-    const { name = 'ANITA SUBHADARSHINI', type = 'MP' } = req.query;
-    const requestId = generateRequestId();
 
-    console.log(`[${requestId}] Testing Appwrite SDK:`, { name, type });
 
-    // 🔴 APPWRITE CALL #3: Test endpoint
-    const result = await fetchMemberFromAppwrite(name, type);
-
-    // 📝 LOG APPWRITE RESPONSE
-    logAppwriteResponse('fetchMemberFromAppwrite (TEST)', { name, type }, result);
-
-    console.log("Result:", result);
-
-    res.json({
-      success: true,
-      result,
-      stats: getAppwriteStats(),
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString(),
-    });
-  }
-});
-
-router.get('/debug-full-flow', async (req, res) => {
-  const { name, type } = req.query;
-
-  if (!name || !type) {
-    return res.status(400).json({ error: 'name and type are required' });
-  }
-
-  try {
-    const requestId = generateRequestId();
-
-    // 🔴 APPWRITE CALL #4: Debug primary
-    const primary = await fetchMemberFromAppwrite(name, type);
-    logAppwriteResponse('fetchMemberFromAppwrite (DEBUG-PRIMARY)', { name, type }, primary);
-
-    const mockResponse = {
-      name,
-      type,
-      personal: {},
-      performance: {}
-    };
-    mergeAppwritePrs(mockResponse, primary);
-
-    const secondary = await fetchMemberFromAppwrite(name, type);
-    logAppwriteResponse('fetchMemberFromAppwrite (DEBUG-SECONDARY)', { name, type }, secondary);
-
-    const beforeMerge = JSON.parse(JSON.stringify(mockResponse));
-    const secondaryResult = await fetchSecondaryData(
-      { name, type },
-      mockResponse,
-      requestId
-    );
-
-    res.json({
-      primary,
-      secondary,
-      beforeMerge,
-      afterMerge: mockResponse,
-      secondaryResult,
-      fieldsUpdated: secondaryResult?.fields || [],
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
-      stack: error.stack
-    });
-  }
-});
 
 router.get('/health', (req, res) => {
   const memUsage = process.memoryUsage();
@@ -982,19 +862,8 @@ router.get('/welcome', (req, res) => {
 
 console.log('✅ API routes initialized with Appwrite SDK dual-call support');
 
-// ============================================================================
-// POLLING ENDPOINT
-// ============================================================================
 
-router.get('/prs/poll/:requestId', async (req, res) => {
-  const { requestId } = req.params;
-  const data = await cacheService.get('poll', requestId);
 
-  if (data) {
-    res.json({ ready: true, data });
-  } else {
-    res.json({ ready: false });
-  }
-});
+
 
 export default router;
