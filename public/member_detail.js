@@ -24,7 +24,6 @@
       }
     }
 
-    // Scroll reveal animation
     function revealOnScroll() {
       const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
       
@@ -38,7 +37,6 @@
       });
     }
 
-    // Add sparkles to quick stat items
     function addSparkles() {
       const statItems = document.querySelectorAll('.quick-stat-item');
       
@@ -65,7 +63,6 @@
       });
     }
 
-    // Animate counters
     function animateCounters() {
       const counters = document.querySelectorAll('.quick-stat-value');
       
@@ -101,7 +98,6 @@
       });
     }
 
-    // 3D tilt effect for cards
     function add3DTilt() {
       const cards = document.querySelectorAll('.quick-stat-item, .card-item');
       
@@ -275,10 +271,8 @@
 
       const cleaned = String(value).replace(/%/g, '').trim();
 
-      // Check for invalid values after cleaning
       if (cleaned === 'NANA' || cleaned === 'nananan' || cleaned === 'NANAN' || cleaned === 'NaN' || cleaned === 'null' || cleaned === 'undefined' || cleaned === '') return 'N/A';
 
-      // If it's a valid number, add % back
       const num = parseFloat(cleaned);
       if (!isNaN(num) && num >= 0 && num <= 100) {
         return num + '%';
@@ -289,46 +283,29 @@
 function cleanEducation(educationText) {
   if (!educationText) return 'N/A';
   
-  // First, remove all the Google Charts and JavaScript code
   let cleaned = educationText
-    // Remove everything from google.charts to the end of the function
     .replace(/google\.charts[\s\S]*?}\s*\)/gm, '')
-    // Remove script tags and their content
     .replace(/<script[\s\S]*?<\/script>/gi, '')
-    // Remove function definitions
     .replace(/function\s+\w+\s*\([^)]*\)\s*{[\s\S]*?}/g, '')
-    // Remove Crime-O-Meter section
     .replace(/Crime-O-Meter[\s\S]*?Criminal Cases:\s*\d+/gi, '')
-    // Remove Assets & Liabilities section
     .replace(/Assets\s*&\s*Liabilities[\s\S]*?Liabilities:\s*Rs\s*[\d,]+\s*~[\s\S]*?Lacs\+/gi, '')
-    // Remove chart related content
     .replace(/var\s+(data|options|chart)[\s\S]*?;/g, '')
     .replace(/chart\.draw\([^)]*\);?/g, '')
-    // Remove any remaining JavaScript snippets
     .replace(/\(['"].*?['"]\)/g, '')
     .replace(/document\.getElementById\([^)]*\)/g, '')
-    // Remove numeric patterns that look like amounts
     .replace(/\d{1,3}(,\d{3})*\s*~\d+\s*Lacs?\+/g, '')
-    // Clean up "Others" prefix at the beginning
     .replace(/^\s*Others\s+/i, '')
-    // Remove duplicate content (the text appears twice in your sample)
     .replace(/(\n|^)Others\s+/gi, '\n')
-    // Clean up back(drawChart) and similar artifacts
     .replace(/back\(drawChart\);?/gi, '')
-    // Remove any remaining gauge/chart references
     .replace(/google\.visualization\.\w+/g, '')
     .replace(/\bGauge\b/g, '')
     .replace(/chart_div/g, '')
-    // Remove Nu | mber patterns
     .replace(/Num\s*\|\s*ber/gi, 'Number')
-    // Clean up pipe separators that shouldn't be there
     .replace(/([a-zA-Z])\s*\|\s*([a-zA-Z])/g, '$1$2')
-    // Remove multiple spaces and trim
     .replace(/\s+/g, ' ')
     .trim();
   
-  // Now extract the actual education content
-  // Look for education-related keywords
+
   const educationPatterns = [
     /Diploma[\s\S]*?Year-?\d{4}/gi,
     /Doctorate[\s\S]*?(?=\s*$|Others|Crime)/gi,
@@ -463,7 +440,6 @@ function parseProperty(text) {
   
   const properties = [];
   
-  // Split by double newlines or numbered patterns like (1), (2)
   const blocks = text.split(/\n\n+|(?=\(\d+\)-)/g).filter(b => b.trim().length > 0);
   
   for (const block of blocks) {
@@ -471,17 +447,14 @@ function parseProperty(text) {
     let value = 'N/A';
     let area = '';
     
-    // Extract value
     const valueMatch = block.match(/Value:\s*Rs\s*([\d,]+)/i);
     if (valueMatch) {
       value = `Rs ${valueMatch[1]}`;
-      // Get address part (everything before "| Value:")
       address = block.split('|')[0].trim().replace(/^\(\d+\)-/, '').trim();
     } else {
       address = block.trim();
     }
     
-    // Extract area/rakba
     const areaMatch = block.match(/(?:Area|Rakba)[:\s-]*([\d.]+\s*(?:hec|sq|acres|sq\.?\s*(?:ft|m|meter)?))/i);
     if (areaMatch) {
       area = areaMatch[1].trim();
@@ -597,18 +570,13 @@ function parseProperty(text) {
       `;
     }
 
-   // ============================================================================
-// PROGRESSIVE LOADING STATE
-// ============================================================================
+
 let currentRequestId = null;
 let pollingInterval = null;
 let pollingAttempts = 0;
-const MAX_POLL_ATTEMPTS = 15; // 30 seconds max
-const POLL_INTERVAL = 2000; // 2 seconds
+const MAX_POLL_ATTEMPTS = 15; 
+const POLL_INTERVAL = 2000; 
 
-// ============================================================================
-// MAIN DATA LOADER - WITH PARALLEL FETCHING
-// ============================================================================
 async function loadMemberData() {
   if (window.SERVER_DATA) {
     console.log('✅ Using server-injected data');
@@ -716,9 +684,7 @@ async function loadMemberData() {
 }
 
 
-// ============================================================================
-// POLLING SYSTEM - FOR PROGRESSIVE DATA LOADING
-// ============================================================================
+
 
 function startPolling(params) {
   if (pollingInterval) {
@@ -773,16 +739,13 @@ function stopPolling() {
   hidePollingIndicator();
 }
 
-// ============================================================================
-// SMART DATA UPDATE - ONLY FILLS MISSING FIELDS
-// ============================================================================
+
 
 function updateDashboardWithNewData(newData) {
   console.log('🔄 Smart updating dashboard with secondary data...');
   
   let hasUpdates = false;
 
-  // Helper: Check if field needs update
   const needsUpdate = (currentValue) => {
     return !currentValue || 
            currentValue === 'N/A' || 
@@ -790,7 +753,6 @@ function updateDashboardWithNewData(newData) {
            currentValue.trim() === '';
   };
 
-  // Update personal info fields
   if (newData.personal) {
     const ageEl = document.querySelector('[data-field="age"]');
     if (ageEl && needsUpdate(ageEl.textContent) && newData.personal.age) {
@@ -814,13 +776,11 @@ function updateDashboardWithNewData(newData) {
     }
   }
 
-  // Update performance metrics if available
   if (newData.performance) {
     updatePerformanceMetrics(newData.performance);
     hasUpdates = true;
   }
 
-  // Update tables if they're missing
   if (newData.html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(newData.html, 'text/html');
@@ -883,14 +843,11 @@ function updateDashboardWithNewData(newData) {
   }
 }
 
-// ============================================================================
-// UPDATE PERFORMANCE METRICS - FIXED VERSION
-// ============================================================================
+
 
 function updatePerformanceMetrics(performance) {
   console.log('📊 Updating performance metrics...', performance);
   
-  // Helper function to find stat card by title text
   const findStatCardByTitle = (titleText) => {
     const statCards = document.querySelectorAll('.stat-card');
     for (const card of statCards) {
@@ -902,12 +859,10 @@ function updatePerformanceMetrics(performance) {
     return null;
   };
 
-  // Helper to check if value needs update
   const needsUpdate = (value) => {
     return !value || value === 'N/A' || value === 'Unknown' || value.trim() === '';
   };
 
-  // Update Attendance
   if (performance.attendance) {
     const attendanceCard = findStatCardByTitle('Attendance');
     if (attendanceCard) {
@@ -920,7 +875,6 @@ function updatePerformanceMetrics(performance) {
     }
   }
   
-  // Update Debates
   if (performance.debates) {
     const debatesCard = findStatCardByTitle('Debates');
     if (debatesCard) {
@@ -933,7 +887,6 @@ function updatePerformanceMetrics(performance) {
     }
   }
   
-  // Update Questions
   if (performance.questions) {
     const questionsCard = findStatCardByTitle('Questions');
     if (questionsCard) {
@@ -946,7 +899,6 @@ function updatePerformanceMetrics(performance) {
     }
   }
 
-  // Update Private Member Bills
   if (performance.pmb) {
     const pmbCard = findStatCardByTitle('Private Member Bills');
     if (pmbCard) {
@@ -959,7 +911,6 @@ function updatePerformanceMetrics(performance) {
     }
   }
 
-  // Update national/state averages if available
   if (performance.natAttendance || performance.stateAttendance) {
     updateComparisonBars('Attendance', performance.attendance, performance.natAttendance, performance.stateAttendance);
   }
@@ -973,9 +924,7 @@ function updatePerformanceMetrics(performance) {
   }
 }
 
-// ============================================================================
-// UPDATE COMPARISON BARS
-// ============================================================================
+
 
 function updateComparisonBars(metricName, memberValue, nationalAvg, stateAvg) {
   const card = findStatCardByTitle(metricName);
@@ -1020,7 +969,6 @@ function updateComparisonBars(metricName, memberValue, nationalAvg, stateAvg) {
   });
 }
 
-// Helper function (make it globally accessible)
 function findStatCardByTitle(titleText) {
   const statCards = document.querySelectorAll('.stat-card');
   for (const card of statCards) {
@@ -1034,7 +982,7 @@ function findStatCardByTitle(titleText) {
 
 function animateFieldUpdate(element) {
   element.style.transition = 'all 0.5s ease';
-  element.style.backgroundColor = '#fef3c7'; // Light yellow highlight
+  element.style.backgroundColor = '#fef3c7';
   element.style.transform = 'scale(1.05)';
   
   setTimeout(() => {
@@ -1045,12 +993,8 @@ function animateFieldUpdate(element) {
 
 
 
-// ============================================================================
-// UI HELPERS - POLLING INDICATOR & NOTIFICATIONS
-// ============================================================================
 
 function showPollingIndicator() {
-  // Remove existing if any
   hidePollingIndicator();
   
   const indicator = document.createElement('div');
@@ -1218,7 +1162,6 @@ function renderMPDashboardFromServerData(prsData, candidateData) {
     questionsTable: ''
   };
 
-  // ✅ FIXED: Directly use the table data from prsData
   if (prsData.attendanceTable) {
     data.attendanceTable = prsData.attendanceTable;
     console.log('✅ Attendance table loaded directly from prsData');
@@ -1234,14 +1177,12 @@ function renderMPDashboardFromServerData(prsData, candidateData) {
     console.log('✅ Questions table loaded directly from prsData');
   }
 
-  // Merge performance data
   if (prsData.performance) {
     Object.keys(prsData.performance).forEach(key => {
       if (prsData.performance[key]) data[key] = prsData.performance[key];
     });
   }
 
-  // Merge personal data
   if (prsData.personal) {
     if (prsData.personal.age) data.age = prsData.personal.age;
     if (prsData.personal.gender) data.gender = prsData.personal.gender;
@@ -1251,7 +1192,6 @@ function renderMPDashboardFromServerData(prsData, candidateData) {
     if (prsData.personal.noOfTerm) data.noOfTerm = prsData.personal.noOfTerm;
   }
 
-  // ✅ FALLBACK: Only if tables are missing, try to parse from HTML
   if ((!data.attendanceTable || !data.debatesTable || !data.questionsTable) && prsData.html) {
     console.log('⚠️ Some tables missing, attempting to parse from HTML...');
     const parser = new DOMParser();
@@ -1325,12 +1265,10 @@ function renderMLADashboardFromServerData(prsData, candidateData) {
     questionsTable: ''
   };
 
-  // ✅ FIXED: Directly use table data
   if (prsData.attendanceTable) data.attendanceTable = prsData.attendanceTable;
   if (prsData.debatesTable) data.debatesTable = prsData.debatesTable;
   if (prsData.questionsTable) data.questionsTable = prsData.questionsTable;
 
-  // Merge personal data
   if (prsData.personal) {
     if (prsData.personal.age) data.age = prsData.personal.age;
     if (prsData.personal.gender) data.gender = prsData.personal.gender;
@@ -1339,7 +1277,6 @@ function renderMLADashboardFromServerData(prsData, candidateData) {
     if (prsData.personal.termEnd) data.termEnd = prsData.personal.termEnd;
   }
 
-  // Merge performance data if available
   if (prsData.performance) {
     Object.keys(prsData.performance).forEach(key => {
       if (prsData.performance[key]) data[key] = prsData.performance[key];
@@ -1355,9 +1292,7 @@ function renderMLADashboardFromServerData(prsData, candidateData) {
   currentMemberData = data;
   renderDashboard(data, candidateData); 
 }
-    // ============================================================================
-// DATA MERGING HELPER - Fills missing fields from candidateData
-// ============================================================================
+
 function mergeCandidateDataIntoMain(data, candidateData) {
   if (!candidateData) return data;
   
