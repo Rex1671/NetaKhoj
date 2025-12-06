@@ -15,9 +15,7 @@ const cache = new NodeCache({
   useClones: false
 });
 
-// ============================================================================
-// CUSTOM ERRORS
-// ============================================================================
+
 
 class CandidateServiceError extends Error {
   constructor(message, code, statusCode) {
@@ -42,9 +40,7 @@ class CandidateNotFoundError extends CandidateServiceError {
   }
 }
 
-// ============================================================================
-// REQUEST DEDUPLICATOR (Prevents duplicate simultaneous requests)
-// ============================================================================
+
 
 class RequestDeduplicator {
   constructor() {
@@ -52,13 +48,11 @@ class RequestDeduplicator {
   }
 
   async deduplicate(key, fn) {
-    // If request is already in flight, wait for it
     if (this.pending.has(key)) {
       logger.debug('DEDUP', `Reusing in-flight request: ${key}`);
       return this.pending.get(key);
     }
 
-    // Execute new request
     const promise = fn()
       .finally(() => {
         this.pending.delete(key);
@@ -80,9 +74,7 @@ class RequestDeduplicator {
   }
 }
 
-// ============================================================================
-// METRICS COLLECTOR
-// ============================================================================
+
 
 class CandidateMetrics {
   constructor() {
@@ -174,9 +166,7 @@ class CandidateMetrics {
   }
 }
 
-// ============================================================================
-// CANDIDATE SERVICE
-// ============================================================================
+
 
 class CandidateService {
   constructor() {
@@ -185,7 +175,7 @@ class CandidateService {
       retryAttempts: parseInt(process.env.CANDIDATE_RETRY_ATTEMPTS) || 2,
       retryDelay: parseInt(process.env.CANDIDATE_RETRY_DELAY) || 1000,
       myNetaBaseUrl: 'https://www.myneta.info',
-      functionId: process.env.APPWRITE_FUNCTION_ID // Specific function ID for candidates if different
+      functionId: process.env.APPWRITE_FUNCTION_ID 
     };
 
     this.metrics = new CandidateMetrics();
@@ -194,9 +184,6 @@ class CandidateService {
     this.enabled = appwriteService.enabled;
   }
 
-  // ========================================================================
-  // ENCRYPTION/DECRYPTION METHODS
-  // ========================================================================
 
   _encrypt(text) {
     const algorithm = 'aes-256-cbc';
@@ -230,20 +217,16 @@ class CandidateService {
       const mappingFile = 'meow_bhaw_mappings.json';
       let mappings = {};
 
-      // Load existing mappings
       try {
         const existing = await fileStorage.getFile(mappingFile);
         if (existing.found) {
           mappings = JSON.parse(existing.data);
         }
       } catch (error) {
-        // File doesn't exist, start fresh
       }
 
-      // Add new mapping
       mappings[encryptedMeow] = { meow: originalMeow, bhaw: originalBhaw };
 
-      // Save updated mappings
       await fileStorage.saveFile(mappingFile, JSON.stringify(mappings, null, 2));
     } catch (error) {
       logger.error('MAPPING', 'Failed to store mapping', error);
@@ -264,14 +247,10 @@ class CandidateService {
     return null;
   }
 
-  // ========================================================================
-  // MAIN METHOD - WITH VALIDATION
-  // ========================================================================
 
   async getCandidateData(name, constituency = '', party = '', meow = '', bhaw = '') {
     const requestId = this._generateRequestId();
 
-    // Validate input
     if (!name || name.trim() === '') {
       logger.error(requestId, 'Candidate name is required');
       return this._getErrorResponse('Candidate name is required');
@@ -286,7 +265,6 @@ class CandidateService {
 
     const normalizedName = name.trim();
 
-    // Decode encrypted meow and bhaw if provided
     let decodedMeow = meow;
     let decodedBhaw = bhaw;
 
@@ -303,7 +281,6 @@ class CandidateService {
 
     const cacheKey = this._getCacheKey(normalizedName, constituency, party);
 
-    // Check cache
     const cached = cache.get(cacheKey);
     if (cached) {
       this.metrics.recordCacheHit();
@@ -313,7 +290,6 @@ class CandidateService {
 
     this.metrics.recordCacheMiss();
 
-    // Deduplicate simultaneous requests
     return this.deduplicator.deduplicate(cacheKey, async () => {
       return await this._fetchCandidateData(requestId, {
         name: normalizedName,
@@ -325,9 +301,7 @@ class CandidateService {
     });
   }
 
-  // ========================================================================
-  // FETCH WITH RETRY
-  // ========================================================================
+  
 
   async _fetchCandidateData(requestId, params, attempt = 1) {
     const startTime = Date.now();
@@ -339,8 +313,6 @@ class CandidateService {
         party: params.party || 'N/A'
       });
 
-      // Use AppwriteService to execute function
-      // Pass the payload directly. AppwriteService handles JSON.stringify.
       const payload = {
         test: 'search',
         name: params.name,
@@ -350,21 +322,18 @@ class CandidateService {
         bhaw: params.bhaw
       };
 
-      // Pass functionId if specific one is needed, otherwise AppwriteService uses default
       const result = await appwriteService.executeFunction(payload, requestId, this.config.functionId);
 
-      // Parse the result structure from AppwriteService
       const data = await this._parseResponse(requestId, result, params.name);
       const duration = Date.now() - startTime;
 
       this.metrics.recordSuccess(duration);
       logger.success(requestId, `Data fetched in ${duration}ms`, {
         name: params.name,
-        hasAssets: !!data.assets, // Changed from data.data.assets
-        hasCriminalCases: !!data.criminalCases // Changed from data.data.criminalCases
+        hasAssets: !!data.assets,
+        hasCriminalCases: !!data.criminalCases 
       });
 
-      // Cache successful result
       const cacheKey = this._getCacheKey(params.name, params.constituency, params.party);
       cache.set(cacheKey, data);
 
@@ -373,7 +342,6 @@ class CandidateService {
     } catch (error) {
       const duration = Date.now() - startTime;
 
-      // Don't retry on certain errors
       if (error instanceof CandidateTimeoutError ||
         error instanceof CandidateNotFoundError ||
         attempt > this.config.retryAttempts) {
@@ -387,7 +355,6 @@ class CandidateService {
         return this._getErrorResponse(error.message, params.name);
       }
 
-      // Exponential backoff
       const delay = this.config.retryDelay * Math.pow(2, attempt - 1);
       logger.warn(requestId, `Retrying in ${delay}ms...`, {
         attempt,
@@ -399,15 +366,11 @@ class CandidateService {
     }
   }
 
-  // ========================================================================
-  // RESPONSE PARSING
-  // ========================================================================
 
   async _parseResponse(requestId, result, name) {
-    // result is the object returned by AppwriteService.executeFunction
-    // it contains { success: true, data: { ... }, execution: { ... } }
+ 
 
-    const responseData = result.data; // This is the parsed JSON body from the function
+    const responseData = result.data; 
 
     if (!responseData || responseData.success === false) {
       if (responseData?.error?.includes('not found') ||
@@ -425,19 +388,17 @@ class CandidateService {
     const searchUrl = this._getSearchUrl(name);
     const candidateData = responseData.data || {};
 
-    // Extract meow and bhaw from assetLink if present
     let meow = '';
     let bhaw = '';
 
     if (candidateData.assetLink) {
       const urlMatch = candidateData.assetLink.match(/\/([^\/]+)\/candidate\.php\?candidate_id=(\d+)/);
       if (urlMatch) {
-        bhaw = urlMatch[1]; // e.g., Karnataka2023
-        meow = urlMatch[2]; // e.g., 8264
+        bhaw = urlMatch[1]; 
+        meow = urlMatch[2];
       }
     }
 
-    // Encrypt meow and bhaw if extracted
     let encryptedMeow = '';
     let encryptedBhaw = '';
 
@@ -445,16 +406,13 @@ class CandidateService {
       encryptedMeow = this._encrypt(meow);
       encryptedBhaw = this._encrypt(bhaw);
 
-      // Store mapping for future decoding
       await this._storeMapping(encryptedMeow, meow, encryptedBhaw, bhaw);
 
       logger.debug(requestId, 'Encrypted meow/bhaw', { encryptedMeow: encryptedMeow.substring(0, 20) + '...', encryptedBhaw: encryptedBhaw.substring(0, 20) + '...' });
     }
 
-    // Remove assetLink from candidateData before returning
     delete candidateData.assetLink;
 
-    // RETURN UNWRAPPED DATA
     return {
       ...candidateData,
       meow: encryptedMeow,
@@ -465,9 +423,7 @@ class CandidateService {
     };
   }
 
-  // ========================================================================
-  // HELPER METHODS
-  // ========================================================================
+
 
   _getHeaders() {
     const headers = {
@@ -509,7 +465,6 @@ class CandidateService {
   _getErrorResponse(errorMessage, name = '') {
     const searchUrl = name ? this._getSearchUrl(name) : null;
 
-    // Also unwrap error response
     return {
       assetLink: searchUrl,
       content: null,
@@ -522,9 +477,7 @@ class CandidateService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  // ========================================================================
-  // PUBLIC UTILITY METHODS
-  // ========================================================================
+
 
   clearCache(pattern) {
     if (pattern) {
@@ -566,7 +519,6 @@ class CandidateService {
 
     try {
       const startTime = Date.now();
-      // Simple health check payload
       await appwriteService.executeFunction({
         test: 'health',
         name: 'Health Check'
@@ -594,9 +546,7 @@ class CandidateService {
     logger.info('ADMIN', 'Metrics and deduplicator reset');
   }
 
-  // ========================================================================
-  // BATCH OPERATIONS
-  // ========================================================================
+
 
   async getCandidatesDataBatch(candidates) {
     if (!Array.isArray(candidates) || candidates.length === 0) {
@@ -631,13 +581,10 @@ class CandidateService {
   }
 }
 
-// ============================================================================
-// EXPORT SINGLETON INSTANCE
-// ============================================================================
+
 
 const candidateService = new CandidateService();
 
-// Backward compatibility export
 export async function getCandidateData(name, constituency = '', party = '', meow = '', bhaw = '') {
   return candidateService.getCandidateData(name, constituency, party, meow, bhaw);
 }
