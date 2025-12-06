@@ -1,12 +1,10 @@
-// BrowserPool - DISABLED: Puppeteer removed from project
-// This service is no longer functional without Puppeteer dependency
 
 class BrowserPool {
   constructor() {
     this.browsers = [];
     this.available = [];
     this.busy = new Set();
-    this.maxBrowsers = 0; // Disabled
+    this.maxBrowsers = 0; 
     this.launching = 0;
   }
 
@@ -19,11 +17,9 @@ class BrowserPool {
   }
 
   releaseBrowser(browser) {
-    // No-op
   }
 
   async closeAll() {
-    // No-op
   }
 
   getStats() {
