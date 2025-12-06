@@ -12,7 +12,6 @@
      position: relative;
  }
 
- /* Enhanced Animated Background with Mesh Gradient */
  body::before {
      content: '';
      position: fixed;
@@ -49,7 +48,6 @@
      }
  }
 
- /* Enhanced Particle Effect with Glow */
  .particles {
      position: fixed;
      top: 0;
@@ -99,7 +97,6 @@
      filter: brightness(0.95) contrast(1.05);
  }
 
- /* Shimmer Animation Keyframes */
  @keyframes shimmer {
      0% {
          transform: translateX(-100%) translateY(-100%) rotate(30deg);
@@ -146,7 +143,6 @@
      }
  }
 
- /* Enhanced Loading Overlay with 3D Effect */
  .loading-overlay {
      position: fixed;
      top: 0;
@@ -200,7 +196,6 @@
      }
  }
 
- /* Enhanced 3D Rotating Icon with Multiple Effects */
  .loader-icon {
      font-size: 5rem;
      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #8b5cf6 50%, #f093fb 75%, #60a5fa 100%);
@@ -285,7 +280,6 @@
      }
  }
 
- /* Enhanced Loading Progress Bar with Glassmorphism */
  .loading-progress {
      margin-top: 2rem;
      width: 400px;
@@ -356,7 +350,6 @@
      }
  }
 
- /* Enhanced Checkpoints with 3D Effect */
  .loading-checkpoints {
      display: flex;
      justify-content: space-between;
@@ -459,7 +452,6 @@
      text-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
  }
 
- /* Enhanced Glassmorphism Header */
  .header {
      position: fixed;
      top: 0;
@@ -577,7 +569,6 @@
      }
  }
 
- /* Enhanced Search Box with Glassmorphism and 3D Effect */
  .search-container {
      position: relative;
      flex: 1;
@@ -666,10 +657,7 @@
      -ms-overflow-style: none;
  }
 
- /* ==================== ENHANCED SEARCH STYLES ==================== */
 
- /* Loading States */
- /* ==================== SEARCH LOADING ANIMATION ==================== */
 
  .search-loading {
      display: flex;
@@ -725,7 +713,6 @@
      animation: iconPulse 1.5s ease-in-out infinite;
  }
 
- /* ==================== CACHE & OPTIMIZATION INDICATORS ==================== */
 
  .cached-indicator {
      display: inline-flex;
@@ -770,7 +757,6 @@
      }
  }
 
- /* Search throttle indicator */
  .search-throttle-notice {
      padding: 0.5rem 1rem;
      background: rgba(245, 158, 11, 0.1);
@@ -789,12 +775,10 @@
      text-align: center;
  }
 
- /* API Loading in search results */
  .search-section .api-loading {
      margin: 0.5rem;
  }
 
- /* Smooth transitions */
  .search-suggestions {
      transition: all 0.3s ease-in-out;
  }
@@ -839,7 +823,6 @@
      font-size: 0.9rem;
  }
 
- /* No Results State */
  .no-results {
      padding: 3rem 2rem;
      text-align: center;
@@ -866,7 +849,6 @@
      color: #64748b;
  }
 
- /* Search Sections */
  .search-section {
      margin-bottom: 0.5rem;
  }
@@ -907,7 +889,6 @@
      flex-direction: column;
  }
 
- /* Enhanced Suggestion Items */
  .suggestion-item {
      padding: 1rem 1.5rem;
      display: flex;
@@ -962,7 +943,6 @@
      transform: scaleY(1);
  }
 
- /* API Result with Image */
  .suggestion-image {
      width: 60px;
      height: 60px;
@@ -1000,7 +980,6 @@
      background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
  }
 
- /* Suggestion Content */
  .suggestion-content {
      flex: 1;
      position: relative;
@@ -1060,7 +1039,6 @@
      border: 1px solid rgba(139, 92, 246, 0.3);
  }
 
- /* Criminal Badge */
  .criminal-badge {
      background: rgba(239, 68, 68, 0.3);
      color: #ef4444;
@@ -1086,7 +1064,6 @@
      }
  }
 
- /* Type Badges */
  .suggestion-type-badge {
      padding: 0.4rem 0.9rem;
      border-radius: 12px;
@@ -1120,12 +1097,10 @@
      border: 1px solid rgba(245, 158, 11, 0.5);
  }
 
- /* Smooth scroll for keyboard navigation */
  .search-suggestions {
      scroll-behavior: smooth;
  }
 
- /* Mobile Responsive */
  @media (max-width: 768px) {
      .suggestion-item {
          flex-wrap: wrap;
@@ -1300,7 +1275,6 @@
      border: 1px solid rgba(245, 158, 11, 0.6);
  }
 
- /* Enhanced Action Buttons with 3D Effect */
  .header-actions {
      display: flex;
      gap: 0.5rem;
@@ -1360,7 +1334,6 @@
      transform: rotate(360deg) scale(1.2);
  }
 
- /* Enhanced Map Toggle with Glassmorphism */
  .map-toggle {
      position: fixed;
      top: 5.5rem;
@@ -1453,7 +1426,6 @@
      transform: translateY(-2px);
  }
 
- /* Enhanced 3D Stats Dashboard */
  .stats-dashboard {
      position: fixed;
      left: 2rem;
@@ -1540,7 +1512,6 @@
      animation: bounce 3s ease-in-out infinite;
  }
 
- /* Clickable Card Styles */
  .clickable-card {
      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
      position: relative;
@@ -1556,7 +1527,6 @@
      transform: translateX(8px) scale(0.98) !important;
  }
 
- /* Click hint that appears on hover */
  .card-click-hint {
      position: absolute;
      bottom: 0.5rem;
@@ -1583,7 +1553,6 @@
      transform: translateX(3px);
  }
 
- /* Remove pointer events from children so click always goes to card */
  .clickable-card * {
      pointer-events: none;
  }
@@ -1611,7 +1580,6 @@
      margin-bottom: 1.5rem;
  }
 
- /* Enhanced 3D Stat Cards with Shimmer */
  .stat-card {
      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
      backdrop-filter: blur(10px);
@@ -1800,7 +1768,6 @@
      gap: 0.75rem;
  }
 
- /* Enhanced Party Items with Glassmorphism */
  .party-item {
      display: flex;
      align-items: center;
@@ -1909,7 +1876,6 @@
      filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
  }
 
- /* Enhanced Detail Panel with 3D Effect */
  .detail-panel {
      position: fixed;
      right: -450px;
@@ -2049,7 +2015,6 @@
      filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.6));
  }
 
- /* Enhanced Representative Cards with 3D */
  .representative-card {
      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
      backdrop-filter: blur(10px);
@@ -2197,7 +2162,6 @@
      filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
  }
 
- /* Enhanced State Link with Pulsing Effect */
  .state-link {
      padding: 1.3rem;
      background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
@@ -2261,7 +2225,6 @@
      z-index: 1;
  }
 
- /* Enhanced Modal with 3D Transform */
  .modal-overlay {
      position: fixed;
      top: 0;
@@ -2519,7 +2482,6 @@
      opacity: 0.7;
  }
 
- /* Responsive Design */
  @media (max-width: 1400px) {
      .stats-dashboard {
          width: 300px;
@@ -2568,7 +2530,6 @@
      }
  }
 
- /* ==================== NATIONAL DATABASE SECTION ==================== */
 
  .national-db-container {
      margin-top: 1rem;
@@ -2640,7 +2601,6 @@
      gap: 1rem;
  }
 
- /* ==================== NATIONAL DB CARDS ==================== */
 
  .national-db-card {
      display: flex;
@@ -2793,7 +2753,6 @@
      opacity: 1;
  }
 
- /* ==================== LOADING & ERROR STATES ==================== */
 
  .detail-loading {
      display: flex;
@@ -2889,8 +2848,6 @@
      color: #94a3b8;
  }
 
- /* ==================== RESPONSIVE ==================== */
- /* ==================== ROTATING LOADING ANIMATION ==================== */
 
  .rotating-loading-content {
      display: flex;
@@ -2981,7 +2938,6 @@
      }
  }
 
- /* Enhanced loading state with glow effect */
  .api-loading::before {
      content: '';
      position: absolute;
@@ -3016,7 +2972,6 @@
      }
  }
 
- /* Disclaimer Modal */
  .disclaimer-modal {
      position: fixed;
      top: 0;
