@@ -165,8 +165,7 @@ NODE_ENV=development # or production
 ADMIN_TOKEN=your_secure_admin_token
 BEHIND_PROXY=false # Set to true if behind Nginx/Cloudflare
 
-# External APIs
-GOOGLE_AI_API_KEY=your_google_ai_key
+
 
 # Appwrite Configuration
 APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
