@@ -14,7 +14,7 @@
 ## Discover Your Representatives  
 Interactive Electoral Intelligence & Constituency Analytics
 
-[🌐 Live Demo](https://netakhoj-web-production.up.railway.app/)
+[🌐 Live Demo](https://netakhoj-web.vercel.app/)
 
 
 > **⚠️ Development Notice**: Netakhoj is currently in active development. You may experience some bugs or temporary service interruptions as we continuously improve the platform.
